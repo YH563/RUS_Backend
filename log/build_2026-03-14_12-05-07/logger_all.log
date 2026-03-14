@@ -1,0 +1,765 @@
+[0.275s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.275s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=4, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x792838d55f60>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x792838e52f20>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x792838e52f20>>, mixin_verb=('build',))
+[0.587s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.588s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.588s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.588s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.588s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.588s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.588s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/yh_ros2/rus_back_end'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.589s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.589s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.604s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.604s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.604s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.604s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.604s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.604s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['ignore', 'ignore_ament_install']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'ignore'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'ignore_ament_install'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['colcon_pkg']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'colcon_pkg'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['colcon_meta']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'colcon_meta'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['ros']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'ros'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['cmake', 'python']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'cmake'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'python'
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['python_setup_py']
+[0.605s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'python_setup_py'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.606s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extensions ['ignore', 'ignore_ament_install']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'ignore'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'ignore_ament_install'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extensions ['colcon_pkg']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'colcon_pkg'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extensions ['colcon_meta']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'colcon_meta'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extensions ['ros']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'ros'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extensions ['cmake', 'python']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'cmake'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'python'
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extensions ['python_setup_py']
+[0.607s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2) by extension 'python_setup_py'
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extension 'ignore'
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extension 'colcon_pkg'
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extensions ['colcon_meta']
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extension 'colcon_meta'
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extensions ['ros']
+[0.608s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino10_v6_moveit2_config) by extension 'ros'
+[0.612s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino10_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino10_v6_moveit2_config'
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extension 'ignore'
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extension 'colcon_pkg'
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extensions ['colcon_meta']
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extension 'colcon_meta'
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extensions ['ros']
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino16_v6_moveit2_config) by extension 'ros'
+[0.613s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino16_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino16_v6_moveit2_config'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extension 'ignore'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.614s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extension 'colcon_pkg'
+[0.614s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extensions ['colcon_meta']
+[0.614s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extension 'colcon_meta'
+[0.614s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extensions ['ros']
+[0.614s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino20_v6_moveit2_config) by extension 'ros'
+[0.614s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino20_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino20_v6_moveit2_config'
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extension 'ignore'
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extension 'colcon_pkg'
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extensions ['colcon_meta']
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extension 'colcon_meta'
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extensions ['ros']
+[0.615s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino30_v6_moveit2_config) by extension 'ros'
+[0.616s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino30_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino30_v6_moveit2_config'
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extension 'ignore'
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extension 'colcon_pkg'
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extensions ['colcon_meta']
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extension 'colcon_meta'
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extensions ['ros']
+[0.616s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3_v6_moveit2_config) by extension 'ros'
+[0.617s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino3_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino3_v6_moveit2_config'
+[0.617s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.617s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extension 'ignore'
+[0.617s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.617s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.618s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extension 'colcon_pkg'
+[0.618s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extensions ['colcon_meta']
+[0.618s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extension 'colcon_meta'
+[0.618s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extensions ['ros']
+[0.618s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino3mt_v6_moveit2_config) by extension 'ros'
+[0.618s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino3mt_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino3mt_v6_moveit2_config'
+[0.618s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extensions ['ignore', 'ignore_ament_install']
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extension 'ignore'
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extension 'ignore_ament_install'
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extensions ['colcon_pkg']
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extension 'colcon_pkg'
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extensions ['colcon_meta']
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extension 'colcon_meta'
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extensions ['ros']
+[0.619s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino5_v6_moveit2_config) by extension 'ros'
+[0.620s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino5_v6_moveit2_config' with type 'ros.ament_cmake' and name 'fairino5_v6_moveit2_config'
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extensions ['ignore', 'ignore_ament_install']
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extension 'ignore'
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extension 'ignore_ament_install'
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extensions ['colcon_pkg']
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extension 'colcon_pkg'
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extensions ['colcon_meta']
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extension 'colcon_meta'
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extensions ['ros']
+[0.621s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_description) by extension 'ros'
+[0.621s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino_description' with type 'ros.ament_cmake' and name 'fairino_description'
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extensions ['ignore', 'ignore_ament_install']
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extension 'ignore'
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extension 'ignore_ament_install'
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extensions ['colcon_pkg']
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extension 'colcon_pkg'
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extensions ['colcon_meta']
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extension 'colcon_meta'
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extensions ['ros']
+[0.622s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_hardware) by extension 'ros'
+[0.623s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino_hardware' with type 'ros.ament_cmake' and name 'fairino_hardware'
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extension 'ignore'
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extension 'ignore_ament_install'
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extensions ['colcon_pkg']
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extension 'colcon_pkg'
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extensions ['colcon_meta']
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extension 'colcon_meta'
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extensions ['ros']
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(src/frcobot_ros2/fairino_msgs) by extension 'ros'
+[0.624s] DEBUG:colcon.colcon_core.package_identification:Package 'src/frcobot_ros2/fairino_msgs' with type 'ros.ament_cmake' and name 'fairino_msgs'
+[0.624s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.624s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.624s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.624s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.624s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.669s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.669s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.674s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 394 installed packages in /opt/ros/humble
+[0.676s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'cmake_args' from command line to 'None'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'cmake_target' from command line to 'None'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'cmake_clean_cache' from command line to 'False'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'cmake_clean_first' from command line to 'False'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'cmake_force_configure' from command line to 'False'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'ament_cmake_args' from command line to 'None'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'catkin_cmake_args' from command line to 'None'
+[0.723s] Level 5:colcon.colcon_core.verb:set package 'fairino_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.724s] DEBUG:colcon.colcon_core.verb:Building package 'fairino_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino_description', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description', 'symlink_install': False, 'test_result_base': None}
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'cmake_target' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'cmake_clean_cache' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'cmake_clean_first' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'cmake_force_configure' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'ament_cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'catkin_cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino_msgs' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.724s] DEBUG:colcon.colcon_core.verb:Building package 'fairino_msgs' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino_msgs', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino_msgs', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs', 'symlink_install': False, 'test_result_base': None}
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino10_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.725s] DEBUG:colcon.colcon_core.verb:Building package 'fairino10_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino10_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino16_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.725s] DEBUG:colcon.colcon_core.verb:Building package 'fairino16_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino16_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino20_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.726s] DEBUG:colcon.colcon_core.verb:Building package 'fairino20_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino20_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino30_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.726s] DEBUG:colcon.colcon_core.verb:Building package 'fairino30_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino30_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.726s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.727s] DEBUG:colcon.colcon_core.verb:Building package 'fairino3_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino3mt_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.727s] DEBUG:colcon.colcon_core.verb:Building package 'fairino3mt_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3mt_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'cmake_args' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'cmake_target' from command line to 'None'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'cmake_clean_cache' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'cmake_clean_first' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'cmake_force_configure' from command line to 'False'
+[0.727s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'ament_cmake_args' from command line to 'None'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'catkin_cmake_args' from command line to 'None'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino5_v6_moveit2_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.728s] DEBUG:colcon.colcon_core.verb:Building package 'fairino5_v6_moveit2_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino5_v6_moveit2_config', 'symlink_install': False, 'test_result_base': None}
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'cmake_args' from command line to 'None'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'cmake_target' from command line to 'None'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'cmake_clean_cache' from command line to 'False'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'cmake_clean_first' from command line to 'False'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'cmake_force_configure' from command line to 'False'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'ament_cmake_args' from command line to 'None'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'catkin_cmake_args' from command line to 'None'
+[0.728s] Level 5:colcon.colcon_core.verb:set package 'fairino_hardware' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.728s] DEBUG:colcon.colcon_core.verb:Building package 'fairino_hardware' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yh_ros2/rus_back_end/build/fairino_hardware', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yh_ros2/rus_back_end/install/fairino_hardware', 'merge_install': False, 'path': '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_hardware', 'symlink_install': False, 'test_result_base': None}
+[0.728s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.729s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.730s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description' with build type 'ament_cmake'
+[0.730s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description'
+[0.737s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.737s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.738s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.742s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs' with build type 'ament_cmake'
+[0.742s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs'
+[0.743s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.743s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.755s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_description
+[0.760s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_msgs
+[1.796s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_description
+[1.798s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_description -- -j4 -l4
+[1.847s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_description -- -j4 -l4
+[1.859s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_description
+[2.179s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino_description)
+[2.180s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_description
+[2.191s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description' for CMake module files
+[2.192s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description' for CMake config files
+[2.193s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_description', 'cmake_prefix_path')
+[2.193s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/hook/cmake_prefix_path.ps1'
+[2.195s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/hook/cmake_prefix_path.dsv'
+[2.196s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/hook/cmake_prefix_path.sh'
+[2.197s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/bin'
+[2.197s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/lib/pkgconfig/fairino_description.pc'
+[2.197s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/lib/python3.10/site-packages'
+[2.198s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/bin'
+[2.198s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.ps1'
+[2.201s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.dsv'
+[2.202s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.sh'
+[2.203s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.bash'
+[2.204s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.zsh'
+[2.205s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino_description/share/colcon-core/packages/fairino_description)
+[2.207s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino_description)
+[2.207s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description' for CMake module files
+[2.207s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description' for CMake config files
+[2.208s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_description', 'cmake_prefix_path')
+[2.208s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/hook/cmake_prefix_path.ps1'
+[2.209s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/hook/cmake_prefix_path.dsv'
+[2.209s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/hook/cmake_prefix_path.sh'
+[2.210s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/bin'
+[2.210s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/lib/pkgconfig/fairino_description.pc'
+[2.211s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/lib/python3.10/site-packages'
+[2.211s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_description/bin'
+[2.211s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.ps1'
+[2.212s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.dsv'
+[2.212s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.sh'
+[2.213s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.bash'
+[2.213s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_description/share/fairino_description/package.zsh'
+[2.214s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino_description/share/colcon-core/packages/fairino_description)
+[2.214s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino10_v6_moveit2_config' with build type 'ament_cmake'
+[2.214s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino10_v6_moveit2_config'
+[2.214s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.214s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.220s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino16_v6_moveit2_config' with build type 'ament_cmake'
+[2.221s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino16_v6_moveit2_config'
+[2.221s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.221s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.225s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino20_v6_moveit2_config' with build type 'ament_cmake'
+[2.226s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino20_v6_moveit2_config'
+[2.226s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.226s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.245s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino10_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config
+[2.253s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino16_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config
+[2.266s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino20_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config
+[2.798s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_msgs
+[2.804s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_msgs -- -j4 -l4
+[3.165s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino10_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config
+[3.165s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config -- -j4 -l4
+[3.189s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino16_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config
+[3.190s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config -- -j4 -l4
+[3.245s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config -- -j4 -l4
+[3.246s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config
+[3.301s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino20_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config
+[3.301s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config -- -j4 -l4
+[3.304s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino10_v6_moveit2_config)
+[3.305s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config' for CMake module files
+[3.305s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config' for CMake config files
+[3.305s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino10_v6_moveit2_config', 'cmake_prefix_path')
+[3.306s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[3.307s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[3.307s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[3.308s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/bin'
+[3.308s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/lib/pkgconfig/fairino10_v6_moveit2_config.pc'
+[3.308s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/lib/python3.10/site-packages'
+[3.311s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/bin'
+[3.312s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.ps1'
+[3.313s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino10_v6_moveit2_config
+[3.313s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.dsv'
+[3.314s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.sh'
+[3.314s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.bash'
+[3.314s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.zsh'
+[3.315s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/colcon-core/packages/fairino10_v6_moveit2_config)
+[3.317s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino10_v6_moveit2_config)
+[3.317s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config' for CMake module files
+[3.317s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config' for CMake config files
+[3.318s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino10_v6_moveit2_config', 'cmake_prefix_path')
+[3.318s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[3.319s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[3.319s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[3.320s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/bin'
+[3.320s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/lib/pkgconfig/fairino10_v6_moveit2_config.pc'
+[3.321s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/lib/python3.10/site-packages'
+[3.321s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/bin'
+[3.321s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.ps1'
+[3.322s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.dsv'
+[3.322s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.sh'
+[3.323s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.bash'
+[3.323s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/fairino10_v6_moveit2_config/package.zsh'
+[3.323s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino10_v6_moveit2_config/share/colcon-core/packages/fairino10_v6_moveit2_config)
+[3.325s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino30_v6_moveit2_config' with build type 'ament_cmake'
+[3.325s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino30_v6_moveit2_config'
+[3.326s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[3.327s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[3.337s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config -- -j4 -l4
+[3.342s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config
+[3.353s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino30_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config
+[3.386s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config -- -j4 -l4
+[3.395s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config
+[3.397s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino16_v6_moveit2_config)
+[3.398s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config' for CMake module files
+[3.398s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config' for CMake config files
+[3.399s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino16_v6_moveit2_config', 'cmake_prefix_path')
+[3.399s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[3.401s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino16_v6_moveit2_config
+[3.402s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[3.402s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[3.403s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/bin'
+[3.403s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/lib/pkgconfig/fairino16_v6_moveit2_config.pc'
+[3.403s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/lib/python3.10/site-packages'
+[3.404s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/bin'
+[3.404s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.ps1'
+[3.405s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.dsv'
+[3.405s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.sh'
+[3.406s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.bash'
+[3.406s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.zsh'
+[3.407s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/colcon-core/packages/fairino16_v6_moveit2_config)
+[3.409s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino16_v6_moveit2_config)
+[3.410s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config' for CMake module files
+[3.410s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config' for CMake config files
+[3.410s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino16_v6_moveit2_config', 'cmake_prefix_path')
+[3.411s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[3.411s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[3.412s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[3.413s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/bin'
+[3.414s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/lib/pkgconfig/fairino16_v6_moveit2_config.pc'
+[3.415s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/lib/python3.10/site-packages'
+[3.419s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/bin'
+[3.420s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.ps1'
+[3.426s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.dsv'
+[3.426s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.sh'
+[3.427s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.bash'
+[3.428s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/fairino16_v6_moveit2_config/package.zsh'
+[3.430s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino16_v6_moveit2_config/share/colcon-core/packages/fairino16_v6_moveit2_config)
+[3.432s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3_v6_moveit2_config' with build type 'ament_cmake'
+[3.432s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3_v6_moveit2_config'
+[3.433s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[3.433s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[3.450s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino20_v6_moveit2_config)
+[3.450s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino20_v6_moveit2_config
+[3.451s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config' for CMake module files
+[3.452s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config' for CMake config files
+[3.452s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino20_v6_moveit2_config', 'cmake_prefix_path')
+[3.453s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[3.454s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[3.455s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[3.455s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/bin'
+[3.456s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/lib/pkgconfig/fairino20_v6_moveit2_config.pc'
+[3.456s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/lib/python3.10/site-packages'
+[3.457s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/bin'
+[3.457s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.ps1'
+[3.458s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.dsv'
+[3.458s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.sh'
+[3.459s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.bash'
+[3.459s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.zsh'
+[3.459s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/colcon-core/packages/fairino20_v6_moveit2_config)
+[3.462s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino20_v6_moveit2_config)
+[3.462s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config' for CMake module files
+[3.463s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config' for CMake config files
+[3.463s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino20_v6_moveit2_config', 'cmake_prefix_path')
+[3.463s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[3.464s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[3.465s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[3.466s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/bin'
+[3.466s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/lib/pkgconfig/fairino20_v6_moveit2_config.pc'
+[3.466s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/lib/python3.10/site-packages'
+[3.466s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/bin'
+[3.467s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.ps1'
+[3.468s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.dsv'
+[3.468s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.sh'
+[3.469s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.bash'
+[3.469s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/fairino20_v6_moveit2_config/package.zsh'
+[3.470s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino20_v6_moveit2_config/share/colcon-core/packages/fairino20_v6_moveit2_config)
+[3.471s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3mt_v6_moveit2_config' with build type 'ament_cmake'
+[3.472s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3mt_v6_moveit2_config'
+[3.472s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[3.472s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[3.485s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config
+[3.504s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3mt_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config
+[4.664s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino30_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config
+[4.664s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config -- -j4 -l4
+[4.741s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config
+[4.741s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config -- -j4 -l4
+[4.756s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config -- -j4 -l4
+[4.756s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config
+[4.763s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino3mt_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config
+[4.764s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config -- -j4 -l4
+[4.783s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino30_v6_moveit2_config)
+[4.783s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config' for CMake module files
+[4.785s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino30_v6_moveit2_config
+[4.788s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config' for CMake config files
+[4.789s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino30_v6_moveit2_config', 'cmake_prefix_path')
+[4.789s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[4.791s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[4.791s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[4.795s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/bin'
+[4.795s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/lib/pkgconfig/fairino30_v6_moveit2_config.pc'
+[4.795s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/lib/python3.10/site-packages'
+[4.795s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/bin'
+[4.796s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.ps1'
+[4.799s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.dsv'
+[4.800s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.sh'
+[4.801s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.bash'
+[4.802s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.zsh'
+[4.802s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/colcon-core/packages/fairino30_v6_moveit2_config)
+[4.807s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino30_v6_moveit2_config)
+[4.808s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config' for CMake module files
+[4.808s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config' for CMake config files
+[4.809s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino30_v6_moveit2_config', 'cmake_prefix_path')
+[4.809s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[4.810s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[4.811s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[4.812s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/bin'
+[4.813s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/lib/pkgconfig/fairino30_v6_moveit2_config.pc'
+[4.813s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/lib/python3.10/site-packages'
+[4.813s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/bin'
+[4.814s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.ps1'
+[4.815s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.dsv'
+[4.816s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.sh'
+[4.817s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.bash'
+[4.818s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/fairino30_v6_moveit2_config/package.zsh'
+[4.818s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino30_v6_moveit2_config/share/colcon-core/packages/fairino30_v6_moveit2_config)
+[4.820s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino5_v6_moveit2_config' with build type 'ament_cmake'
+[4.820s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino5_v6_moveit2_config'
+[4.821s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[4.821s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[4.855s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino5_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config
+[4.865s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config -- -j4 -l4
+[4.866s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config
+[4.887s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config -- -j4 -l4
+[4.896s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config
+[4.933s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino3_v6_moveit2_config)
+[4.933s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config' for CMake module files
+[4.933s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config' for CMake config files
+[4.934s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino3_v6_moveit2_config', 'cmake_prefix_path')
+[4.934s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[4.935s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[4.935s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[4.936s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/bin'
+[4.936s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/lib/pkgconfig/fairino3_v6_moveit2_config.pc'
+[4.941s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/lib/python3.10/site-packages'
+[4.941s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino3_v6_moveit2_config
+[4.943s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/bin'
+[4.944s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.ps1'
+[4.948s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.dsv'
+[4.948s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.sh'
+[4.949s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.bash'
+[4.949s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.zsh'
+[4.957s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/colcon-core/packages/fairino3_v6_moveit2_config)
+[4.960s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino3_v6_moveit2_config)
+[4.960s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config' for CMake module files
+[4.961s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config' for CMake config files
+[4.961s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino3_v6_moveit2_config', 'cmake_prefix_path')
+[4.961s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[4.962s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[4.963s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[4.964s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/bin'
+[4.965s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/lib/pkgconfig/fairino3_v6_moveit2_config.pc'
+[4.965s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/lib/python3.10/site-packages'
+[4.966s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/bin'
+[4.967s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.ps1'
+[4.968s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.dsv'
+[4.969s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.sh'
+[4.970s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.bash'
+[4.971s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/fairino3_v6_moveit2_config/package.zsh'
+[4.972s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino3_v6_moveit2_config/share/colcon-core/packages/fairino3_v6_moveit2_config)
+[4.976s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino3mt_v6_moveit2_config)
+[4.977s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config' for CMake module files
+[4.977s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config' for CMake config files
+[4.977s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino3mt_v6_moveit2_config', 'cmake_prefix_path')
+[4.978s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[4.979s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[4.979s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[4.980s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/bin'
+[4.980s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/lib/pkgconfig/fairino3mt_v6_moveit2_config.pc'
+[4.980s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/lib/python3.10/site-packages'
+[4.984s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/bin'
+[4.985s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.ps1'
+[4.985s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.dsv'
+[4.986s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.sh'
+[4.986s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.bash'
+[4.986s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.zsh'
+[4.987s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/colcon-core/packages/fairino3mt_v6_moveit2_config)
+[4.988s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino3mt_v6_moveit2_config)
+[4.990s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino3mt_v6_moveit2_config
+[4.991s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config' for CMake module files
+[4.992s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config' for CMake config files
+[4.992s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino3mt_v6_moveit2_config', 'cmake_prefix_path')
+[4.993s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[4.993s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[4.994s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[4.995s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/bin'
+[4.995s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/lib/pkgconfig/fairino3mt_v6_moveit2_config.pc'
+[4.995s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/lib/python3.10/site-packages'
+[4.996s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/bin'
+[4.996s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.ps1'
+[4.997s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.dsv'
+[4.998s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.sh'
+[4.999s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.bash'
+[5.000s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/fairino3mt_v6_moveit2_config/package.zsh'
+[5.000s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino3mt_v6_moveit2_config/share/colcon-core/packages/fairino3mt_v6_moveit2_config)
+[5.897s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino5_v6_moveit2_config -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config
+[5.897s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config -- -j4 -l4
+[6.001s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config -- -j4 -l4
+[6.002s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config
+[6.047s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino5_v6_moveit2_config)
+[6.047s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_description:/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino5_v6_moveit2_config
+[6.049s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config' for CMake module files
+[6.049s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config' for CMake config files
+[6.052s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino5_v6_moveit2_config', 'cmake_prefix_path')
+[6.053s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[6.054s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[6.055s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[6.056s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/bin'
+[6.056s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/lib/pkgconfig/fairino5_v6_moveit2_config.pc'
+[6.056s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/lib/python3.10/site-packages'
+[6.057s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/bin'
+[6.057s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.ps1'
+[6.058s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.dsv'
+[6.059s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.sh'
+[6.059s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.bash'
+[6.060s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.zsh'
+[6.060s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/colcon-core/packages/fairino5_v6_moveit2_config)
+[6.064s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino5_v6_moveit2_config)
+[6.064s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config' for CMake module files
+[6.065s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config' for CMake config files
+[6.065s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino5_v6_moveit2_config', 'cmake_prefix_path')
+[6.065s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/hook/cmake_prefix_path.ps1'
+[6.066s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/hook/cmake_prefix_path.dsv'
+[6.067s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/hook/cmake_prefix_path.sh'
+[6.067s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/bin'
+[6.067s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/lib/pkgconfig/fairino5_v6_moveit2_config.pc'
+[6.067s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/lib/python3.10/site-packages'
+[6.068s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/bin'
+[6.068s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.ps1'
+[6.070s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.dsv'
+[6.071s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.sh'
+[6.071s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.bash'
+[6.072s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/fairino5_v6_moveit2_config/package.zsh'
+[6.073s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino5_v6_moveit2_config/share/colcon-core/packages/fairino5_v6_moveit2_config)
+[9.477s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_msgs -- -j4 -l4
+[9.478s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_msgs
+[9.608s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino_msgs)
+[9.608s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs' for CMake module files
+[9.609s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_msgs
+[9.609s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs' for CMake config files
+[9.610s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_msgs', 'cmake_prefix_path')
+[9.610s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/cmake_prefix_path.ps1'
+[9.611s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/cmake_prefix_path.dsv'
+[9.611s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/cmake_prefix_path.sh'
+[9.612s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/lib'
+[9.612s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_msgs', 'ld_library_path_lib')
+[9.612s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/ld_library_path_lib.ps1'
+[9.613s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/ld_library_path_lib.dsv'
+[9.613s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/ld_library_path_lib.sh'
+[9.613s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/bin'
+[9.613s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/lib/pkgconfig/fairino_msgs.pc'
+[9.614s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/lib/python3.10/site-packages'
+[9.614s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/bin'
+[9.614s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.ps1'
+[9.615s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.dsv'
+[9.615s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.sh'
+[9.616s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.bash'
+[9.616s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.zsh'
+[9.616s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino_msgs/share/colcon-core/packages/fairino_msgs)
+[9.618s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino_msgs)
+[9.618s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs' for CMake module files
+[9.619s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs' for CMake config files
+[9.619s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_msgs', 'cmake_prefix_path')
+[9.619s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/cmake_prefix_path.ps1'
+[9.620s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/cmake_prefix_path.dsv'
+[9.620s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/cmake_prefix_path.sh'
+[9.621s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/lib'
+[9.621s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_msgs', 'ld_library_path_lib')
+[9.621s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/ld_library_path_lib.ps1'
+[9.621s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/ld_library_path_lib.dsv'
+[9.622s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/hook/ld_library_path_lib.sh'
+[9.622s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/bin'
+[9.622s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/lib/pkgconfig/fairino_msgs.pc'
+[9.622s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/lib/python3.10/site-packages'
+[9.623s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_msgs/bin'
+[9.623s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.ps1'
+[9.623s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.dsv'
+[9.624s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.sh'
+[9.624s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.bash'
+[9.625s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_msgs/share/fairino_msgs/package.zsh'
+[9.625s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino_msgs/share/colcon-core/packages/fairino_msgs)
+[9.625s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_hardware' with build type 'ament_cmake'
+[9.626s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_hardware'
+[9.626s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[9.626s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[9.641s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_hardware': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:/opt/ros/humble LD_LIBRARY_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_hardware -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_hardware
+[11.163s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_hardware' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:/opt/ros/humble LD_LIBRARY_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_hardware -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_hardware
+[11.165s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_hardware': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:/opt/ros/humble LD_LIBRARY_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_hardware -- -j4 -l4
+[58.064s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_hardware' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:/opt/ros/humble LD_LIBRARY_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_hardware -- -j4 -l4
+[58.066s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_hardware': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:/opt/ros/humble LD_LIBRARY_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_hardware
+[58.158s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino_hardware)
+[58.158s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware' for CMake module files
+[58.159s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_hardware' returned '0': AMENT_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs:/opt/ros/humble LD_LIBRARY_PATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/yh_ros2/rus_back_end/install/fairino_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_hardware
+[58.159s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware' for CMake config files
+[58.160s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_hardware', 'cmake_prefix_path')
+[58.160s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/cmake_prefix_path.ps1'
+[58.161s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/cmake_prefix_path.dsv'
+[58.161s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/cmake_prefix_path.sh'
+[58.162s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/lib'
+[58.162s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_hardware', 'ld_library_path_lib')
+[58.162s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/ld_library_path_lib.ps1'
+[58.162s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/ld_library_path_lib.dsv'
+[58.163s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/ld_library_path_lib.sh'
+[58.163s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/bin'
+[58.163s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/lib/pkgconfig/fairino_hardware.pc'
+[58.163s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/lib/python3.10/site-packages'
+[58.164s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/bin'
+[58.164s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.ps1'
+[58.164s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.dsv'
+[58.165s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.sh'
+[58.165s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.bash'
+[58.166s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.zsh'
+[58.166s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino_hardware/share/colcon-core/packages/fairino_hardware)
+[58.169s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(fairino_hardware)
+[58.169s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware' for CMake module files
+[58.170s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware' for CMake config files
+[58.170s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_hardware', 'cmake_prefix_path')
+[58.170s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/cmake_prefix_path.ps1'
+[58.171s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/cmake_prefix_path.dsv'
+[58.171s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/cmake_prefix_path.sh'
+[58.172s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/lib'
+[58.172s] Level 1:colcon.colcon_core.shell:create_environment_hook('fairino_hardware', 'ld_library_path_lib')
+[58.172s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/ld_library_path_lib.ps1'
+[58.173s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/ld_library_path_lib.dsv'
+[58.173s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/hook/ld_library_path_lib.sh'
+[58.173s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/bin'
+[58.174s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/lib/pkgconfig/fairino_hardware.pc'
+[58.174s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/lib/python3.10/site-packages'
+[58.174s] Level 1:colcon.colcon_core.environment:checking '/home/yh_ros2/rus_back_end/install/fairino_hardware/bin'
+[58.174s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.ps1'
+[58.175s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.dsv'
+[58.176s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.sh'
+[58.176s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.bash'
+[58.177s] INFO:colcon.colcon_core.shell:Creating package script '/home/yh_ros2/rus_back_end/install/fairino_hardware/share/fairino_hardware/package.zsh'
+[58.177s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yh_ros2/rus_back_end/install/fairino_hardware/share/colcon-core/packages/fairino_hardware)
+[58.178s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[58.179s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[58.180s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[58.180s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[58.196s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[58.196s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[58.196s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[58.232s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[58.233s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[58.234s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yh_ros2/rus_back_end/install/local_setup.ps1'
+[58.235s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/yh_ros2/rus_back_end/install/_local_setup_util_ps1.py'
+[58.237s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yh_ros2/rus_back_end/install/setup.ps1'
+[58.238s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yh_ros2/rus_back_end/install/local_setup.sh'
+[58.239s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/yh_ros2/rus_back_end/install/_local_setup_util_sh.py'
+[58.239s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yh_ros2/rus_back_end/install/setup.sh'
+[58.241s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yh_ros2/rus_back_end/install/local_setup.bash'
+[58.241s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yh_ros2/rus_back_end/install/setup.bash'
+[58.242s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yh_ros2/rus_back_end/install/local_setup.zsh'
+[58.243s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yh_ros2/rus_back_end/install/setup.zsh'

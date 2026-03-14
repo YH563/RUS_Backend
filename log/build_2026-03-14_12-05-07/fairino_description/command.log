@@ -1,0 +1,6 @@
+Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_description
+Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_description -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_description
+Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_description -- -j4 -l4
+Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_description -- -j4 -l4
+Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_description
+Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_description

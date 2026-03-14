@@ -1,0 +1,6 @@
+Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_msgs
+Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/yh_ros2/rus_back_end/src/frcobot_ros2/fairino_msgs -DCMAKE_INSTALL_PREFIX=/home/yh_ros2/rus_back_end/install/fairino_msgs
+Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_msgs -- -j4 -l4
+Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/yh_ros2/rus_back_end/build/fairino_msgs -- -j4 -l4
+Invoking command in '/home/yh_ros2/rus_back_end/build/fairino_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_msgs
+Invoked command in '/home/yh_ros2/rus_back_end/build/fairino_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/yh_ros2/rus_back_end/build/fairino_msgs
