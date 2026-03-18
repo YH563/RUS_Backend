@@ -65,6 +65,10 @@ namespace TrajectoryPlanner {
             RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "总时间必须大于0");
             return false;
         }
+        if (start_pose_.isApprox(goal_pose_)) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "起始位姿和目标位姿不能相同");
+            return false;
+        }
         // TODO
         return true;
     }
