@@ -61,6 +61,10 @@ namespace TrajectoryPlanner {
 
     bool TrajectoryPlanner::GenerateTrajectory()
     {
+        if (total_time_ <= 0.0) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "总时间必须大于0");
+            return false;
+        }
         // TODO
         return true;
     }
