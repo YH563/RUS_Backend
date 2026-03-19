@@ -1,4 +1,4 @@
-#include "rus_sim_planning/trajectory_planner.hpp"
+#include "rus_sim_planner/trajectory_planner.hpp"
 
 namespace TrajectoryPlanner {
     bool TrajectoryPlanner::Initialize(const SE3 &start, const SE3 &goal, const PointCloud3d &point_cloud, double total_time, double time_step)
@@ -69,6 +69,12 @@ namespace TrajectoryPlanner {
             RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "起始位姿和目标位姿不能相同");
             return false;
         }
+        if (point_cloud_.rows() == 0) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "点云数据不能为空");
+            return false;
+        }
+
+        
         // TODO
         return true;
     }

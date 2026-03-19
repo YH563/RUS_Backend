@@ -6,6 +6,7 @@
 #include <optional>
 #include "igl/heat_geodesics.h"
 #include "igl/grad.h"
+#include <pcl/point_cloud.h>
 
 namespace TrajectoryPlanner {
     using Vector3 = Eigen::Vector3d;

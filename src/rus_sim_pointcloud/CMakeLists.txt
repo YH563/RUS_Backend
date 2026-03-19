@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
-project(rus_sim_planning)
+project(rus_sim_pointcloud)
 # 设置使用C++17标准，并启用编译命令导出
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -11,54 +12,44 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(moveit_ros_planning_interface REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-# 设置包含目录和源文件
 set(LIBIGL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/libigl/include)  # libigl 库目录
-set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
-file(GLOB SRC_FILES src/rus_sim_planning/*.cpp)
-file(GLOB TEST_FILES ${TEST_DIR}/*.cpp)
+file(GLOB SRC_FILES src/${PROJECT_NAME}/*.cpp)
+file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/test/*.cpp)
 
-# 添加可执行文件
-add_executable(rus_sim_planning
+add_executable(rus_sim_pointcloud
   src/main.cpp
   ${SRC_FILES}
   ${TEST_FILES}
 )
 
-# 设置 include 目录
-target_include_directories(rus_sim_planning PRIVATE
+target_include_directories(rus_sim_pointcloud PRIVATE
   ${LIBIGL_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${TEST_DIR}
 )
 
 # 链接依赖库
-ament_target_dependencies(rus_sim_planning
+ament_target_dependencies(rus_sim_pointcloud
   rclcpp
-  moveit_ros_planning_interface
   sensor_msgs
-  std_msgs
 )
 
-target_link_libraries(rus_sim_planning
+target_link_libraries(rus_sim_pointcloud
   Eigen3::Eigen
+  ${PCL_LIBRARIES}
 )
 
-install(TARGETS rus_sim_planning
+install(TARGETS rus_sim_pointcloud
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 安装launch文件
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}/
-)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
