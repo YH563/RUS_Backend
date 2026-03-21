@@ -1,6 +1,6 @@
 #include "rus_sim_pointcloud/point_cloud_preprocess.hpp"
 
-namespace PointCloud {
+namespace RusPointCloud {
     MeshPtr PointCloudPreprocess::Generate(const PointCloudPtr& cloud_ptr) const
     {
         if (cloud_ptr->empty()) {

@@ -9,7 +9,7 @@
 #include <pcl/io/pcd_io.h>
 #include <rclcpp/rclcpp.hpp>
 
-namespace PointCloud {
+namespace RusPointCloud {
     using PointCloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;  // 点云数据指针，为智能指针对象
     using MeshPtr = pcl::PolygonMeshPtr;  // 三角网格数据指针，为智能指针对象
 

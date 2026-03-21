@@ -9,7 +9,7 @@
 #include <pcl/PolygonMesh.h>
 #include <pcl/memory.h>
 
-namespace TrajectoryPlanner {
+namespace RusTrajectoryPlanner {
     using Vector3 = Eigen::Vector3d;  // 3D向量
     using Quaternion = Eigen::Quaterniond;  // 四元数
     using SE3 = Eigen::Isometry3d;  // 位姿矩阵

@@ -12,7 +12,7 @@
 
 #include "rus_sim_pointcloud/point_cloud_preprocess.hpp"
 
-namespace PointCloudNode {
+namespace RusPointCloudNode {
     using PointCloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;  // 点云数据指针，为智能指针对象
     using MeshPtr = pcl::PolygonMeshPtr;  // 三角网格数据指针，为智能指针对象
 
@@ -28,7 +28,7 @@ namespace PointCloudNode {
         // 将网格数据发布到ROS话题
         void publish_mesh(const MeshPtr& mesh);
 
-        PointCloud::PointCloudPreprocess preprocess_;  // 点云处理器实例
+        RusPointCloud::PointCloudPreprocess preprocess_;  // 点云处理器实例
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_subscription_;  // 点云数据订阅
         rclcpp::Publisher<shape_msgs::msg::Mesh>::SharedPtr mesh_publisher_;  // 三角网格数据发布
     };

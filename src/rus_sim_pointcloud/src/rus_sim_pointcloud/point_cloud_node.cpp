@@ -1,6 +1,6 @@
 #include "rus_sim_pointcloud/point_cloud_node.hpp"
 
-namespace PointCloudNode {
+namespace RusPointCloudNode {
     PointCloudNode::PointCloudNode() : Node("point_cloud_node")
     {
         // 声明参数
@@ -49,7 +49,6 @@ namespace PointCloudNode {
     void PointCloudNode::publish_mesh(const MeshPtr &mesh_ptr)
     {
         shape_msgs::msg::Mesh mesh_msg;
-        
         
         // 转换顶点数据
         PointCloudPtr cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>);

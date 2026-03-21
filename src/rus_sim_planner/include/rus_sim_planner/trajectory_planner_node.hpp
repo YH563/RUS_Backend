@@ -4,7 +4,7 @@
 #include <shape_msgs/msg/mesh.hpp>
 #include "rus_sim_planner/trajectory_planner.hpp"
 
-namespace TrajectoryPlannerNode
+namespace RusTrajectoryPlannerNode
 {
     // 轨迹规划节点类
     class TrajectoryPlannerNode : public rclcpp::Node
@@ -16,7 +16,7 @@ namespace TrajectoryPlannerNode
         }
 
     private:
-        TrajectoryPlanner::TrajectoryPlanner planner_;  // 轨迹规划器实例
+        RusTrajectoryPlanner::TrajectoryPlanner planner_;  // 轨迹规划器实例
         rclcpp::Subscription<shape_msgs::msg::Mesh>::SharedPtr mesh_subscription_;  // 三角网格数据订阅
     };
 }

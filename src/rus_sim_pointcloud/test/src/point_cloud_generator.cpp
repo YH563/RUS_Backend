@@ -1,4 +1,4 @@
-#include "test/point_cloud_generator.hpp"
+#include "test_include/point_cloud_generator.hpp"
 
 namespace TestPointCloud {
     PointCloudGenerator::PointCloudGenerator() : Node("point_cloud_generator")
