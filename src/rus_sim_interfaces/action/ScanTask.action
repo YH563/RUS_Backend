@@ -1,0 +1,14 @@
+# 用于执行一次完整的扫查任务
+
+# Goal
+ScanPath path          # 扫查路径（使用上面定义的 ScanPath 消息）
+float64 speed_factor   # 全局速度因子（1.0 为默认速度）
+---
+# Result
+bool success
+string message
+---
+# Feedback
+float32 progress           # 0.0 ~ 1.0
+geometry_msgs/Pose current_pose
+int32 current_index        # 当前已完成的路径点索引（用于断点续扫）

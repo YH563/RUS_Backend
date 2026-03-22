@@ -1,0 +1,7 @@
+# 暂停扫查任务
+
+# 请求
+---
+# 响应
+bool success
+string message
