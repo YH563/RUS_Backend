@@ -23,7 +23,7 @@ namespace RusPointCloudNode {
         PointCloudNode();
     private:
         // 订阅点云数据的回调函数
-        void point_cloud_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg);
+        void on_point_cloud(const sensor_msgs::msg::PointCloud2::SharedPtr msg);
 
         // 将网格数据发布到ROS话题
         void publish_mesh(const MeshPtr& mesh);

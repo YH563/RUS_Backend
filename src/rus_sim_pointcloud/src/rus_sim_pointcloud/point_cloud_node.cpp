@@ -14,7 +14,7 @@ namespace RusPointCloudNode {
         // 订阅点云数据
         point_cloud_subscription_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
             "/simulated_pointcloud", 10,
-            std::bind(&PointCloudNode::point_cloud_callback, this, std::placeholders::_1)
+            std::bind(&PointCloudNode::on_point_cloud, this, std::placeholders::_1)
         );
 
         // 发布网络数据
@@ -23,7 +23,7 @@ namespace RusPointCloudNode {
         RCLCPP_INFO(this->get_logger(), "点云处理节点已启动");
     }
 
-    void PointCloudNode::point_cloud_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
+    void PointCloudNode::on_point_cloud(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
     {
         PointCloudPtr cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromROSMsg(*msg, *cloud_ptr); // 将ROS消息转换为PCL点云

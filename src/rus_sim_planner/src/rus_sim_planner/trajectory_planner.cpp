@@ -1,4 +1,5 @@
 #include "rus_sim_planner/trajectory_planner.hpp"
+#include <cstddef>
 
 namespace RusTrajectoryPlanner {
     bool TrajectoryPlanner::Initialize(const SE3 &start, const SE3 &goal, const MeshPtr& mesh, double total_time, double time_step)
@@ -11,6 +12,10 @@ namespace RusTrajectoryPlanner {
             RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "起始位姿和目标位姿不能相同");
             return false;
         }
+        if (time_step <= 0.0) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "时间步长必须大于0");
+            return false;
+        }
         start_pose_ = start;
         goal_pose_ = goal;
         if (!pclmesh_to_eigen(mesh)) {
@@ -19,20 +24,63 @@ namespace RusTrajectoryPlanner {
         }
         total_time_ = total_time;
         time_step_ = time_step;
+        is_initialized_ = true;
         return true;
     }
 
     bool TrajectoryPlanner::pclmesh_to_eigen(const MeshPtr& mesh)
     {
-        if (mesh->polygons.empty() || mesh->cloud.data.empty()) {
+        if (!is_initialized_) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹规划器未初始化");
+            return false;
+        }
+        if (mesh->polygons.empty() || mesh->cloud.data.empty() || !mesh) {
             RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "输入网格为空");
             return false;
+        }
+        else {
+            pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+            pcl::fromPCLPointCloud2(mesh->cloud, *cloud);
+            size_t num_vertices = cloud->size();
+            size_t num_faces = mesh->polygons.size();
+
+            // 创建顶点和面矩阵
+            mesh_data_.first.resize(num_vertices, 3);  // 顶点矩阵
+            mesh_data_.second.resize(num_faces, 3);   // 面矩阵
+
+            // 对顶点矩阵和面矩阵进行填充
+            for (size_t i=0; i < num_vertices; ++i) {
+                mesh_data_.first(i, 0) = cloud->points[i].x;
+                mesh_data_.first(i, 1) = cloud->points[i].y;
+                mesh_data_.first(i, 2) = cloud->points[i].z;
+            }
+            for (size_t i=0; i < num_faces; ++i) {
+                if (mesh->polygons[i].vertices.size() != 3) {
+                    RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "非三角形面数据不支持");
+                    return false;
+                }
+                mesh_data_.second(i, 0) = mesh->polygons[i].vertices[0];
+                mesh_data_.second(i, 1) = mesh->polygons[i].vertices[1];
+                mesh_data_.second(i, 2) = mesh->polygons[i].vertices[2];
+            }
+            return true;
         }
         
     }
 
     std::optional<SE3> TrajectoryPlanner::GetPoseAtTime(double time) const
     {
+        // 检查是否已初始化
+        if (!is_initialized_) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹规划器未初始化");
+            return std::nullopt;
+        }
+        // 检查轨迹是否已生成
+        if (trajectory_.empty()) 
+        {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹未生成");
+            return std::nullopt;
+        }
         // 检查时间戳是否在轨迹范围内
         if (time < 0.0 || time > total_time_)
         {
@@ -73,6 +121,10 @@ namespace RusTrajectoryPlanner {
 
     bool TrajectoryPlanner::GenerateTrajectory()
     {
+        if (!is_initialized_) {
+            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹规划器未初始化");
+            return false;
+        }
         if (total_time_ <= 0.0) {
             RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "总时间必须大于0");
             return false;

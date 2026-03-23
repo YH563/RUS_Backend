@@ -2,5 +2,8 @@
 
 namespace RusTrajectoryPlannerNode
 {
-    
+    TrajectoryPlannerNode::TrajectoryPlannerNode() : Node("trajectory_planner_node")
+    {
+        planner_ = RusTrajectoryPlanner::TrajectoryPlanner();
+    }
 }

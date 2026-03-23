@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional> 
 #include <rclcpp/rclcpp.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <Eigen/Core>
@@ -7,6 +8,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/PolygonMesh.h>
+#include <pcl/conversions.h>
 #include <pcl/memory.h>
 
 namespace RusTrajectoryPlanner {
@@ -30,12 +32,27 @@ namespace RusTrajectoryPlanner {
         // 生成轨迹
         bool GenerateTrajectory();
         // 获取生成的轨迹
-        const Trajectory& GetTrajectory() const { return trajectory_; }
+        std::optional<std::reference_wrapper<const Trajectory>> GetTrajectory() const { 
+            if (!is_initialized_) {
+                RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹规划器未初始化");
+                return std::nullopt;
+            }
+            if (trajectory_.empty()) 
+            {
+                RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹未生成");
+                return std::nullopt;
+            }
+            return std::cref(trajectory_);
+        }
         // 按照时间戳获取位姿，若时间超出范围可返回空值
         std::optional<SE3> GetPoseAtTime(double time) const;
 
     private:
-        bool pclmesh_to_eigen(const MeshPtr& mesh);  // 将PCL网格数据转换为Eigen矩阵，便于 libigl 进行处理计算
+        // 将PCL网格数据转换为Eigen矩阵，便于 libigl 进行处理计算
+        bool pclmesh_to_eigen(const MeshPtr& mesh);  
+
+        // 私有成员变量
+        bool is_initialized_ = false;  // 是否已初始化
         std::pair<VertexMatrix, FaceMatrix> mesh_data_;  // 网格数据：顶点矩阵和面矩阵
         SE3 start_pose_ = SE3::Identity();  // 起始位姿
         SE3 goal_pose_ = SE3::Identity();   // 目标位姿
