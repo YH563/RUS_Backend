@@ -1,5 +1,4 @@
 #include "rus_sim_planner/trajectory_planner.hpp"
-#include <cstddef>
 
 namespace RusTrajectoryPlanner {
     bool TrajectoryPlanner::Initialize(const SE3 &start, const SE3 &goal, const MeshPtr& mesh, double total_time, double time_step)

@@ -3,5 +3,8 @@
 # 路径点列表
 geometry_msgs/Pose[] poses
 
+# 每个点的时间戳，单位秒
+float64[] timestamps
+
 # 每个点的速度，单位 mm/s
-float64[] speeds
+# float64[] speeds
