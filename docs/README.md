@@ -18,7 +18,8 @@ RUS-Sim（Robotic Ultrasound Simulator）是一个面向超声扫查机械臂的
 - **Eigen3** 3.4.0
 - **PCL** 1.21.1
 - **pcl_conversions** 2.4.5
-- **Moveit** 
+- **Moveit** 2.5.9-Alpha
+- **ros-humble-pinocchio** 3.9.0
 
 ## 项目结构
 采用标准的 ROS2 工作空间布局，主要功能组织为多个功能包。
