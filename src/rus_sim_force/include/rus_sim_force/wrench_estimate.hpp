@@ -8,6 +8,12 @@
 
 #include <rclcpp/rclcpp.hpp>
 
+#include <pinocchio/parsers/urdf.hpp>
+#include <pinocchio/algorithm/rnea.hpp>
+#include <pinocchio/algorithm/joint-configuration.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include<pinocchio/algorithm/jacobian.hpp>
+
 namespace RusSimForce {
 
 // 连杆静态惯性参数
@@ -84,7 +90,6 @@ class WrenchEstimate{
     void ClearSimForce();
 
     private:
-    Eigen::Matrix4d rot_z_homogeneous(double q) const;
     std::vector<Eigen::Matrix4d> forward_kinematics(const Eigen::VectorXd& q) const;
     Eigen::MatrixXd jacobian(const Eigen::VectorXd& q) const;
 
@@ -122,6 +127,10 @@ class WrenchEstimate{
 
     FlangeConfig flange_config_;
     ForceConfig sim_config_;
+
+    mutable pinocchio::Model model_;
+
+    bool tool_applied_ = false;
 
 };
 

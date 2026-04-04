@@ -102,11 +102,17 @@ bool WrenchEstimate::load_urdf(const std::string& urdf_path) {
     // 打印加载结果：link数量、关节数量
     RCLCPP_INFO(rclcpp::get_logger("urdf_loader"),"Loaded %zu links, %zu revolute joints",links_.size(), joints_.size());
 
+    //用 Pinocchio 独立建模
+    pinocchio::urdf::buildModel(urdf_path, model_);
+    model_.gravity.linear(gravity_);
+    RCLCPP_INFO(rclcpp::get_logger("urdf_loader"),"Pinocchio model: %d DOF", model_.nv);
+
     return true;  // URDF加载成功
 }
 
 void WrenchEstimate::SetGravity(const Eigen::Vector3d& gravity) {
     gravity_ = gravity;
+    model_.gravity.linear(gravity_); 
 }
 
 void WrenchEstimate::SetFlangeConfig(const FlangeConfig& config) {
@@ -123,6 +129,11 @@ void WrenchEstimate::SetDampingFactor(double lambda) {
 
 void WrenchEstimate::SetToolPayload(double mass, const Eigen::Vector3d& com_in)
 {
+    if (tool_applied_) {
+        RCLCPP_WARN(rclcpp::get_logger("WrenchEstimate"),
+                    "[WrenchEstimate] SetToolPayload 已调用过，忽略重复调用");
+        return;
+    }
     // 取末端 link（最后一个关节的子 link）
     const int last_child = joints_.back().child_idx;
     LinkParam& last_link  = links_[last_child];
@@ -133,20 +144,32 @@ void WrenchEstimate::SetToolPayload(double mass, const Eigen::Vector3d& com_in)
 
     if (m_new < 1e-12) return;  // 防除零
 
-    // 质量加权平均求新质心
+      // ── links_[] 合并（原有逻辑不变）──────────────────────────
     const Eigen::Vector3d com_new = (m0 * last_link.com + mt * com_in) / m_new;
-
-    // Steiner 平行轴修正项：m*(||d||²·I - d·dᵀ)
     auto steiner = [](double m, const Eigen::Vector3d& d) -> Eigen::Matrix3d {
         return m * (d.squaredNorm() * Eigen::Matrix3d::Identity() - d * d.transpose());
     };
-
-    // 工具自身惯量视为质点（零），两次平行轴定理合并惯量，针对小质量工具的逻辑简化措施
     last_link.inertia += steiner(m0, last_link.com - com_new)
-                       + steiner(mt, com_in   - com_new);
-
+                       + steiner(mt, com_in        - com_new);
     last_link.com  = com_new;
     last_link.mass = m_new;
+
+    // ── 同步到 Pinocchio：覆盖式写入，不再 += ────────────────
+    // Pinocchio 关节索引：从 1 开始，model_.njoints-1 是最后一个运动关节
+    const pinocchio::JointIndex jid =
+        static_cast<pinocchio::JointIndex>(model_.njoints - 1);
+
+    // 用 links_[] 里已合并好的最终值构造 Pinocchio Inertia 并直接赋值
+    // pinocchio::Inertia(mass, com, I_3x3)
+    // 注意：Pinocchio 的 Inertia 构造器第三个参数是关于质心的惯量矩阵（3×3）
+    model_.inertias[jid] = pinocchio::Inertia(
+        last_link.mass,
+        last_link.com,
+        last_link.inertia   // 已经是合并后关于新质心的惯量
+    );
+
+
+    tool_applied_ = true;
 }
 
 void WrenchEstimate::SetSimForce(const Eigen::VectorXd& wrench_6d)
@@ -164,52 +187,51 @@ void WrenchEstimate::ClearSimForce()
     sim_config_.wrench_6d = Eigen::VectorXd::Zero(6);
 }
 
-Eigen::Matrix4d WrenchEstimate::rot_z_homogeneous(double q) const
-{
-    Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
-    const double c = std::cos(q);
-    const double s = std::sin(q);
-    T(0, 0) = c;
-    T(0, 1) = -s;
-    T(1, 0) = s;
-    T(1, 1) = c;
-    return T;
-}
-
 std::vector<Eigen::Matrix4d> WrenchEstimate::forward_kinematics(const Eigen::VectorXd& q) const
 {
     const int dof = static_cast<int>(joints_.size());
  if (q.size() != dof) {
         throw std::invalid_argument("[WrenchEstimate] ForwardKinematics 输入维度与 DOF 不匹配");
     }
+    // ← 新增：防御性检查，确认 Pinocchio 模型的运动关节数与 joints_ 一致
+    if (model_.nv != dof) {
+        throw std::runtime_error(
+            "[WrenchEstimate] Pinocchio model_.nv 与 joints_.size() 不一致，"
+            "请检查 URDF 是否含有非 revolute 关节");
+    }
+
+    // 转换为原有接口格式 vector<Matrix4d>，下游代码完全不变
+    pinocchio::Data local_data(model_);          // ← 改为局部 Data
+    pinocchio::forwardKinematics(model_, local_data, q);
 
     std::vector<Eigen::Matrix4d> T_link(dof + 1);
     T_link[0] = Eigen::Matrix4d::Identity();
-
     for (int i = 0; i < dof; ++i) {
-        T_link[i + 1] = T_link[i] * joints_[i].T_fixed * rot_z_homogeneous(q(i));
+        const pinocchio::SE3& se3 = local_data.oMi[i + 1];  // ← 改为 local_data
+        T_link[i + 1] = Eigen::Matrix4d::Identity();
+        T_link[i + 1].block<3,3>(0,0) = se3.rotation();
+        T_link[i + 1].block<3,1>(0,3) = se3.translation();
     }
-
     return T_link;
 }
 
 Eigen::MatrixXd WrenchEstimate::jacobian(const Eigen::VectorXd& q) const 
 {
-    const int dof = static_cast<int>(joints_.size());
-    const auto T_link = forward_kinematics(q);
-    const Eigen::Vector3d p_ee = T_link[dof].block<3, 1>(0, 3);
+    const int dof = model_.nv;
 
-    Eigen::MatrixXd J = Eigen::MatrixXd::Zero(6, dof);
+    pinocchio::Data local_data(model_);          // ← 改为局部 Data
+    pinocchio::computeJointJacobians(model_, local_data, q);
 
-    for (int i = 0; i < dof; ++i) {
-        const Eigen::Matrix4d T_joint_i = T_link[i] * joints_[i].T_fixed;
-        const Eigen::Vector3d z_i = T_joint_i.block<3, 1>(0, 2);
-        const Eigen::Vector3d p_i = T_joint_i.block<3, 1>(0, 3);
+    Eigen::MatrixXd J_pin = Eigen::MatrixXd::Zero(6, dof);
+    pinocchio::getJointJacobian(
+        model_, local_data,
+        static_cast<pinocchio::JointIndex>(model_.njoints - 1),
+        pinocchio::LOCAL_WORLD_ALIGNED,
+        J_pin);
 
-        J.block<3, 1>(0, i) = z_i;
-        J.block<3, 1>(3, i) = z_i.cross(p_ee - p_i);
-    }
-
+    Eigen::MatrixXd J(6, dof);
+    J.topRows<3>()    = J_pin.bottomRows<3>();
+    J.bottomRows<3>() = J_pin.topRows<3>();
     return J;
 }
 
@@ -226,25 +248,45 @@ double WrenchEstimate::compute_condition_number(const Eigen::MatrixXd& J) const
 
 Eigen::VectorXd WrenchEstimate::build_sim_tau_meas(const Eigen::VectorXd& q,const Eigen::VectorXd& qd,const Eigen::VectorXd& qdd) const
 {
-    const Eigen::VectorXd tau_model = inverse_dynamics(q, qd, qdd);
-    const Eigen::MatrixXd J = jacobian(q);
+    pinocchio::Data local_data(model_);
+
+    const Eigen::VectorXd tau_model =
+        pinocchio::rnea(model_, local_data, q, qd, qdd);
+
+    // 复用同一个 local_data 算雅可比
+    const int dof = model_.nv;
+    pinocchio::computeJointJacobians(model_, local_data, q);
+    Eigen::MatrixXd J_pin = Eigen::MatrixXd::Zero(6, dof);
+    pinocchio::getJointJacobian(
+        model_, local_data,
+        static_cast<pinocchio::JointIndex>(model_.njoints - 1),
+        pinocchio::LOCAL_WORLD_ALIGNED,
+        J_pin);
+    Eigen::MatrixXd J(6, dof);
+    J.topRows<3>()    = J_pin.bottomRows<3>();
+    J.bottomRows<3>() = J_pin.topRows<3>();
+
     return tau_model + J.transpose() * sim_config_.wrench_6d;
 }
 
 EndEffectorWrench WrenchEstimate::transform_to_flange(const Eigen::VectorXd& q,const ForceResult& raw) const
 {
-    const auto T_fk = forward_kinematics(q);
-    const Eigen::Matrix3d R_wrist3 = T_fk[6].block<3, 3>(0, 0);
-    const Eigen::Vector3d p_wrist3 = T_fk[6].block<3, 1>(0, 3);
+// 用局部 Data 做 FK，不污染成员 data_
+    pinocchio::Data local_data(model_);
+    pinocchio::forwardKinematics(model_, local_data, q);
 
-    // 法兰原点在 base 坐标系下的位置
+    const int last = static_cast<int>(joints_.size());
+    const pinocchio::SE3& se3_last = local_data.oMi[last];
+
+    const Eigen::Matrix3d R_wrist3 = se3_last.rotation();
+    const Eigen::Vector3d p_wrist3 = se3_last.translation();
+
     const Eigen::Vector3d p_flange =
         p_wrist3 + R_wrist3 * flange_config_.flange_in_wrist3;
     const Eigen::Matrix3d R_flange = R_wrist3;
 
-    // 力矩从 wrist3 原点搬移到法兰原点：M_B = M_A + r_{AB} × F
     const Eigen::Vector3d torque_at_flange =
-        raw.torque + (p_wrist3 - p_flange).cross(raw.force);
+        raw.torque + (p_flange - p_wrist3).cross(raw.force);
 
     EndEffectorWrench res;
     res.force            = raw.force;
@@ -260,89 +302,15 @@ EndEffectorWrench WrenchEstimate::transform_to_flange(const Eigen::VectorXd& q,c
 
 Eigen::VectorXd WrenchEstimate::inverse_dynamics(const Eigen::VectorXd& q,const Eigen::VectorXd& qd,const Eigen::VectorXd& qdd) const
 {
-    const int dof = static_cast<int>(joints_.size());
+        const int dof = static_cast<int>(joints_.size());
     if (q.size() != dof || qd.size() != dof || qdd.size() != dof) {
         throw std::invalid_argument(
             "[WrenchEstimate] inverse_dynamics 输入维度与 DOF 不匹配");
     }
 
-    const auto T_link = forward_kinematics(q);
-
-    // ── 预计算每个关节的位置、轴、质心、惯量（在 base 坐标系下）──
-    std::vector<Eigen::Vector3d> o(dof + 1);   // 关节原点
-    std::vector<Eigen::Vector3d> z(dof);        // 关节转轴
-    std::vector<Eigen::Vector3d> com_b(dof);    // 质心（base 系）
-    std::vector<Eigen::Matrix3d> I_base(dof);   // 惯量（base 系）
-
-    for (int i = 0; i < dof; ++i) {
-        o[i] = T_link[i].block<3, 1>(0, 3);
-
-        const Eigen::Matrix4d T_joint = T_link[i] * joints_[i].T_fixed;
-        z[i] = T_joint.block<3, 1>(0, 2);
-
-        const int child = joints_[i].child_idx;
-        const Eigen::Matrix3d R_i = T_link[i + 1].block<3, 3>(0, 0);
-
-        com_b[i]  = T_link[i + 1].block<3, 1>(0, 3) + R_i * links_[child].com;
-        I_base[i] = R_i * links_[child].inertia * R_i.transpose();
-    }
-    o[dof] = T_link[dof].block<3, 1>(0, 3);
-
-    // ── 正向递推：角速度、角加速度、线加速度 ──
-    std::vector<Eigen::Vector3d> omega(dof + 1, Eigen::Vector3d::Zero());
-    std::vector<Eigen::Vector3d> alpha(dof + 1, Eigen::Vector3d::Zero());
-    std::vector<Eigen::Vector3d> a_o  (dof + 1, Eigen::Vector3d::Zero());
-    a_o[0] = -gravity_;   // 将重力等效为根节点处的向上加速度
-
-    for (int i = 0; i < dof; ++i) {
-        omega[i + 1] = omega[i] + z[i] * qd(i);
-        alpha[i + 1] = alpha[i] + z[i] * qdd(i)
-                     + omega[i].cross(z[i] * qd(i));
-
-        const Eigen::Vector3d r_oi = o[i + 1] - o[i];
-        a_o[i + 1] = a_o[i]
-                   + alpha[i].cross(r_oi)
-                   + omega[i].cross(omega[i].cross(r_oi));
-    }
-
-    // ── 质心加速度 ──
-    std::vector<Eigen::Vector3d> a_c(dof, Eigen::Vector3d::Zero());
-    for (int i = 0; i < dof; ++i) {
-        const Eigen::Vector3d r_ci = com_b[i] - o[i + 1];
-        a_c[i] = a_o[i + 1]
-               + alpha[i + 1].cross(r_ci)
-               + omega[i + 1].cross(omega[i + 1].cross(r_ci));
-    }
-
-    // ── 反向递推：力、力矩、关节力矩 ──
-    std::vector<Eigen::Vector3d> f(dof + 2, Eigen::Vector3d::Zero());
-    std::vector<Eigen::Vector3d> n(dof + 2, Eigen::Vector3d::Zero());
-    Eigen::VectorXd tau = Eigen::VectorXd::Zero(dof);
-
-    for (int i = dof; i >= 1; --i) {
-        const int child = joints_[i - 1].child_idx;
-        const double m   = links_[child].mass;
-
-        const Eigen::Vector3d F_i = m * a_c[i - 1];
-        const Eigen::Vector3d N_i = I_base[i - 1] * alpha[i]
-                                  + omega[i].cross(I_base[i - 1] * omega[i]);
-
-        f[i] = F_i + f[i + 1];
-
-        Eigen::Vector3d moment_carry = Eigen::Vector3d::Zero();
-        if (i < dof) {
-            moment_carry = (o[i + 1] - o[i]).cross(f[i + 1]);
-        }
-
-        n[i] = N_i
-             + n[i + 1]
-             + (com_b[i - 1] - o[i]).cross(F_i)
-             + moment_carry;
-
-        tau(i - 1) = n[i].dot(z[i - 1]);
-    }
-
-    return tau;
+    // RNEA：完整 Newton-Euler，自动处理所有质心偏置和惯量
+    pinocchio::Data local_data(model_);
+    return pinocchio::rnea(model_, local_data, q, qd, qdd);
 }
 
 ForceResult WrenchEstimate::Estimate(const Eigen::VectorXd& q,const Eigen::VectorXd& qd,const Eigen::VectorXd& qdd,const Eigen::VectorXd& tau_meas) const
@@ -353,28 +321,42 @@ ForceResult WrenchEstimate::Estimate(const Eigen::VectorXd& q,const Eigen::Vecto
         throw std::invalid_argument(
             "[WrenchEstimate] Estimate 输入维度与 DOF 不匹配");
     }
+    
 
-    // 1. 力矩残差：外力在关节上的"指纹"
-    const Eigen::VectorXd tau_model = inverse_dynamics(q, qd, qdd);
-    const Eigen::VectorXd tau_ext   = tau_meas - tau_model;
+    // 用局部 Data，避免成员 data_ 被多次写入互相覆盖
+    pinocchio::Data local_data(model_);
 
-    // 2. 雅可比矩阵与奇异性判断
-    const Eigen::MatrixXd J    = jacobian(q);
-    const double          cond = compute_condition_number(J);
-    const bool            valid = (cond < singularity_threshold_);
+    // 1. RNEA（内部调用 FK，写入 local_data）
+    const Eigen::VectorXd tau_model =
+        pinocchio::rnea(model_, local_data, q, qd, qdd);
+    const Eigen::VectorXd tau_ext = tau_meas - tau_model;
 
+    // 2. 雅可比（复用 local_data，顺序安全）
+    pinocchio::computeJointJacobians(model_, local_data, q);
+    Eigen::MatrixXd J_pin = Eigen::MatrixXd::Zero(6, dof);
+    pinocchio::getJointJacobian(
+        model_, local_data,
+        static_cast<pinocchio::JointIndex>(model_.njoints - 1),
+        pinocchio::LOCAL_WORLD_ALIGNED,
+        J_pin);
+    Eigen::MatrixXd J(6, dof);
+    J.topRows<3>()    = J_pin.bottomRows<3>();
+    J.bottomRows<3>() = J_pin.topRows<3>();
+
+    // 3. 条件数
+    const double cond  = compute_condition_number(J);
+    const bool   valid = (cond < singularity_threshold_);
     if (!valid) {
         RCLCPP_WARN(rclcpp::get_logger("WrenchEstimate"),
                     "[WrenchEstimate] 条件数 %.2f 超过阈值，结果不可靠", cond);
     }
 
-    // 3. 阻尼最小二乘求解末端力旋量：F = J(JᵀJ + λ²I)⁻¹ τ_ext
+    // 4. DLS 求解（原公式不变）
     const Eigen::MatrixXd JtJ = J.transpose() * J;
     const Eigen::MatrixXd A   = JtJ + lambda_ * lambda_ *
                                 Eigen::MatrixXd::Identity(dof, dof);
     const Eigen::VectorXd F_vec = J * A.ldlt().solve(tau_ext);
 
-    // 4. 打包结果（前3维力矩，后3维力）
     ForceResult result;
     result.torque   = F_vec.head<3>();
     result.force    = F_vec.tail<3>();

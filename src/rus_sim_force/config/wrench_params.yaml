@@ -1,0 +1,11 @@
+wrench_estimate_node:
+  ros__parameters:
+    urdf_path: "src/frcobot_ros2/fairino_description/urdf/fairino3_v6.urdf"
+    joint_state_topic: "/joint_states"
+    wrench_topic: "/flange_wrench"
+    wrench_frame_id: "flange"
+    publish_rate_hz: 100.0
+    publish_in_flange: true
+    qdd_alpha: 0.2
+    lambda: 0.001
+    singularity_threshold: 200.0
