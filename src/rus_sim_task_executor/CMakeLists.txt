@@ -19,6 +19,7 @@ find_package(rclcpp REQUIRED)
 find_package(yasmin REQUIRED)           # YASMIN 核心库，实现状态机逻辑
 find_package(yasmin_ros REQUIRED)       # YASMIN ROS2 集成（包含 YasminNode、Blackboard 等）
 find_package(yasmin_viewer REQUIRED)    # Web 可视化（可选，用于 YasminViewerPub）
+find_package(std_msgs REQUIRED)
 
 file(GLOB SRC_FILES src/rus_sim_task_executor/*.cpp)
 file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cpp)  # 测试源文件
@@ -35,6 +36,7 @@ ament_target_dependencies(task_executor_core PUBLIC
   yasmin
   yasmin_ros
   yasmin_viewer
+  std_msgs
 )
 
 # ------------------- 主程序 -------------------
@@ -60,6 +62,7 @@ ament_target_dependencies(rus_sim_task_executor PUBLIC
   yasmin
   yasmin_ros
   yasmin_viewer
+  std_msgs
 )
 
 target_include_directories(rus_sim_task_executor PRIVATE

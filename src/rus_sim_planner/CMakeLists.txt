@@ -26,6 +26,18 @@ find_package(rus_sim_interfaces REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+# 添加 libigl 可视化依赖
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLFW REQUIRED glfw3)
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
+
+# 查找glad库
+find_library(GLAD_LIBRARY glad REQUIRED)
+find_library(DL_LIBRARY dl REQUIRED)
+
+add_definitions(-DIGL_VIEWER)
+
 # 设置包含目录和源文件
 set(LIBIGL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/libigl/include)  # libigl 库目录
 file(GLOB SRC_FILES src/rus_sim_planner/*.cpp)
@@ -50,6 +62,9 @@ ament_target_dependencies(planner_core PUBLIC
 target_link_libraries(planner_core PUBLIC
   Eigen3::Eigen
   ${PCL_LIBRARIES}
+  ${GLFW_LIBRARIES}
+  ${GLEW_LIBRARIES}
+  OpenGL::GL
 )
 
 # ------------------- 主程序 -------------------
@@ -68,6 +83,8 @@ add_executable(rus_sim_planner ${MAIN_SOURCES})
 
 target_link_libraries(rus_sim_planner PRIVATE
   planner_core
+  ${GLAD_LIBRARY}   # 链接系统 GLAD 库
+  ${DL_LIBRARY} 
 )
 
 ament_target_dependencies(rus_sim_planner PUBLIC
@@ -80,6 +97,7 @@ ament_target_dependencies(rus_sim_planner PUBLIC
 
 target_include_directories(rus_sim_planner PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/test  # 链接测试用头文件
+  ${LIBIGL_INCLUDE_DIR}
 )
 
 install(TARGETS rus_sim_planner

@@ -5,7 +5,7 @@ namespace TestPointCloud {
     {
         // 1. 声明参数
         this->declare_parameter<std::string>("topic_name", "/simulated_pointcloud");
-        this->declare_parameter<double>("publish_rate", 1.0); // Hz
+        this->declare_parameter<double>("publish_rate", 1.0/5); // Hz
         this->declare_parameter<std::string>("frame_id", "world");
 
         // 2. 创建发布者
@@ -16,7 +16,8 @@ namespace TestPointCloud {
         double rate = this->get_parameter("publish_rate").as_double();
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int>(1000.0 / rate)),
-            std::bind(&PointCloudGenerator::timer_callback, this));
+            [this](){RCLCPP_INFO(this->get_logger(), "我也不知道输出点啥了");});
+        timer_callback();
 
         RCLCPP_INFO(this->get_logger(), "点云生成器已启动，将在话题 [%s] 上发布数据", topic_name.c_str());
     }
@@ -24,7 +25,7 @@ namespace TestPointCloud {
     void PointCloudGenerator::timer_callback()
     {
         // 生成模拟点云数据：在一个平面上生成随机点
-        constexpr size_t num_points = 1000;
+        constexpr size_t num_points = 5000;
         constexpr float plane_size = 2.0f;  // 平面范围 [-1, 1] 米
 
         sensor_msgs::msg::PointCloud2 cloud_msg;

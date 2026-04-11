@@ -1,49 +1,82 @@
 #pragma once
 
-#include "yasmin/state.hpp"
-#include <rclcpp/rclcpp.hpp>
+#include <set>
 #include <string>
+#include <functional>
+
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/string.hpp>
+
+#include "yasmin/state.hpp"
+#include "yasmin_ros/monitor_state.hpp"
 
 namespace RusScanState {
-    // 状态枚举
-    enum class StateId { INIT, IDLE, RUNNING, PAUSED, ERROR, SHUTDOWN };
+    // 状态字符串常量
+    constexpr const char* kInitState = "INIT";  // 初始化
+    constexpr const char* kIdleState = "IDLE";  // 空闲，已使能，等待指令
+    constexpr const char* kRunningState = "RUNNING";  // 运行中
+    constexpr const char* kPausedState = "PAUSED";  // 暂停
+    constexpr const char* kErrorState = "ERROR";  // 错误
+    constexpr const char* kShutdownState = "SHUTDOWN";  // 关闭
 
-    // 动作结果枚举
-    enum class Outcome { SUCCESS, ERROR, TIMEOUT };
+    // 动作结果字符串常量
+    constexpr const char* kOutcomeInitSuccess = "INITSUCCESS";  // 初始化成功
+    constexpr const char* kOutcomeInitFail = "INITFAIL";  // 初始化失败
 
-    // 状态枚举转字符串
-    inline std::string Enum2String(StateId stateId)
-    {
-        switch (stateId) {
-            case StateId::INIT: return "INIT";  // 初始化
-            case StateId::IDLE: return "IDLE";  // 待机
-            case StateId::RUNNING: return "RUNNING";  // 执行动作
-            case StateId::PAUSED: return "PAUSED";  // 暂停
-            case StateId::ERROR: return "ERROR";  // 错误
-            case StateId::SHUTDOWN: return "SHUTDOWN";  // 关闭
-            default: return "UNKOWN";
-        }
-    }
+    constexpr const char* kOutcomeGotoRunning = "GOTO_RUNNING";  // 从空闲状态进入运行状态
+    constexpr const char* kOutcomeShutdown = "SHUTDOWN";
+    constexpr const char* kOutcomeStay = "STAY";
+    constexpr const char* kOutcomeSuccess = "SUCCESS";
+    constexpr const char* kOutcomeError = "ERROR";
+    constexpr const char* kOutcomeTimeout = "TIMEOUT";
 
-    // 动作结果枚举转字符串
-    inline std::string Enum2String(Outcome outcome)
-    {
-        switch (outcome) {
-            case Outcome::SUCCESS: return "SUCCESS";  // 动作执行成功
-            case Outcome::ERROR: return "ERROR";  // 动作执行失败
-            case Outcome::TIMEOUT: return "TIMEOUT";  // 动作执行超时
-            default: return "UNKNOWN";
-        }
-    }
-
-    // 初始状态
+    // 初始化状态
     class InitState : public yasmin::State
     {
     public:
-        InitState() : yasmin::State({Enum2String(Outcome::SUCCESS), Enum2String(Outcome::ERROR), Enum2String(Outcome::TIMEOUT)}){}
-        // 执行动作
-        std::string execute(yasmin::Blackboard::SharedPtr blackboard) override{
 
+    private:
+    };
+
+    // 空闲状态
+    class IdleState : public yasmin_ros::MonitorState<std_msgs::msg::String>
+    {
+    public:
+        explicit IdleState(const std::string& topic_name) : yasmin_ros::MonitorState<std_msgs::msg::String>(
+            topic_name, 
+            {kOutcomeGotoRunning, kOutcomeShutdown, kOutcomeStay},
+            std::bind(&IdleState::callback, this, std::placeholders::_1, std::placeholders::_2), 
+            10, 
+            10, 
+            10
+        ){}
+    private:
+        // 接收到消息时的回调函数
+        std::string callback(yasmin::Blackboard::SharedPtr blackboard,
+                         const std_msgs::msg::String::SharedPtr msg)
+        {
+            RCLCPP_INFO(rclcpp::get_logger("IdleState"), "Received command: %s", msg->data.c_str());
+            blackboard->set<std::string>("last_command", msg->data);
+
+            if (msg->data == "start") {
+                RCLCPP_INFO(rclcpp::get_logger("IdleState"), kOutcomeGotoRunning);
+                return kOutcomeGotoRunning;
+            } else if (msg->data == "shutdown") {
+                RCLCPP_INFO(rclcpp::get_logger("IdleState"), kOutcomeShutdown);
+                return kOutcomeShutdown;
+            } else {
+                RCLCPP_INFO(rclcpp::get_logger("IdleState"), kOutcomeStay);
+                return kOutcomeStay;
+            }
         }
+    };
+
+    // 运行状态
+    class RunningState : public yasmin::State
+    {
+    public:
+
+    private:
+        
     };
 }

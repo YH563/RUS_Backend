@@ -34,7 +34,6 @@ namespace RusPointCloudNode {
             RCLCPP_INFO(this->get_logger(), "接收到点云数据，点数: %zu", cloud_ptr->size());
         }
 
-        
         MeshPtr mesh_ptr = preprocess_.Generate(cloud_ptr); // 生成三角网格
         if (mesh_ptr != nullptr) {
             publish_mesh(mesh_ptr);

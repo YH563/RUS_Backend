@@ -16,6 +16,7 @@
   <depend>yasmin</depend>
   <depend>yasmin_ros</depend>
   <depend>yasmin_viewer</depend>
+  <depend>std_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
