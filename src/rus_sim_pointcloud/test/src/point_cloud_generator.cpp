@@ -25,7 +25,7 @@ namespace TestPointCloud {
     void PointCloudGenerator::timer_callback()
     {
         // 生成模拟点云数据：在一个平面上生成随机点
-        constexpr size_t num_points = 5000;
+        constexpr size_t num_points = 15000;
         constexpr float plane_size = 2.0f;  // 平面范围 [-1, 1] 米
 
         sensor_msgs::msg::PointCloud2 cloud_msg;
