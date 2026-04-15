@@ -1,7 +1,11 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.18)         
 project(rus_sim_force)
 
-option(ENABLE_TESTING "Include test code in executable" ON)
+set(CMAKE_CXX_STANDARD 17)                    
+set(CMAKE_CXX_STANDARD_REQUIRED On)           
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)       
+
+option(ENABLE_TEST "Include test code in executable" ON)  
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -17,77 +21,65 @@ find_package(urdf REQUIRED)
 find_package(pinocchio REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+     
+file(GLOB TEST_FILES test/src/*.cpp)                    
 
 # ─────────────────────────────────────────────────────────────
-# 核心库：算法实现
-# 你的真实路径在 src/rus_sim_force/
+# 核心静态库
 # ─────────────────────────────────────────────────────────────
-add_library(wrench_estimate STATIC
-  src/rus_sim_force/wrench_estimate.cpp
+add_library(rus_sim_force_core STATIC
+  src/rus_sim_force/wrench_estimate.cpp   
 )
 
-target_include_directories(wrench_estimate PUBLIC
+target_include_directories(rus_sim_force_core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(wrench_estimate
-  Eigen3::Eigen
-  pinocchio::pinocchio
-)
-
-ament_target_dependencies(wrench_estimate
+ament_target_dependencies(rus_sim_force_core PUBLIC     
   rclcpp
   urdf
 )
 
+target_link_libraries(rus_sim_force_core PUBLIC         
+  Eigen3::Eigen
+  pinocchio::pinocchio
+)
+
 # ─────────────────────────────────────────────────────────────
-# 主程序：main + ROS2 节点
-# 节点实现也在 src/rus_sim_force/
+# 主程序
 # ─────────────────────────────────────────────────────────────
 set(MAIN_SOURCES
   src/main.cpp
   src/rus_sim_force/wrench_pub_node.cpp
 )
 
-if(ENABLE_TESTING)
-  file(GLOB TEST_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cpp
-  )
-  list(APPEND MAIN_SOURCES ${TEST_SOURCES})
+if(ENABLE_TEST)                                         
+  list(APPEND MAIN_SOURCES ${TEST_FILES})
+  add_definitions(-DENABLE_TESTING)                     
 endif()
 
-add_executable(wrench_estimate_node
-  ${MAIN_SOURCES}
-)
+add_executable(rus_sim_force ${MAIN_SOURCES})           
 
-target_include_directories(wrench_estimate_node PRIVATE
+target_include_directories(rus_sim_force PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/test/test_include
 )
 
-target_link_libraries(wrench_estimate_node
-  wrench_estimate
+target_link_libraries(rus_sim_force PRIVATE
+  rus_sim_force_core                                    
 )
 
-ament_target_dependencies(wrench_estimate_node
+ament_target_dependencies(rus_sim_force PUBLIC
   rclcpp
   sensor_msgs
   geometry_msgs
 )
 
-if(ENABLE_TESTING)
-  target_compile_definitions(wrench_estimate_node PRIVATE ENABLE_TESTING)
-endif()
-
 # ─────────────────────────────────────────────────────────────
 # 安装
 # ─────────────────────────────────────────────────────────────
-install(TARGETS
-  wrench_estimate
-  wrench_estimate_node
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
+install(TARGETS rus_sim_force
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 

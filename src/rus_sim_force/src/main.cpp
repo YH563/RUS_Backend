@@ -1,20 +1,11 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rus_sim_force/wrench_pub_node.hpp"
 
+
 #ifdef ENABLE_TESTING
-#include "test_wrench_estimate_smoke.hpp"
-#include "test_wrench_estimate_val.hpp"
-#include "test_wrench_estimate_pinocchio.hpp"
-namespace TestRusSimForceSmoke {
-void TestWrenchEstimatorSmoke(const std::string& urdf_path);
-}
-namespace TestRusSimForceVal {
-void TestWrenchDemo(const std::string& urdf_path);
-}
-namespace TestRusSimForcePinocchio {
-void TestPinocchioIntegration(const std::string& urdf_path);
-}
+#include "test_wrench_estimate.hpp" 
 #endif
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // URDF 路径：优先从命令行 --urdf 参数读取，兜底使用默认路径
@@ -31,6 +22,7 @@ static std::string parse_urdf_path(int argc, char* argv[])
     }
     return default_path;
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -53,11 +45,11 @@ int main(int argc, char* argv[])
         RCLCPP_INFO(logger, "[main] 测试模式启动，urdf_path: %s", urdf_path.c_str());
 
         // ---- 历史测试（按需取消注释） ----
-        // TestRusSimForceSmoke::TestWrenchEstimatorSmoke(urdf_path);
-        // TestRusSimForceVal::TestWrenchDemo(urdf_path);
+        TestWrenchEstimate::TestWrenchEstimatorSmoke(urdf_path);
+        TestWrenchEstimate::TestWrenchDemo(urdf_path);
 
         // ---- 当前主要测试：Pinocchio 集成验证 ----
-        TestRusSimForcePinocchio::TestPinocchioIntegration(urdf_path);
+        TestWrenchEstimate::TestPinocchioIntegration(urdf_path);
 
         rclcpp::shutdown();
         return 0;
