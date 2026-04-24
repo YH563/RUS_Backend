@@ -17,6 +17,7 @@
   <depend>libpcl-all-dev</depend>
   <depend>pcl_conversions</depend>
   <depend>shape_msgs</depend>
+  <depend>rus_sim_interfaces</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

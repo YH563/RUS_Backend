@@ -17,9 +17,11 @@ find_package(sensor_msgs REQUIRED)
 set(msg_files
   "msg/ScanPath.msg"
   "msg/UltrasoundFrame.msg"
+  "msg/JointAngles.msg"
 )
 set(srv_files
   "srv/PauseScan.srv"
+  "srv/GenerateTrajectory.srv"
 )
 set(action_files
   "action/ScanTask.action"

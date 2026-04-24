@@ -1,0 +1,7 @@
+# 输入：起点+终点
+geometry_msgs/Pose start_pose
+geometry_msgs/Pose end_pose
+---
+# 输出：轨迹点，是否规划成功
+geometry_msgs/Pose[] poses
+bool success

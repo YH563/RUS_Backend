@@ -21,6 +21,7 @@ find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
+find_package(rus_sim_interfaces REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -42,6 +43,7 @@ ament_target_dependencies(pointcloud_core PUBLIC
   sensor_msgs
   shape_msgs
   pcl_conversions
+  rus_sim_interfaces
 )
 
 target_link_libraries(pointcloud_core PUBLIC
@@ -71,6 +73,7 @@ ament_target_dependencies(rus_sim_pointcloud PUBLIC
   sensor_msgs
   shape_msgs
   pcl_conversions
+  rus_sim_interfaces
 )
 
 target_include_directories(rus_sim_pointcloud PRIVATE

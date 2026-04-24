@@ -3,17 +3,17 @@
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/timer.hpp>
-#include <rus_sim_interfaces/msg/detail/scan_path__struct.hpp>
-#include <shape_msgs/msg/mesh.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <pcl_conversions/pcl_conversions.h>
+
 #include "rus_sim_planner/trajectory_planner.hpp"
-#include "rus_sim_interfaces/action/scan_task.hpp"
+#include "rus_sim_interfaces/srv/generate_trajectory.hpp"
 
 namespace RusTrajectoryPlannerNode
 {
+    using namespace std::placeholders;
     using TrajectoryPlanner = RusTrajectoryPlanner::TrajectoryPlanner;  // 轨迹规划器类
-    using MsgMesh = shape_msgs::msg::Mesh;  // 三角网格消息类型
-    using MsgMeshPtr = shape_msgs::msg::Mesh::ConstSharedPtr;  // 三角网格数据指针
-    using ScanTask = rus_sim_interfaces::action::ScanTask;  // 扫描任务动作定义
+    using PointCloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;  // PCL 点云指针
 
     // 轨迹规划节点类
     class TrajectoryPlannerNode : public rclcpp::Node
@@ -22,12 +22,15 @@ namespace RusTrajectoryPlannerNode
         TrajectoryPlannerNode();
 
     private:
-        // 接收网格数据的回调函数
-        void on_mesh_data(const MsgMeshPtr& msg);
-
-        // 
+        // 接收规划服务的回调函数
+        void handle_generate_trajectory(
+            const std::shared_ptr<rus_sim_interfaces::srv::GenerateTrajectory::Request> request,
+            std::shared_ptr<rus_sim_interfaces::srv::GenerateTrajectory::Response> response
+        );
 
         std::unique_ptr<TrajectoryPlanner> planner_;  // 轨迹规划器实例
-        rclcpp::Subscription<MsgMesh>::SharedPtr mesh_subscription_;  // 三角网格数据订阅
+        rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_subscription_;  // 点云数据订阅
+        rclcpp::Service<rus_sim_interfaces::srv::GenerateTrajectory>::SharedPtr planner_service_;  // 规划服务
+        PointCloudPtr cloud_;  // 保存点云数据
     };
 }

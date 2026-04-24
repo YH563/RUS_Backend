@@ -17,6 +17,10 @@
   <depend>yasmin_ros</depend>
   <depend>yasmin_viewer</depend>
   <depend>std_msgs</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_visual_tools</depend>
+  <depend>geometry_msgs</depend>
+  <depend>rus_sim_interfaces</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
