@@ -73,14 +73,12 @@ namespace RusMoveitManagerNode
         {
             RCLCPP_ERROR(
                 this->get_logger(),
-                "服务失败"
+                "轨迹生成失败"
             );
             return;
         }
         RCLCPP_INFO(this->get_logger(), "收到轨迹点数：%zu", response->poses.size());
-
         trajectory_ = std::move(response->poses);
-        ExecuteTrajectory();
         return;
     }
 }

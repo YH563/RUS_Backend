@@ -22,6 +22,7 @@ set(msg_files
 set(srv_files
   "srv/PauseScan.srv"
   "srv/GenerateTrajectory.srv"
+  "srv/ModuleInit.srv"
 )
 set(action_files
   "action/ScanTask.action"

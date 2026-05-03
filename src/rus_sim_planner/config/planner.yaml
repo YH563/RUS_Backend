@@ -1,0 +1,16 @@
+/rus_sim_planner:
+  ros__parameters:
+    # 话题，服务相关的参数
+    point_cloud_topic: "/pointcloud_data"
+    init_service: "init_planner"
+    planner_service: "generate_trajectory"
+    # 规划器初始化所需参数
+    alpha: 1.0          # 椭圆 Gabriel 条件检查参数
+    graph_k: 30         # 构建初始图的 k-NN 参数
+    normal_k: 30        # 法线估计的参数
+    projection_k: 30    # 重投影的参数
+    tol: 1.0e-6         # 长度变化容差
+    max_iter: 40        # 最大迭代轮次
+    use_smoothing: true # 是否开启平滑
+    lambda: 0.63       # 平滑参数
+    mu: -0.65           # 平滑参数

@@ -58,7 +58,6 @@ namespace RusTrajectoryPlanner
         int projection_k = 30;  // 重投影的参数
         double tol = 1e-6;  // 长度变化容差
         int max_iter = 40;  // 最大迭代轮次
-        // double step = 0.005;  // 插值步长
         bool use_smoothing = true;  // 是否开启平滑
         double lambda = 0.63;  // 平滑参数
         double mu = -0.65;  // 平滑参数

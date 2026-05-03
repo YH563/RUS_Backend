@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
     // 发送请求
     moveit_node->RequestTrajectory(start_pose, end_pose);
+    moveit_node->ExecuteTrajectory();
     executor.spin();
     rclcpp::shutdown();
     return 0;

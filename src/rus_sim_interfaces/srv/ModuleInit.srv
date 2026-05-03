@@ -1,0 +1,5 @@
+# 初始化模块的服务
+# 无输入
+---
+bool success  # 初始化结果
+string error_message  # 错误信息

@@ -113,8 +113,7 @@ install(TARGETS rus_sim_planner
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 安装launch文件
-install(DIRECTORY launch
+install(DIRECTORY config/
   DESTINATION share/${PROJECT_NAME}/
 )
 

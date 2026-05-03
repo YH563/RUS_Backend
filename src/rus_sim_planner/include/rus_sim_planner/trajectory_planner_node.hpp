@@ -8,6 +8,7 @@
 
 #include "rus_sim_planner/trajectory_planner.hpp"
 #include "rus_sim_interfaces/srv/generate_trajectory.hpp"
+#include "rus_sim_interfaces/srv/module_init.hpp"
 
 namespace RusTrajectoryPlannerNode
 {
@@ -28,9 +29,17 @@ namespace RusTrajectoryPlannerNode
             std::shared_ptr<rus_sim_interfaces::srv::GenerateTrajectory::Response> response
         );
 
+        // 接收初始化服务的回调函数
+        void handle_init(
+            const std::shared_ptr<rus_sim_interfaces::srv::ModuleInit::Request> request,
+            std::shared_ptr<rus_sim_interfaces::srv::ModuleInit::Response> response
+        );
+
+        bool is_initialized_ = false;  // 是否已经初始化
         std::unique_ptr<TrajectoryPlanner> planner_;  // 轨迹规划器实例
-        rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_subscription_;  // 点云数据订阅
-        rclcpp::Service<rus_sim_interfaces::srv::GenerateTrajectory>::SharedPtr planner_service_;  // 规划服务
+        rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_sub_;  // 点云数据订阅
+        rclcpp::Service<rus_sim_interfaces::srv::GenerateTrajectory>::SharedPtr planner_server_;  // 规划服务
+        rclcpp::Service<rus_sim_interfaces::srv::ModuleInit>::SharedPtr init_server_;  // 初始化服务
         PointCloudPtr cloud_;  // 保存点云数据
     };
 }
