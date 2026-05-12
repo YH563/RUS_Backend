@@ -13,6 +13,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -31,6 +32,7 @@ ament_target_dependencies(calibration_core PUBLIC
   sensor_msgs
   cv_bridge
   image_transport
+  geometry_msgs
 )
 
 target_link_libraries(calibration_core PUBLIC
@@ -49,6 +51,7 @@ ament_target_dependencies(rus_sim_calibration PUBLIC
   sensor_msgs
   cv_bridge
   image_transport
+  geometry_msgs
 )
 
 install(TARGETS rus_sim_calibration
