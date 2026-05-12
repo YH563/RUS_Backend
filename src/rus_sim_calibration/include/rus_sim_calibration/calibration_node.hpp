@@ -11,6 +11,8 @@
 
 namespace RusCalibrationNode {
     using RusCalibration::CalibrationSolver;
+    using RusCalibration::PatternParameter;
+    using RusCalibration::CameraParameter;
 
     // 标定用节点
     class CalibrationNode : public rclcpp::Node

@@ -18,6 +18,7 @@ find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(yaml-cpp REQUIRED)  # yaml 解析库
 
 file(GLOB SRC_FILES src/${PROJECT_NAME}/*.cpp)
 
@@ -38,6 +39,7 @@ ament_target_dependencies(calibration_core PUBLIC
 target_link_libraries(calibration_core PUBLIC
   Eigen3::Eigen
   ${OpenCV_LIBS}
+  yaml-cpp
 )
 
 add_executable(rus_sim_calibration src/main.cpp)
