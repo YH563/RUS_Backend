@@ -23,6 +23,9 @@ set(srv_files
   "srv/PauseScan.srv"
   "srv/GenerateTrajectory.srv"
   "srv/ModuleInit.srv"
+  "srv/CalibrationCapture.srv"
+  "srv/CalibrationCompute.srv"
+  "srv/CalibrationSave.srv"
 )
 set(action_files
   "action/ScanTask.action"
@@ -40,3 +43,4 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()
+

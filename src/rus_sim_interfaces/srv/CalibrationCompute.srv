@@ -1,0 +1,12 @@
+# 标定：执行手眼标定计算
+---
+bool success
+string message
+
+# 眼在手上结果: 相机→法兰变换（4x4 齐次变换矩阵，按行展平）
+# 仅在 mode="eye_in_hand" 或 mode="all" 时有值
+float64[16] eye_in_hand_matrix
+
+# 眼在手外结果: 相机→机器人基座变换（4x4 齐次变换矩阵，按行展平）
+# 仅在 mode="eye_to_hand" 或 mode="all" 时有值
+float64[16] eye_to_hand_matrix

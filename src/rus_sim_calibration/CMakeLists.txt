@@ -19,6 +19,8 @@ find_package(image_transport REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(yaml-cpp REQUIRED)  # yaml 解析库
+find_package(rus_sim_interfaces REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 file(GLOB SRC_FILES src/${PROJECT_NAME}/*.cpp)
 
@@ -34,6 +36,7 @@ ament_target_dependencies(calibration_core PUBLIC
   cv_bridge
   image_transport
   geometry_msgs
+  rus_sim_interfaces
 )
 
 target_link_libraries(calibration_core PUBLIC
@@ -54,6 +57,7 @@ ament_target_dependencies(rus_sim_calibration PUBLIC
   cv_bridge
   image_transport
   geometry_msgs
+  rus_sim_interfaces
 )
 
 install(TARGETS rus_sim_calibration
@@ -66,6 +70,11 @@ install(DIRECTORY config/
 
 install(DIRECTORY launch/
   DESTINATION share/${PROJECT_NAME}/launch
+)
+
+# 安装 Python 脚本
+install(PROGRAMS scripts/calibration_controller.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

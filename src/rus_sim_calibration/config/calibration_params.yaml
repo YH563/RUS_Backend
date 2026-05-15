@@ -1,0 +1,40 @@
+# 手眼标定节点参数配置
+# 可通过 ros2 launch 或 ros2 param load 加载
+
+calibration_node:
+  ros__parameters:
+
+    # ---------- 话题和服务名称 ----------
+    # 彩色图像话题（相机发布的图像）
+    image_topic: "/camera/color/image_raw"
+    # 机械臂末端位姿话题
+    robot_pose_topic: "/robot/end_effector_pose"
+    # 捕获标定数据服务
+    capture_service: "calibration_capture"
+    # 执行标定计算服务
+    compute_service: "calibration_compute"
+    # 保存标定结果服务
+    save_service: "calibration_save"
+    # 保存结果文件的默认路径（为空时需通过服务请求指定）
+    result_file_path: ""
+
+    # ---------- 棋盘格参数 ----------
+    # 棋盘格内角点列数（建议 9）
+    pattern_width: 9
+    # 棋盘格内角点行数（建议 6）
+    pattern_height: 6
+    # 棋盘格方格边长（单位：米）
+    square_size: 0.025
+
+    # ---------- 相机内参 ----------
+    # 相机内参矩阵，按行排列，共 9 个值
+    # [fx,  0, cx,
+    #   0, fy, cy,
+    #   0,  0,  1]
+    # 这里给的是典型的 RGB 相机参数示例，请根据实际相机标定结果修改
+    camera_matrix: [615.0, 0.0, 320.0,
+                    0.0, 615.0, 240.0,
+                    0.0, 0.0, 1.0]
+    # 畸变系数，共 5 个值
+    # [k1, k2, p1, p2, k3]
+    dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]

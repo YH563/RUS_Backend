@@ -1,0 +1,6 @@
+# 标定：保存标定结果到文件
+string file_path  # 文件路径，为空则使用节点默认路径
+
+---
+bool success
+string message
