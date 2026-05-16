@@ -20,20 +20,6 @@ namespace RusCalibration
             return T;
         }
 
-        // 用 SVD 将矩阵投影到 SO(3)（保证正交且行列式为 +1）
-        cv::Mat ProjectToSO3(const cv::Mat& R)
-        {
-            cv::Mat w, u, vt;
-            cv::SVD::compute(R, w, u, vt);
-            cv::Mat R_proj = u * vt;
-            if (cv::determinant(R_proj) < 0)
-            {
-                vt.row(2) *= -1;
-                R_proj = u * vt;
-            }
-            return R_proj;
-        }
-
         // 序列化 4x4 变换矩阵到 YAML
         void SerializeTransformToYAML(YAML::Emitter& out, const cv::Mat& T, const std::string& name)
         {
@@ -188,85 +174,6 @@ namespace RusCalibration
         RCLCPP_INFO(rclcpp::get_logger("CalibrationSolver"),
             "✓ 眼在手上标定完成！使用%zu组数据。", n);
 
-        return true;
-    }
-
-    // 眼在手外标定
-    bool CalibrationSolver::CalibrateEyeToHand(cv::Mat &transform_camera_to_robot_base)
-    {
-        if (!is_initialized_)
-        {
-            RCLCPP_ERROR(rclcpp::get_logger("CalibrationSolver"), "请先进行初始化！");
-            return false;
-        }
-        size_t n = robot_poses_.size();
-        if (n < 3)
-        {
-            RCLCPP_ERROR(rclcpp::get_logger("CalibrationSolver"),
-                "标定数据不足！当前仅有%zu组数据，至少需要3组。", n);
-            return false;
-        }
-
-        // 构造相对运动: A_rel = A_i^{-1} · A_{i+1}, B_rel = B_i^{-1} · B_{i+1}
-        std::vector<cv::Mat> A_rel_R, A_rel_t;
-        std::vector<cv::Mat> B_rel_R, B_rel_t;
-
-        for (size_t i = 0; i < n - 1; i++)
-        {
-            // A_rel_i = A_i^{-1} · A_{i+1}: 法兰从姿态i到i+1的相对运动
-            cv::Mat A_rel = robot_poses_[i].inv() * robot_poses_[i + 1];
-            cv::Mat R_rel, t_rel;
-            DecomposeTransform(A_rel, R_rel, t_rel);
-            A_rel_R.push_back(R_rel);
-            A_rel_t.push_back(t_rel);
-
-            // B_rel_i = B_i^{-1} · B_{i+1}: 标定板在相机坐标系中从姿态i到i+1的相对运动
-            cv::Mat B_rel = target_poses_[i].inv() * target_poses_[i + 1];
-            cv::Mat R_rel_b, t_rel_b;
-            DecomposeTransform(B_rel, R_rel_b, t_rel_b);
-            B_rel_R.push_back(R_rel_b);
-            B_rel_t.push_back(t_rel_b);
-        }
-
-        // 求解 AX = XB，得到 X = T_target^flange
-        cv::Mat R_target2gripper, t_target2gripper;
-        cv::calibrateHandEye(
-            A_rel_R, A_rel_t,      // 法兰相对运动（作为 gripper2base）
-            B_rel_R, B_rel_t,      // 标定板相对运动（作为 target2cam）
-            R_target2gripper, t_target2gripper,
-            cv::CALIB_HAND_EYE_TSAI
-        );
-
-        // 组装 X = T_target^flange
-        cv::Mat target_to_flange = ComposeTransform(R_target2gripper, t_target2gripper);
-
-        // 用所有数据计算 Y = T_camera^base，然后取平均
-        // Y_i = A_i · X · B_i^{-1}
-        cv::Mat R_sum = cv::Mat::zeros(3, 3, CV_64F);
-        cv::Mat t_sum = cv::Mat::zeros(3, 1, CV_64F);
-
-        for (size_t i = 0; i < n; i++)
-        {
-            cv::Mat B_i_inv = target_poses_[i].inv();       // T_camera^{target_i}
-            cv::Mat Yi = robot_poses_[i] * target_to_flange * B_i_inv;
-
-            cv::Mat R_i, t_i;
-            DecomposeTransform(Yi, R_i, t_i);
-            R_sum += R_i;
-            t_sum += t_i;
-        }
-
-        // 平均旋转矩阵并投影到 SO(3)
-        R_sum /= static_cast<double>(n);
-        t_sum /= static_cast<double>(n);
-        cv::Mat R_avg = ProjectToSO3(R_sum);
-
-        // 组装最终结果并保存
-        transform_camera_to_robot_base = ComposeTransform(R_avg, t_sum);
-        camera_to_robot_base_ = transform_camera_to_robot_base.clone();
-
-        RCLCPP_INFO(rclcpp::get_logger("CalibrationSolver"),
-            "✓ 眼在手外标定完成！使用%zu组数据。", n);
         return true;
     }
 
@@ -443,15 +350,6 @@ namespace RusCalibration
             out << YAML::Key << "eye_in_hand";
             out << YAML::Value << YAML::BeginMap;
             SerializeTransformToYAML(out, camera_to_flange_, "camera_to_flange");
-            out << YAML::EndMap;
-        }
-
-        // 眼在手外结果
-        if (!camera_to_robot_base_.empty())
-        {
-            out << YAML::Key << "eye_to_hand";
-            out << YAML::Value << YAML::BeginMap;
-            SerializeTransformToYAML(out, camera_to_robot_base_, "camera_to_robot_base");
             out << YAML::EndMap;
         }
 

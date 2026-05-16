@@ -51,14 +51,11 @@ namespace RusCalibration
         // 添加一组标定数据：机械臂法兰到基座的变换，以及对应的深度相机图像
         bool AddCalibrationData(const Pose& robot_pose, const cv::Mat& color_image);
 
-        // 执行手眼标定（眼在手外 或 眼在手上，默认眼在手外）
-        bool CalibrateEyeToHand(cv::Mat& transform_camera_to_robot_base);
+        // 执行手眼标定（眼在手上）
         bool CalibrateEyeInHand(cv::Mat& transform_camera_to_flange);
 
         // 获取标定结果
-        cv::Mat GetCameraToRobotBase() const { return camera_to_robot_base_; }
         cv::Mat GetCameraToFlange() const { return camera_to_flange_; }
-
         // 保存标定结果到文件
         bool SaveCalibrationResult(const std::string& file_path);
 
@@ -86,7 +83,6 @@ namespace RusCalibration
         CameraParameter camera_parameter_;  // 相机内参
         std::vector<cv::Mat> robot_poses_;   // 机械臂法兰到基座变换矩阵 (4x4)
         std::vector<cv::Mat> target_poses_;  // 标定板位姿
-        cv::Mat camera_to_robot_base_;  // 眼在手外: 相机到机器人基座
         cv::Mat camera_to_flange_;     // 眼在手上: 相机到法兰
     };
 }

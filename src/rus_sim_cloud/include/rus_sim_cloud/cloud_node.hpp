@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <shape_msgs/msg/mesh.hpp>
@@ -12,6 +13,18 @@
 
 #include "rus_sim_cloud/cloud_preprocess.hpp"
 
-namespace RusPointCloudNode {
-    
+namespace RusCloudNode 
+{
+    using RusCloudPreprocess::CloudPreprocess;
+
+    // 接收点云数据，进行处理并发布处理后的点云数据
+    class CloudNode : public rclcpp::Node
+    {
+    public:
+        CloudNode();
+    private:
+
+        // 私有成员变量
+        std::unique_ptr<CloudPreprocess> cloud_preprocess;  // 点云预处理对象
+    };
 }

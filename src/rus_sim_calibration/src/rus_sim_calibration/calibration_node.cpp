@@ -183,7 +183,7 @@ namespace RusCalibrationNode
             return;
         }
 
-        // 先尝试眼在手上标定
+        // 眼在手上标定
         cv::Mat eye_in_hand_result;
         bool eye_in_hand_ok = calibration_solver_->CalibrateEyeInHand(eye_in_hand_result);
         if (eye_in_hand_ok)
@@ -196,38 +196,13 @@ namespace RusCalibrationNode
                 response->eye_in_hand_matrix[i] = eye_in_hand_result.at<double>(r, c);
             }
             RCLCPP_INFO(this->get_logger(), "眼在手上标定成功。");
-        }
-
-        // 再尝试眼在手外标定
-        cv::Mat eye_to_hand_result;
-        bool eye_to_hand_ok = calibration_solver_->CalibrateEyeToHand(eye_to_hand_result);
-        if (eye_to_hand_ok)
-        {
-            for (int i = 0; i < 16; i++)
-            {
-                int r = i / 4;
-                int c = i % 4;
-                response->eye_to_hand_matrix[i] = eye_to_hand_result.at<double>(r, c);
-            }
-            RCLCPP_INFO(this->get_logger(), "眼在手外标定成功。");
-        }
-
-        // 判断整体结果
-        if (eye_in_hand_ok || eye_to_hand_ok)
-        {
+            response->message = "眼在手上标定完成";
             response->success = true;
-            if (eye_in_hand_ok && eye_to_hand_ok)
-                response->message = "眼在手上和眼在手外标定均已完成。";
-            else if (eye_in_hand_ok)
-                response->message = "眼在手上标定完成（眼在手外标定失败）。";
-            else
-                response->message = "眼在手外标定完成（眼在手上标定失败）。";
-            RCLCPP_INFO(this->get_logger(), "%s", response->message.c_str());
+            return;
         }
-        else
-        {
+        else {
             response->success = false;
-            response->message = "标定失败：眼在手上和眼在手外标定均未成功。请检查标定数据是否足够（≥3组）且有效。";
+            response->message = "标定失败。请检查标定数据是否足够（≥3组）且有效。";
             RCLCPP_ERROR(this->get_logger(), "%s", response->message.c_str());
         }
     }
