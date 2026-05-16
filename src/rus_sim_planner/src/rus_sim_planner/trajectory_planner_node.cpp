@@ -35,7 +35,7 @@ namespace RusTrajectoryPlannerNode
             point_cloud_topic, 10, 
             [this](const sensor_msgs::msg::PointCloud2::SharedPtr msg){
                 pcl::fromROSMsg(*msg, *cloud_);
-                planner_->Initialize(cloud_);
+                planner_->LoadCloud(cloud_);
             }
         );
         planner_server_ = this->create_service<rus_sim_interfaces::srv::GenerateTrajectory>(
@@ -128,7 +128,7 @@ namespace RusTrajectoryPlannerNode
 
         response->success = true;
         is_initialized_ = response->success;
-        response->error_message = "";
+        response->error_message = "轨迹规划器节点已初始化";
         return;
     }
 }

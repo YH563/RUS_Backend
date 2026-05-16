@@ -17,7 +17,7 @@ namespace RusMoveitManagerNode
     public:
         MoveitManagerNode();
         // 初始化规划组
-        void Init() { moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), "fairino3_v6_group"); }
+        void Initialize() { moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), "fairino3_v6_group"); }
         // 发送请求，生成轨迹
         void RequestTrajectory(const Pose& start, const Pose& end);
         // 执行轨迹

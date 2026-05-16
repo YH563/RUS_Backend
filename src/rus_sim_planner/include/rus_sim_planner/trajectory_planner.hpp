@@ -26,8 +26,8 @@ namespace RusTrajectoryPlanner
     using Pose = geometry_msgs::msg::Pose;  // ROS2 Pose
     using Trajectory = std::vector<Pose>;  // 轨迹由多个位姿点组成
     using Point = pcl::PointXYZ;  // PCL 点
-    using PointCloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;  // PCL 点云指针
-    using PointCloudNormalsPtr = pcl::PointCloud<pcl::PointNormal>::Ptr;  // 带有法向量的点云指针
+    using CloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;  // PCL 点云指针
+    using CloudNormalsPtr = pcl::PointCloud<pcl::PointNormal>::Ptr;  // 带有法向量的点云指针
     using Graph = boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
                                     boost::no_property,                   // 顶点无属性
                                     boost::property<boost::edge_weight_t, float>>; // 边有权重
@@ -70,8 +70,8 @@ namespace RusTrajectoryPlanner
         TrajectoryPlanner() = default;
         ~TrajectoryPlanner() = default;
 
-        // 初始化轨迹规划器
-        bool Initialize(const PointCloudPtr& cloud);
+        // 加载点云数据
+        bool LoadCloud(const CloudPtr& cloud);
         // 设置参数
         void SetParameter(TrajectoryParameter parameter){ parameter_ = parameter; }
         // 生成轨迹
@@ -89,7 +89,7 @@ namespace RusTrajectoryPlanner
         bool point_inside_rotated_ellipsoid(const Point& pi, const Point& pj, const Point& pk, double alpha);
 
         // 计算全局点云的法向量
-        bool compute_global_normals(const PointCloudPtr&);
+        bool compute_global_normals(const CloudPtr&);
         // 计算路径点的法向量
         void compute_path_normals();
         // 计算路径总长度
@@ -105,13 +105,14 @@ namespace RusTrajectoryPlanner
 
         // 私有成员变量
         bool is_initialized_ = false;  // 是否已初始化
+        std::string class_name_ = "trajectory_planner";  // 保存类名，用于日志保存以及输出
         Pose start_pose_ {};  // 起始位姿
         Pose goal_pose_ {};   // 目标位姿
         Trajectory trajectory_;  // 轨迹
 
         // 点云相关的成员变量
         pcl::KdTreeFLANN<Point> tree_;  // KDTree
-        PointCloudNormalsPtr cloud_normals_ptr_;  // 携带法向量的点云数据
+        CloudNormalsPtr cloud_normals_ptr_;  // 携带法向量的点云数据
         std::shared_ptr<Graph> graph_ptr_;  // 图对象
         std::vector<std::pair<Point, int>> origin_path_;  // 包含索引的初始路径
         SparseMatrixd M;  // 用于优化的矩阵

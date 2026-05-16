@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     auto moveit_node = std::make_shared<RusMoveitManagerNode::MoveitManagerNode>();
     rclcpp::executors::MultiThreadedExecutor executor;
     executor.add_node(moveit_node);
-    moveit_node->Init();
+    moveit_node->Initialize();
     
     auto start_pose = geometry_msgs::msg::Pose();
     auto end_pose = geometry_msgs::msg::Pose();

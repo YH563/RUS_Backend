@@ -22,35 +22,35 @@ namespace RusTrajectoryPlanner {
         return q;
     }
 
-    bool TrajectoryPlanner::Initialize(const PointCloudPtr &cloud)
+    bool TrajectoryPlanner::LoadCloud(const CloudPtr &cloud)
     {
         if (is_initialized_) return true;
         if (cloud->size() == 0)
         {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "请检查传入的点云数据");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "请检查传入的点云数据");
             return false;
         }
         tree_.setInputCloud(cloud);
         if(!compute_global_normals(cloud))
         {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "点云法向量计算失败");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "点云法向量计算失败");
             return false;
         }
         graph_ptr_ = std::make_shared<Graph>();
         generate_graph();
-        RCLCPP_INFO(rclcpp::get_logger("TrajectoryPlanner"), "轨迹规划器已初始化");
+        RCLCPP_INFO(rclcpp::get_logger(class_name_), "轨迹规划器已加载点云数据，完成初始化");
         is_initialized_ = true;
         return true;
     }
 
     std::optional<std::reference_wrapper<const Trajectory>> TrajectoryPlanner::GetTrajectory() const { 
         if (!is_initialized_) {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹规划器未初始化");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "轨迹规划器未初始化");
             return std::nullopt;
         }
         if (trajectory_.empty()) 
         {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹未生成");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "轨迹未生成");
             return std::nullopt;
         }
         return std::cref(trajectory_);
@@ -66,7 +66,7 @@ namespace RusTrajectoryPlanner {
 
         if (!is_initialized_)
         {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "请先对规划器进行初始化");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "请先对规划器进行初始化");
             return false;
         }
         int start_idx = find_nearest_point(Point(start.position.x, start.position.y, start.position.z));
@@ -74,7 +74,7 @@ namespace RusTrajectoryPlanner {
         // 1.初始化，生成初始轨迹
         if(!generate_origin_path(start_idx, end_idx))
         {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "初始轨迹生成失败");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "初始轨迹生成失败");
             return false;
         }
         for (const auto& p:origin_path_)
@@ -192,7 +192,7 @@ namespace RusTrajectoryPlanner {
         // 1. 顶点数量
         int n = boost::num_vertices(*graph_ptr_);
         if (start_idx < 0 || start_idx >= n || end_idx < 0 || end_idx >= n) {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "请输入正确的起始点以及终点坐标!");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "请输入正确的起始点以及终点坐标!");
             return false;
         }
 
@@ -211,7 +211,7 @@ namespace RusTrajectoryPlanner {
 
         // 4. 检查终点是否可达
         if (distances[end_idx] == std::numeric_limits<float>::max()) {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "不存在有效轨迹!");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "不存在有效轨迹!");
             return false;
         }
 
@@ -220,7 +220,7 @@ namespace RusTrajectoryPlanner {
         for (int v = end_idx; v != start_idx; v = predecessors[v]) {
             vertex_path.push_back(v);
             if (v == predecessors[v]) { // 防止死循环（正常不会）
-                RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "轨迹前驱链断裂!");
+                RCLCPP_ERROR(rclcpp::get_logger(class_name_), "轨迹前驱链断裂!");
                 return false;
             }
         }
@@ -291,7 +291,7 @@ namespace RusTrajectoryPlanner {
     }
 
     
-    bool TrajectoryPlanner::compute_global_normals(const PointCloudPtr& cloud)
+    bool TrajectoryPlanner::compute_global_normals(const CloudPtr& cloud)
     {
         pcl::NormalEstimation<Point, pcl::Normal> ne;
         ne.setInputCloud(cloud);
@@ -305,7 +305,7 @@ namespace RusTrajectoryPlanner {
         ne.compute(*normals);
         
         if (normals->size() != cloud->size()) {
-            RCLCPP_ERROR(rclcpp::get_logger("TrajectoryPlanner"), "法向量计算失败");
+            RCLCPP_ERROR(rclcpp::get_logger(class_name_), "法向量计算失败");
             return false;
         }
 
@@ -321,7 +321,7 @@ namespace RusTrajectoryPlanner {
             pn.curvature = n.curvature;
         }
 
-        RCLCPP_INFO(rclcpp::get_logger("TrajectoryPlanner"), "已成功为数量为%zu的点云计算法向量", cloud_normals_ptr_->size());
+        RCLCPP_INFO(rclcpp::get_logger(class_name_), "已成功为数量为%zu的点云计算法向量", cloud_normals_ptr_->size());
         return true;
     }
 
