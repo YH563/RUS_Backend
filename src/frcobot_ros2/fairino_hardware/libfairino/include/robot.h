@@ -15,7 +15,6 @@
 #include <iostream>
 #include <list>
 #include <vector>
-#include <memory>
 
 class FRTcpClient;
 
@@ -125,68 +124,6 @@ public:
 	errno_t MoveJ(JointPos *joint_pos, DescPose *desc_pos, int tool, int user, float vel, float acc, float ovl, ExaxisPos *epos, float blendT, uint8_t offset_flag, DescPose *offset_pos);
 
 	/**
-	 * @brief  关节空间运动(重载函数 不需要输入笛卡尔位置)
-	 * @param  [in] joint_pos  目标关节位置,单位deg
-	 * @param  [in] tool  工具坐标号，范围[0~14]
-	 * @param  [in] user  工件坐标号，范围[0~14]
-	 * @param  [in] vel  速度百分比，范围[0~100]
-	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] ovl  速度缩放因子，范围[0~100]
-	 * @param  [in] epos  扩展轴位置，单位mm
-	 * @param  [in] blendT [-1.0]-运动到位(阻塞)，[0~500.0]-平滑时间(非阻塞)，单位ms
-	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos  位姿偏移量
-	 * @return  错误码
-	 */
-	errno_t MoveJ(JointPos* joint_pos, int tool, int user, float vel, float acc, float ovl, ExaxisPos* epos, float blendT, uint8_t offset_flag, DescPose* offset_pos);
-
-	/**
-	 * @brief 笛卡尔空间直线运动(重载函数1 增加blendMode)
-	 * @param [in] joint_pos 目标关节位置,单位deg
-	 * @param [in] desc_pos 目标笛卡尔位姿
-	 * @param [in] tool 工具坐标号，范围[0~14]
-	 * @param [in] user 工件坐标号，范围[0~14]
-	 * @param [in] vel 速度百分比，范围[0~100]
-	 * @param [in] acc 加速度百分比，范围[0~100],暂不开放
-	 * @param [in] ovl 速度缩放因子[0~100]/物理速度(mm/s)
-	 * @param [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	 * @param [in] blendMode 过渡方式；0-内切过渡；1-角点过渡
-	 * @param [in] epos 扩展轴位置，单位mm
-	 * @param [in] search 0-不焊丝寻位，1-焊丝寻位
-	 * @param [in] offset_flag 0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param [in] offset_pos 位姿偏移量
-	 * @param [in] oacc 加速度缩放因子[0-100]/物理加速度(mm/s2)
-	 * @param [in] velAccParamMode 速度加速度参数模式；0-百分比；1-物理速度(mm/s)加速度(mm/s2)
-	 * @param [in] overSpeedStrategy 超速处理策略，1-标准；2-超速时报错停止；3-自适应降速，默认为0
-     * @param [in] speedPercent 允许降速阈值百分比[0-100]，默认10%
-	 * @return 错误码
-	 */
-	errno_t MoveL(JointPos *joint_pos, DescPose *desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, int blendMode, ExaxisPos *epos, uint8_t search, uint8_t offset_flag, DescPose *offset_pos, float oacc = 100.0, int velAccParamMode = 0, int overSpeedStrategy = 0, int speedPercent = 10);
-
-	/**
-	 * @brief  笛卡尔空间直线运动(重载函数2 不需要输入关节位置)
-	 * @param  [in] desc_pos   目标笛卡尔位姿
-	 * @param  [in] tool  工具坐标号，范围[0~14]
-	 * @param  [in] user  工件坐标号，范围[0~14]
-	 * @param  [in] vel  速度百分比，范围[0~100]
-	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] ovl  速度缩放因子[0~100]/物理速度(mm/s)
-	 * @param  [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	 * @param  [in] blendMode 过渡方式；0-内切过渡；1-角点过渡
-	 * @param  [in] epos  扩展轴位置，单位mm
-	 * @param  [in] search  0-不焊丝寻位，1-焊丝寻位
-	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos  位姿偏移量
-	 * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	 * @param  [in] velAccParamMode 速度加速度参数模式；0-百分比；1-物理速度(mm/s)加速度(mm/s2)
-	 * @param  [in] overSpeedStrategy  超速处理策略，1-标准；2-超速时报错停止；3-自适应降速，默认为0
-	 * @param  [in] speedPercent  允许降速阈值百分比[0-100]，默认10%
-	 * @return  错误码
-	 */
-	errno_t MoveL(DescPose* desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, int blendMode, ExaxisPos* epos, uint8_t search, uint8_t offset_flag, DescPose* offset_pos, int config = -1, int velAccParamMode = 0, int overSpeedStrategy = 0, int speedPercent = 10);
-
-
-	/**
 	 * @brief  笛卡尔空间直线运动
 	 * @param  [in] joint_pos  目标关节位置,单位deg
 	 * @param  [in] desc_pos   目标笛卡尔位姿
@@ -201,11 +138,11 @@ public:
 	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
 	 * @param  [in] offset_pos  位姿偏移量
 	 * @param  [in] overSpeedStrategy  超速处理策略，1-标准；2-超速时报错停止；3-自适应降速，默认为0
-	 * @param  [in] speedPercent  允许降速阈值百分比[0-100]，默认10%
+     * @param  [in] speedPercent  允许降速阈值百分比[0-100]，默认10%
 	 * @return  错误码
 	 */
-	errno_t MoveL(JointPos* joint_pos, DescPose* desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, ExaxisPos* epos, uint8_t search, uint8_t offset_flag, DescPose* offset_pos, int overSpeedStrategy = 0, int speedPercent = 10);
-	
+	errno_t MoveL(JointPos *joint_pos, DescPose *desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, ExaxisPos *epos, uint8_t search, uint8_t offset_flag, DescPose *offset_pos, int overSpeedStrategy = 0, int speedPercent = 10);
+
 	/**
 	 * @brief  笛卡尔空间圆弧运动
 	 * @param  [in] joint_pos_p  路径点关节位置,单位deg
@@ -226,39 +163,11 @@ public:
 	 * @param  [in] epos_t  扩展轴位置，单位mm
 	 * @param  [in] toffset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
 	 * @param  [in] offset_pos_t  位姿偏移量
-	 * @param  [in] ovl  速度缩放因子[0~100]/物理速度(mm/s)
-	 * @param  [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	 * @param  [in] oacc 加速度缩放因子[0-100]/物理加速度(mm/s2)
-	 * @param  [in] velAccParamMode 速度加速度参数模式；0-百分比；1-物理速度(mm/s)加速度(mm/s2)
-	 * @return  错误码
-	 */
-	errno_t MoveC(JointPos *joint_pos_p, DescPose *desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos *epos_p, uint8_t poffset_flag, DescPose *offset_pos_p, JointPos *joint_pos_t, DescPose *desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos *epos_t, uint8_t toffset_flag, DescPose *offset_pos_t, float ovl, float blendR, float oacc = 100.0, int velAccParamMode = 0);
-
-	/**
-	 * @brief  笛卡尔空间圆弧运动 (重载函数1 不需要输入关节位置)
-	 * @param  [in] desc_pos_p   路径点笛卡尔位姿
-	 * @param  [in] ptool  工具坐标号，范围[0~14]
-	 * @param  [in] puser  工件坐标号，范围[0~14]
-	 * @param  [in] pvel  速度百分比，范围[0~100]
-	 * @param  [in] pacc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos_p  扩展轴位置，单位mm
-	 * @param  [in] poffset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos_p  位姿偏移量
-	 * @param  [in] desc_pos_t   目标点笛卡尔位姿
-	 * @param  [in] ttool  工具坐标号，范围[0~14]
-	 * @param  [in] tuser  工件坐标号，范围[0~14]
-	 * @param  [in] tvel  速度百分比，范围[0~100]
-	 * @param  [in] tacc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos_t  扩展轴位置，单位mm
-	 * @param  [in] toffset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos_t  位姿偏移量
 	 * @param  [in] ovl  速度缩放因子，范围[0~100]
 	 * @param  [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	 * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	 * @param  [in] velAccParamMode 速度加速度参数模式；0-百分比；1-物理速度(mm/s)加速度(mm/s2)
 	 * @return  错误码
 	 */
-	errno_t MoveC(DescPose* desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos* epos_p, uint8_t poffset_flag, DescPose* offset_pos_p, DescPose* desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos* epos_t, uint8_t toffset_flag, DescPose* offset_pos_t, float ovl, float blendR, int config = -1, int velAccParamMode = 0);
+	errno_t MoveC(JointPos *joint_pos_p, DescPose *desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos *epos_p, uint8_t poffset_flag, DescPose *offset_pos_p, JointPos *joint_pos_t, DescPose *desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos *epos_t, uint8_t toffset_flag, DescPose *offset_pos_t, float ovl, float blendR);
 
 	/**
 	 * @brief  笛卡尔空间整圆运动
@@ -276,40 +185,12 @@ public:
 	 * @param  [in] tvel  速度百分比，范围[0~100]
 	 * @param  [in] tacc  加速度百分比，范围[0~100],暂不开放
 	 * @param  [in] epos_t  扩展轴位置，单位mm
-	 * @param  [in] ovl  速度缩放因子[0~100]/物理速度(mm/s)
-	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos  位姿偏移量
-	 * @param  [in] oacc 加速度缩放因子[0-100]/物理加速度(mm/s2)
-	 * @param  [in] blendR -1：阻塞；0~1000：平滑半径
-	 * @param  [in] velAccParamMode 速度加速度参数模式；0-百分比；1-物理速度(mm/s)加速度(mm/s2)
-	 * @return  错误码
-	 */
-	errno_t Circle(JointPos* joint_pos_p, DescPose* desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos* epos_p, JointPos* joint_pos_t, DescPose* desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos* epos_t, float ovl, uint8_t offset_flag, DescPose* offset_pos, double oacc = 100.0, double blendR = -1, int velAccParamMode = 0);
-
-	/**
-	 * @brief  笛卡尔空间整圆运动 (重载函数1 不需要输入关节位置)
-	 * @param  [in] desc_pos_p   路径点1笛卡尔位姿
-	 * @param  [in] ptool  工具坐标号，范围[0~14]
-	 * @param  [in] puser  工件坐标号，范围[0~14]
-	 * @param  [in] pvel  速度百分比，范围[0~100]
-	 * @param  [in] pacc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos_p  扩展轴位置，单位mm
-	 * @param  [in] desc_pos_t   路径点2笛卡尔位姿
-	 * @param  [in] ttool  工具坐标号，范围[0~14]
-	 * @param  [in] tuser  工件坐标号，范围[0~14]
-	 * @param  [in] tvel  速度百分比，范围[0~100]
-	 * @param  [in] tacc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos_t  扩展轴位置，单位mm
 	 * @param  [in] ovl  速度缩放因子，范围[0~100]
 	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
 	 * @param  [in] offset_pos  位姿偏移量
-	 * @param  [in] oacc 加速度百分比
-	 * @param  [in] blendR -1：阻塞；0~1000：平滑半径
-	 * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	 * @param  [in] velAccParamMode 速度加速度参数模式；0-百分比；1-物理速度(mm/s)加速度(mm/s2)
 	 * @return  错误码
 	 */
-	errno_t Circle(DescPose* desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos* epos_p, DescPose* desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos* epos_t, float ovl, uint8_t offset_flag, DescPose* offset_pos, double oacc = 100.0, double blendR = -1, int config = -1, int velAccParamMode = 0);
+	errno_t Circle(JointPos *joint_pos_p, DescPose *desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos *epos_p, JointPos *joint_pos_t, DescPose *desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos *epos_t, float ovl, uint8_t offset_flag, DescPose *offset_pos);
 
 	/**
 	 * @brief  笛卡尔空间螺旋线运动
@@ -327,23 +208,6 @@ public:
 	 * @return  错误码
 	 */
 	errno_t NewSpiral(JointPos *joint_pos, DescPose *desc_pos, int tool, int user, float vel, float acc, ExaxisPos *epos, float ovl, uint8_t offset_flag, DescPose *offset_pos, SpiralParam spiral_param);
-	
-	/**
-	 * @brief  笛卡尔空间螺旋线运动 (重载函数1 不需要输入关节位置)
-	 * @param  [in] desc_pos   目标笛卡尔位姿
-	 * @param  [in] tool  工具坐标号，范围[0~14]
-	 * @param  [in] user  工件坐标号，范围[0~14]
-	 * @param  [in] vel  速度百分比，范围[0~100]
-	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos  扩展轴位置，单位mm
-	 * @param  [in] ovl  速度缩放因子，范围[0~100]
-	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos  位姿偏移量
-	 * @param  [in] spiral_param  螺旋参数
-	 * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	 * @return  错误码
-	 */
-	errno_t NewSpiral(DescPose* desc_pos, int tool, int user, float vel, float acc, ExaxisPos* epos, float ovl, uint8_t offset_flag, DescPose* offset_pos, SpiralParam spiral_param, int config = -1);
 
 	/**
 	 * @brief 伺服运动开始，配合ServoJ、ServoCart指令使用
@@ -366,25 +230,23 @@ public:
 	 * @param  [in] cmdT  指令下发周期，单位s，建议范围[0.001~0.0016]
 	 * @param  [in] filterT 滤波时间，单位s，暂不开放，默认为0
 	 * @param  [in] gain  目标位置的比例放大器，暂不开放，默认为0
-	 * @param  [in] id servoJ指令ID,默认为0
 	 * @return  错误码
 	 */
-	errno_t ServoJ(JointPos *joint_pos, ExaxisPos* axisPos, float acc, float vel, float cmdT, float filterT, float gain, int id = 0);
+	errno_t ServoJ(JointPos *joint_pos, ExaxisPos* axisPos, float acc, float vel, float cmdT, float filterT, float gain);
 
 	/**
-	 * @brief 笛卡尔空间伺服模式运动
-	 * @param [in] mode 0-绝对运动(基坐标系)，1-增量运动(基坐标系)，2-增量运动(工具坐标系)
-	 * @param [in] desc_pos 目标笛卡尔位姿或位姿增量
-	 * @param [in] exaxis 扩展轴位置
-	 * @param [in] pos_gain 位姿增量比例系数，仅在增量运动下生效，范围[0~1]
-	 * @param [in] acc 加速度百分比，范围[0~100],暂不开放，默认为0
-	 * @param [in] vel 速度百分比，范围[0~100]，暂不开放，默认为0
-	 * @param [in] cmdT 指令下发周期，单位s，建议范围[0.001~0.016]
-	 * @param [in] filterT 滤波时间，单位s，暂不开放，默认为0
-	 * @param [in] gain 目标位置的比例放大器，暂不开放，默认为0
-	 * @return 错误码
+	 * @brief  笛卡尔空间伺服模式运动
+	 * @param  [in]  mode  0-绝对运动(基坐标系)，1-增量运动(基坐标系)，2-增量运动(工具坐标系)
+	 * @param  [in]  desc_pos  目标笛卡尔位姿或位姿增量
+	 * @param  [in]  pos_gain  位姿增量比例系数，仅在增量运动下生效，范围[0~1]
+	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放，默认为0
+	 * @param  [in] vel  速度百分比，范围[0~100]，暂不开放，默认为0
+	 * @param  [in] cmdT  指令下发周期，单位s，建议范围[0.001~0.0016]
+	 * @param  [in] filterT 滤波时间，单位s，暂不开放，默认为0
+	 * @param  [in] gain  目标位置的比例放大器，暂不开放，默认为0
+	 * @return  错误码
 	 */
-	errno_t ServoCart(int mode, DescPose *desc_pose, ExaxisPos exaxis, float pos_gain[6], float acc, float vel, float cmdT, float filterT, float gain);
+	errno_t ServoCart(int mode, DescPose *desc_pose, float pos_gain[6], float acc, float vel, float cmdT, float filterT, float gain);
 
 	/**
 	 * @brief  笛卡尔空间点到点运动
@@ -420,18 +282,6 @@ public:
 	errno_t SplinePTP(JointPos *joint_pos, DescPose *desc_pos, int tool, int user, float vel, float acc, float ovl);
 
 	/**
-	 * @brief  关节空间样条运动 (重载函数1 不需要输入笛卡尔位置)
-	 * @param  [in] joint_pos  目标关节位置,单位deg
-	 * @param  [in] tool  工具坐标号，范围[0~14]
-	 * @param  [in] user  工件坐标号，范围[0~14]
-	 * @param  [in] vel  速度百分比，范围[0~100]
-	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] ovl  速度缩放因子，范围[0~100]
-	 * @return  错误码
-	 */
-	errno_t SplinePTP(JointPos* joint_pos, int tool, int user, float vel, float acc, float ovl);
-
-	/**
 	 * @brief  样条运动结束
 	 * @return  错误码
 	 */
@@ -459,22 +309,6 @@ public:
 	 * @return  错误码
 	 */
 	errno_t NewSplinePoint(JointPos *joint_pos, DescPose *desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, int lastFlag);
-
-	/**
-	 * @brief 新样条指令点(重载函数1 不需要输入关节位置)
-	 * @param  [in] desc_pos   目标笛卡尔位姿
-	 * @param  [in] tool  工具坐标号，范围[0~14]
-	 * @param  [in] user  工件坐标号，范围[0~14]
-	 * @param  [in] vel  速度百分比，范围[0~100]
-	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] ovl  速度缩放因子，范围[0~100]
-	 * @param  [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	 * @param  [in] lastFlag 是否为最后一个点，0-否，1-是
-	 * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	 * @return  错误码
-	 */
-	errno_t NewSplinePoint(DescPose* desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, int lastFlag, int config = -1);
-
 
 	/**
 	 * @brief 新样条运动结束
@@ -546,7 +380,7 @@ public:
 	/**
 	 * @brief  设置工具模拟量输出
 	 * @param  [in] id  io编号，范围[0]
-	 * @param  [in] value 电流或电压值百分比，范围[0~100]对应电压[0~10V]
+	 * @param  [in] value 电流或电压值百分比，范围[0~100]对应电流值[0~20mA]或电压[0~10V]
 	 * @param  [in] block  0-阻塞，1-非阻塞
 	 * @return  错误码
 	 */
@@ -614,7 +448,7 @@ public:
 	 * @brief  获取工具模拟量输入
 	 * @param  [in] id  io编号，范围[0]
 	 * @param  [in] block  0-阻塞，1-非阻塞
-	 * @param  [out] result  输入电流或电压值百分比，范围[0~100]对应电压[0~10V]
+	 * @param  [out] result  输入电流或电压值百分比，范围[0~100]对应电流值[0~20mS]或电压[0~10V]
 	 * @return  错误码
 	 */
 	errno_t GetToolAI(int id, uint8_t block, float *result);
@@ -656,7 +490,7 @@ public:
 	 * @brief 等待工具模拟量输入
 	 * @param  [in] id  io编号，范围[0]
 	 * @param  [in]  sign 0-大于，1-小于
-	 * @param  [in]  value 输入电流或电压值百分比，范围[0~100]对应电压[0~10V]
+	 * @param  [in]  value 输入电流或电压值百分比，范围[0~100]对应电流值[0~20mS]或电压[0~10V]
 	 * @param  [in]  max_time  最大等待时间，单位ms
 	 * @param  [in]  opt  超时后策略，0-程序停止并提示超时，1-忽略超时提示程序继续执行，2-一直等待
 	 * @return  错误码
@@ -769,13 +603,12 @@ public:
 	errno_t SetWObjCoordPoint(int point_num);
 
 	/**
-	 * @brief  计算工件坐标系
-	 * @param [in] method 计算方法 0：原点-x轴-z轴  1：原点-x轴-xy平面
-	 * @param [in] refFrame 参考坐标系
+	 * @brief 计算工件坐标系
+	 * @param [in] method 计算方式 0：原点-x轴-z轴  1：原点-x轴-xy平面
 	 * @param [out] wobj_pose 工件坐标系
 	 * @return 错误码
 	 */
-	errno_t ComputeWObjCoord(int method, int refFrame, DescPose *wobj_pose);
+	errno_t ComputeWObjCoord(int method, DescPose *wobj_pose);
 
 	/**
 	 * @brief  设置工件坐标系
@@ -797,11 +630,10 @@ public:
 
 	/**
 	 * @brief  设置末端负载重量
-	 * @param  [in] loadNum 负载编号
 	 * @param  [in] weight  负载重量，单位kg
 	 * @return  错误码
 	 */
-	errno_t SetLoadWeight(int loadNum, float weight);
+	errno_t SetLoadWeight(float weight);
 
 	/**
 	 * @brief  设置末端负载质心坐标
@@ -809,14 +641,6 @@ public:
 	 * @return  错误码
 	 */
 	errno_t SetLoadCoord(DescTran *coord);
-
-	/**
-	 * @brief  设置末端负载质心坐标
-	 * @param  [in] loadNum 负载编号
-	 * @param  [in] coord 质心坐标，单位mm
-	 * @return  错误码
-	 */
-	errno_t SetLoadCoord(int loadNum, DescTran* coord);
 
 	/**
 	 * @brief  设置机器人安装方式
@@ -843,7 +667,7 @@ public:
 	/**
 	 * @brief 设置碰撞等级
 	 * @param  [in]  mode  0-等级，1-百分比
-	 * @param  [in]  level 碰撞阈值，等级对应范围[1-10],百分比对应范围[0~1]
+	 * @param  [in]  level 碰撞阈值，等级对应范围[],百分比对应范围[0~1]
 	 * @param  [in]  config 0-不更新配置文件，1-更新配置文件
 	 * @return  错误码
 	 */
@@ -851,14 +675,13 @@ public:
 
 	/**
 	 * @brief  设置碰撞后策略
-	 * @param  [in] strategy  0-报错停止，1-继续运行
+	 * @param  [in] strategy  0-报错暂停；1-继续运行;2-报错停止；3-重力矩模式；4-震荡相应模式；5-碰撞回弹模式 
 	 * @param  [in] safeTime  安全停止时间[1000 - 2000]ms
 	 * @param  [in] safeDistance  安全停止距离[1-150]mm
-	 * @param  [in] safeVel 安全速度[50-250] mm/s
 	 * @param  [in] safetyMargin  j1-j6安全系数[1-10]
 	 * @return  错误码
 	 */
-	errno_t SetCollisionStrategy(int strategy, int safeTime, int safeDistance, int safeVel, int safetyMargin[]);
+	errno_t SetCollisionStrategy(int strategy, int safeTime, int safeDistance, int safetyMargin[]);
 
 	/**
 	 * @brief  设置正限位
@@ -1050,18 +873,6 @@ public:
 	 * @return  错误码
 	 */
 	errno_t GetInverseKinHasSolution(int type, DescPose *desc_pos, JointPos *joint_pos_ref, uint8_t *result);
-
-	/**
-	 * @brief 逆运动学求解，笛卡尔空间包含扩展轴位置
-	 * @param [in] type 0-绝对位姿(基坐标系)，1-增量位姿(基坐标系)，2-增量位姿(工具坐标系)
-	 * @param [in] desc_pos 笛卡尔位姿
-	 * @param [in] exaxis 扩展轴位置
-	 * @param [in] tool 工具号
-	 * @param [in] workPiece 工件号
-	 * @param [out] joint_pos 关节位置
-	 * @return 错误码
-	 */
-	errno_t GetInverseKinExaxis(int type, DescPose desc_pos, ExaxisPos exaxis, int tool, int workPiece, JointPos& joint_pos);
 
 	/**
 	 * @brief  正运动学求解
@@ -1474,30 +1285,6 @@ public:
 	errno_t GetGripperTemp(uint16_t *fault, int *temp);
 
 	/**
-	 * @brief  获取旋转夹爪的旋转圈数
-	 * @param  [out] fault  0-无错误，1-有错误
-	 * @param  [out] num  旋转圈数
-	 * @return  错误码
-	 */
-	errno_t GetGripperRotNum(uint16_t* fault, double* num);
-
-	/**
-	 * @brief  获取旋转夹爪的旋转速度
-	 * @param  [out] fault  0-无错误，1-有错误
-	 * @param  [out] speed  旋转速度百分比
-	 * @return  错误码
-	 */
-	errno_t GetGripperRotSpeed(uint16_t* fault, int* speed);
-
-	/**
-	 * @brief  获取旋转夹爪的旋转力矩
-	 * @param  [out] fault  0-无错误，1-有错误
-	 * @param  [out] torque  旋转力矩百分比
-	 * @return  错误码
-	 */
-	errno_t GetGripperRotTorque(uint16_t* fault, int* torque);
-
-	/**
 	 * @brief  计算预抓取点-视觉
 	 * @param  [in] desc_pos  抓取点笛卡尔位姿
 	 * @param  [in] zlength   z轴偏移量
@@ -1519,8 +1306,8 @@ public:
 
 	/**
 	 * @brief  配置力传感器
-	 * @param  [in] company  力传感器厂商，17-坤维科技，19-航天十一院，20-ATI传感器，21-中科米点，22-伟航敏芯，23-NBIT，24-鑫精诚(XJC)，26-NSR
-	 * @param  [in] device  设备号，坤维(0-KWR75B)，航天十一院(0-MCS6A-200-4)，ATI(0-AXIA80-M8)，中科米点(0-MST2010)，伟航敏芯(0-WHC6L-YB-10A)，NBIT(0-XLH93003ACS)，鑫精诚XJC(0-XJC-6F-D82)，NSR(0-NSR-FTSensorA)
+	 * @param  [in] company  力传感器厂商，17-坤维科技，19-航天十一院，20-ATI传感器，21-中科米点，22-伟航敏芯
+	 * @param  [in] device  设备号，坤维(0-KWR75B)，航天十一院(0-MCS6A-200-4)，ATI(0-AXIA80-M8)，中科米点(0-MST2010)，伟航敏芯(0-WHC6L-YB-10A)
 	 * @param  [in] softvesion  软件版本号，暂不使用，默认为0
 	 * @param  [in] bus 设备挂在末端总线位置，暂不使用，默认为0
 	 * @return  错误码
@@ -1633,55 +1420,7 @@ public:
      * @param  [in] isNoBlock 阻塞标志，0-阻塞；1-非阻塞
 	 * @return  错误码
 	 */
-	errno_t FT_Control(uint8_t flag, int sensor_id, uint8_t select[6], ForceTorque *ft, float ft_pid[6], uint8_t adj_sign, 
-	uint8_t ILC_sign, float max_dis, float max_ang, int filter_Sign = 0, int posAdapt_sign = 0, int isNoBlock = 0);
-
-	/**
-	 * @brief  恒力控制
-	 * @param  [in] flag 0-关闭恒力控制，1-开启恒力控制
-	 * @param  [in] sensor_id 力传感器编号
-	 * @param  [in] select  选择六个自由度是否检测碰撞，0-不检测，1-检测
-	 * @param  [in] ft  碰撞力/扭矩，fx,fy,fz,tx,ty,tz
-	 * @param  [in] ft_pid 力pid参数，力矩pid参数
-	 * @param  [in] adj_sign 自适应启停控制，0-关闭，1-开启
-	 * @param  [in] ILC_sign ILC启停控制， 0-停止，1-训练，2-实操
-	 * @param  [in] max_dis 最大调整距离，单位mm
-	 * @param  [in] max_ang 最大调整角度，单位deg
-	 * @param  [in] M rx、ry质量参数[0.1-10],默认2
-	 * @param  [in] B rx、ry阻尼参数[0.1-50],默认8
-	 * @param  [in] polishRadio 打磨半径，单位mm
-	 * @param  [in] filter_Sign 滤波开启标志 0-关；1-开，默认关闭
-	 * @param  [in] posAdapt_sign 姿态顺应开启标志 0-关；1-开，默认关闭
-	 * @param  [in] isNoBlock 阻塞标志，0-阻塞；1-非阻塞
-	 * @return  错误码
-	 */
-	errno_t FT_Control(uint8_t flag, int sensor_id, uint8_t select[6], ForceTorque* ft, float ft_pid[6], uint8_t adj_sign, 
-	uint8_t ILC_sign, float max_dis, float max_ang, double M[2], double B[2], double polishRadio = 0.0, int filter_Sign = 0, int posAdapt_sign = 0,  int isNoBlock = 0);
-
-	/**
-	 * @brief  恒力控制
-	 * @param  [in] flag 0-关闭恒力控制，1-开启恒力控制
-	 * @param  [in] sensor_id 力传感器编号
-	 * @param  [in] select  选择六个自由度是否检测碰撞，0-不检测，1-检测
-	 * @param  [in] ft  碰撞力/扭矩，fx,fy,fz,tx,ty,tz
-	 * @param  [in] ft_pid 力pid参数，力矩pid参数
-	 * @param  [in] adj_sign 自适应启停控制，0-关闭，1-开启
-	 * @param  [in] ILC_sign ILC启停控制， 0-停止，1-训练，2-实操
-	 * @param  [in] max_dis 最大调整距离，单位mm
-	 * @param  [in] max_ang 最大调整角度，单位deg
-	 * @param  [in] M rx、ry质量参数[0.1-10],默认2
-	 * @param  [in] B rx、ry阻尼参数[0.1-50],默认8
-	 * @param  [in] threshold rx、ry启动阈值[0-10],默认0.2
-	 * @param  [in] adjustCoeff rx、ry力矩调节系数[0-1],默认1
-	 * @param  [in] polishRadio 打磨半径，单位mm
-	 * @param  [in] filter_Sign 滤波开启标志 0-关；1-开，默认关闭
-	 * @param  [in] posAdapt_sign 姿态顺应开启标志 0-关；1-开，默认关闭
-	 * @param  [in] isNoBlock 阻塞标志，0-阻塞；1-非阻塞
-	 * @return  错误码
-	 */
-	errno_t FT_Control(uint8_t flag, int sensor_id, uint8_t select[6], ForceTorque* ft, float ft_pid[6], uint8_t adj_sign, 
-		uint8_t ILC_sign, float max_dis, float max_ang, double M[2], double B[2], double threshold[2], double adjustCoeff[2], double polishRadio = 0.0, int filter_Sign = 0, int posAdapt_sign = 0, int isNoBlock = 0);
-
+	errno_t FT_Control(uint8_t flag, int sensor_id, uint8_t select[6], ForceTorque *ft, float ft_pid[6], uint8_t adj_sign, uint8_t ILC_sign, float max_dis, float max_ang, int filter_Sign = 0, int posAdapt_sign = 0, int isNoBlock = 0);
 
 	/**
 	 * @brief  螺旋线探索
@@ -1695,18 +1434,17 @@ public:
 	errno_t FT_SpiralSearch(int rcs, float dr, float ft, float max_t_ms, float max_vel);
 
 	/**
-	 * @brief 旋转插入
-	 * @param [in] rcs 参考坐标系，0-工具坐标系，1-基坐标系
-	 * @param [in] angVelRot 旋转角速度，单位deg/s
-	 * @param [in] ft  力/扭矩阈值，fx,fy,fz,tx,ty,tz，范围[0~100]
-	 * @param [in] max_angle 最大旋转角度，单位deg
-	 * @param [in] orn 力/扭矩方向，1-沿z轴方向，2-绕z轴方向
-	 * @param [in] max_angAcc 最大旋转加速度，单位deg/s^2，暂不使用，默认为0
-	 * @param [in] rotorn  旋转方向，1-顺时针，2-逆时针
-	 * @param [in] strategy 未检测到力/力矩的处理策略，0-报错；1-警告，继续运动
+	 * @brief  旋转插入
+	 * @param  [in] rcs 参考坐标系，0-工具坐标系，1-基坐标系
+	 * @param  [in] angVelRot 旋转角速度，单位deg/s
+	 * @param  [in] ft  力/扭矩阈值，fx,fy,fz,tx,ty,tz，范围[0~100]
+	 * @param  [in] max_angle 最大旋转角度，单位deg
+	 * @param  [in] orn 力/扭矩方向，1-沿z轴方向，2-绕z轴方向
+	 * @param  [in] max_angAcc 最大旋转加速度，单位deg/s^2，暂不使用，默认为0
+	 * @param  [in] rotorn  旋转方向，1-顺时针，2-逆时针
 	 * @return  错误码
 	 */
-	errno_t FT_RotInsertion(int rcs, float angVelRot, float ft, float max_angle, uint8_t orn, float max_angAcc, uint8_t rotorn, int strategy = 0);
+	errno_t FT_RotInsertion(int rcs, float angVelRot, float ft, float max_angle, uint8_t orn, float max_angAcc, uint8_t rotorn);
 
 	/**
 	 * @brief  直线插入
@@ -1856,12 +1594,9 @@ public:
 	 * @param [in] para[3] 工件坐标系编号 针对跟踪运动功能选择工件坐标系编号，跟踪抓取、TPD跟踪设为0
 	 * @param [in] para[4] 是否配视觉  0 不配  1 配
 	 * @param [in] para[5] 速度比  针对传送带跟踪抓取选项（1-100）  其他选项默认为1 
-	 * @param [in] followType 跟踪运动类型，0-跟踪运动；1-追检运动
-	 * @param [in] startDis 追检抓取需要设置， 跟踪起始距离， -1：自动计算(工件到达机器人下方后自动追检)，单位mm， 默认值0
-	 * @param [in] endDis 追检抓取需要设置，跟踪终止距离， 单位mm， 默认值100
 	 * @return 错误码
 	 */
-	errno_t ConveyorSetParam(float para[6], int followType = 0, int startDis = 0, int endDis = 100);
+	errno_t ConveyorSetParam(float para[6]);
 
 	/**
 	 * @brief 传动带抓取点补偿
@@ -2085,25 +1820,24 @@ public:
 	/**
 	 * @brief 设置摆动参数
 	 * @param [in] weaveNum 摆焊参数配置编号
-	 * @param [in] weaveType 摆动类型 0-三角波摆动(LIN/ARC/Circle)；1-垂直L型三角波摆动(LIN/ARC/Circle)；2-圆形摆动-顺时针(LIN)；3-圆形摆动-逆时针(LIN)；4-正弦波摆动(LIN/ARC/Circle)；5-垂直L型正弦波摆动(LIN/ARC/Circle)；6-立焊三角摆动
+	 * @param [in] weaveType 摆动类型 0-平面三角波摆动；1-垂直L型三角波摆动；2-顺时针圆形摆动；3-逆时针圆形摆动；4-平面正弦波摆动；5-垂直L型正弦波摆动；6-垂直三角波摆动；7-垂直正弦波摆动
 	 * @param [in] weaveFrequency 摆动频率(Hz)
-	 * @param [in] weaveIncStayTime 摆动等待时间 0-周期不包含等待时间；1-周期包含等待时间
+	 * @param [in] weaveIncStayTime 等待模式 0-周期不包含等待时间；1-周期包含等待时间
 	 * @param [in] weaveRange 摆动幅度(mm)
-	 * @param [in] weaveLeftRange 垂直三角摆动左侧边长度(mm)
-	 * @param [in] weaveRightRange 垂直三角摆动右侧边长度(mm)
-	 * @param [in] additionalStayTime 垂直三角摆动零点停留时间(mm)
+	 * @param [in] weaveLeftRange 垂直三角摆动左弦长度(mm)
+	 * @param [in] weaveRightRange 垂直三角摆动右弦长度(mm)
+	 * @param [in] additionalStayTime 垂直三角摆动垂三角点停留时间(mm)
 	 * @param [in] weaveLeftStayTime 摆动左停留时间(ms)
 	 * @param [in] weaveRightStayTime 摆动右停留时间(ms)
-	 * @param [in] weaveCircleRadio 圆形摆动-回调比例(0-100%)
+	 * @param [in] weaveCircleRadio 圆形摆动-回调比率(0-100%)
 	 * @param [in] weaveStationary 摆动位置等待，0-等待时间内位置继续移动；1-等待时间内位置静止
 	 * @param [in] weaveYawAngle 摆动方向方位角(绕摆动Z轴旋转)，单位°
-	 * @param [in] weaveRotAngle 摆动方向侧倾角(绕摆动X轴偏转)，单位°
 	 * @return 错误码
 	 */
 	errno_t WeaveSetPara(int weaveNum, int weaveType, double weaveFrequency, 
                             int weaveIncStayTime, double weaveRange, double weaveLeftRange, 
                             double weaveRightRange, int additionalStayTime, int weaveLeftStayTime, 
-                            int weaveRightStayTime, int weaveCircleRadio, int weaveStationary, double weaveYawAngle, double weaveRotAngle = 0);
+                            int weaveRightStayTime, int weaveCircleRadio, int weaveStationary, double weaveYawAngle);
 
 	/**
 	 * @brief 即时设置摆动参数
@@ -2407,10 +2141,9 @@ public:
 	* @param [in] reconnectEnable	通讯断开自动重连使能 0-不使能 1-使能
 	* @param [in] reconnectPeriod	重连周期间隔(ms)
 	* @param [in] reconnectNum	重连次数
-	* @param [in] selfConnect 断电重启是否自动建立连接；0-不建立连接；1-建立连接
 	* @return 错误码
 	*/
-	errno_t ExtDevSetUDPComParam(std::string ip, int port, int period, int lossPkgTime, int lossPkgNum, int disconnectTime, int reconnectEnable, int reconnectPeriod, int reconnectNum, int selfConnect = 1);
+	errno_t ExtDevSetUDPComParam(std::string ip, int port, int period, int lossPkgTime, int lossPkgNum, int disconnectTime, int reconnectEnable, int reconnectPeriod, int reconnectNum);
 
 	/**
 	 * @brief 获取UDP扩展轴通讯参数
@@ -2479,10 +2212,9 @@ public:
 	 * @brief UDP扩展轴运动
 	 * @param [in] pos 目标位置
 	 * @param [in] ovl 速度百分比
-	 * @param [in] blend 平滑参数(mm或ms)
 	 * @return 错误码
 	 */
-	errno_t ExtAxisMove(ExaxisPos pos, double ovl, double blend = -1);
+	errno_t ExtAxisMove(ExaxisPos pos, double ovl);
 
 	/**
 	 * @brief 设置扩展DO
@@ -2667,7 +2399,7 @@ public:
 
 	/**
 	 * @brief  UDP扩展轴与机器人关节运动同步运动
-	 * @param  [in] joint_pos  目标关节位置,单位deg
+	 * @param  [in] joerrno_t_pos  目标关节位置,单位deg
 	 * @param  [in] desc_pos   目标笛卡尔位姿
 	 * @param  [in] tool  工具坐标号，范围[0~14]
 	 * @param  [in] user  工件坐标号，范围[0~14]
@@ -2681,22 +2413,6 @@ public:
 	 * @return  错误码
 	 */
 	 errno_t ExtAxisSyncMoveJ(JointPos joint_pos, DescPose desc_pos, int tool, int user, float vel, float acc, float ovl, ExaxisPos epos, float blendT, uint8_t offset_flag, DescPose offset_pos);
-
-	 /**
-	 * @brief  UDP扩展轴与机器人关节运动同步运动 (重载函数 不需要输入笛卡尔位置)
-	 * @param  [in] joint_pos  目标关节位置,单位deg
-	 * @param  [in] tool  工具坐标号，范围[0~14]
-	 * @param  [in] user  工件坐标号，范围[0~14]
-	 * @param  [in] vel  速度百分比，范围[0~100]
-	 * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] ovl  速度缩放因子，范围[0~100]
-	 * @param  [in] epos  扩展轴位置，单位mm
-	 * @param  [in] blendT [-1.0]-运动到位(阻塞)，[0~500.0]-平滑时间(非阻塞)，单位ms
-	 * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos  位姿偏移量
-	 * @return  错误码
-	 */
-	 errno_t ExtAxisSyncMoveJ(JointPos joint_pos, int tool, int user, float vel, float acc, float ovl, ExaxisPos epos, float blendT, uint8_t offset_flag, DescPose offset_pos);
 
 	/**
 	 * @brief  UDP扩展轴与机器人直线运动同步运动
@@ -2714,23 +2430,6 @@ public:
 	 * @return  错误码
 	 */
 	 errno_t ExtAxisSyncMoveL(JointPos joint_pos, DescPose desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, ExaxisPos epos, uint8_t offset_flag, DescPose offset_pos);
-
-	 /**
-	  * @brief  UDP扩展轴与机器人直线运动同步运动 (重载函数 不需要输入关节位置)
-	  * @param  [in] desc_pos   目标笛卡尔位姿
-	  * @param  [in] tool  工具坐标号，范围[0~14]
-	  * @param  [in] user  工件坐标号，范围[0~14]
-	  * @param  [in] vel  速度百分比，范围[0~100]
-	  * @param  [in] acc  加速度百分比，范围[0~100],暂不开放
-	  * @param  [in] ovl  速度缩放因子，范围[0~100]
-	  * @param  [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	  * @param  [in] epos  扩展轴位置，单位mm
-	  * @param  [in] offset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	  * @param  [in] offset_pos  位姿偏移量
-	  * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	  * @return  错误码
-	  */
-	 errno_t ExtAxisSyncMoveL(DescPose desc_pos, int tool, int user, float vel, float acc, float ovl, float blendR, ExaxisPos epos, uint8_t offset_flag, DescPose offset_pos, int config = -1);
 
 	 /**
 	  * @brief  UDP扩展轴与机器人圆弧运动同步运动
@@ -2758,32 +2457,6 @@ public:
 	  */
 	 errno_t ExtAxisSyncMoveC(JointPos joint_pos_p, DescPose desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos epos_p, uint8_t poffset_flag, DescPose offset_pos_p, JointPos joint_pos_t, DescPose desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos epos_t, uint8_t toffset_flag, DescPose offset_pos_t, float ovl, float blendR);
 	
-	 /**
-	 * @brief  UDP扩展轴与机器人圆弧运动同步运动 (重载函数 不需要输入关节位置)
-	 * @param  [in] desc_pos_p   路径点笛卡尔位姿
-	 * @param  [in] ptool  工具坐标号，范围[0~14]
-	 * @param  [in] puser  工件坐标号，范围[0~14]
-	 * @param  [in] pvel  速度百分比，范围[0~100]
-	 * @param  [in] pacc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos_p  扩展轴位置，单位mm
-	 * @param  [in] poffset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos_p  位姿偏移量
-	 * @param  [in] desc_pos_t   目标点笛卡尔位姿
-	 * @param  [in] ttool  工具坐标号，范围[0~14]
-	 * @param  [in] tuser  工件坐标号，范围[0~14]
-	 * @param  [in] tvel  速度百分比，范围[0~100]
-	 * @param  [in] tacc  加速度百分比，范围[0~100],暂不开放
-	 * @param  [in] epos_t  扩展轴位置，单位mm
-	 * @param  [in] toffset_flag  0-不偏移，1-基坐标系/工件坐标系下偏移，2-工具坐标系下偏移
-	 * @param  [in] offset_pos_t  位姿偏移量
-	 * @param  [in] ovl  速度缩放因子，范围[0~100]
-	 * @param  [in] blendR [-1.0]-运动到位(阻塞)，[0~1000.0]-平滑半径(非阻塞)，单位mm
-	 * @param  [in] config 逆解关节空间配置，[-1]-参考当前关节位置解算，[0~7]-依据特定关节空间配置求解
-	 * @return  错误码
-	 */
-	 errno_t ExtAxisSyncMoveC(DescPose desc_pos_p, int ptool, int puser, float pvel, float pacc, ExaxisPos epos_p, uint8_t poffset_flag, DescPose offset_pos_p, DescPose desc_pos_t, int ttool, int tuser, float tvel, float tacc, ExaxisPos epos_t, uint8_t toffset_flag, DescPose offset_pos_t, float ovl, float blendR, int config = -1);
-
-
 	/**
 	* @brief  焊丝寻位开始
 	* @param  [in] refPos  1-基准点 2-接触点
@@ -2855,11 +2528,9 @@ public:
 	  * @param  [in] referSampleStartUd 上下基准电流采样开始计数(反馈);，cyc
 	  * @param  [in] referSampleCountUd 上下基准电流采样循环计数(反馈);，cyc
 	  * @param  [in] referenceCurrent 上下基准电流mA
-	  * @param  [in] offsetType 偏置跟踪类型，0-不偏置；1-采样；2-百分比
-	  * @param  [in] offsetParameter 偏置参数；采样(偏置采样开始时间，默认采一周期)；百分比(偏置百分比(-100 ~ 100))
 	  * @return  错误码
 	  */
-	 errno_t ArcWeldTraceControl(int flag, double delaytime, int isLeftRight, double klr, double tStartLr, double stepMaxLr, double sumMaxLr, int isUpLow, double kud, double tStartUd, double stepMaxUd, double sumMaxUd, int axisSelect, int referenceType, double referSampleStartUd, double referSampleCountUd, double referenceCurrent, int offsetType = 0, int offsetParameter = 0);
+	 errno_t ArcWeldTraceControl(int flag, double delaytime, int isLeftRight, double klr, double tStartLr, double stepMaxLr, double sumMaxLr, int isUpLow, double kud, double tStartUd, double stepMaxUd, double sumMaxUd, int axisSelect, int referenceType, double referSampleStartUd, double referSampleCountUd, double referenceCurrent);
 
 
 	 /**
@@ -2869,29 +2540,12 @@ public:
 	  */
 	 errno_t ArcWeldTraceExtAIChannelConfig(int channel);
 
-	 /**
-	  * @brief  力传感器辅助拖动
-	  * @param  [in] status 控制状态，0-关闭；1-开启
-	  * @param  [in] asaptiveFlag 自适应开启标志，0-关闭；1-开启
-	  * @param  [in] interfereDragFlag 干涉区拖动标志，0-关闭；1-开启
-	  * @param  [in] ingularityConstraintsFlag 奇异点策略，0-规避；1-穿越
-	  * @param  [in] M 惯性系数
-	  * @param  [in] B 阻尼系数
-	  * @param  [in] K 刚度系数
-	  * @param  [in] F 拖动六维力阈值
-	  * @param  [in] Fmax 最大拖动力限制
-	  * @param  [in] Vmax 最大关节速度限制
-	  * @return  错误码
-	  */
-	 errno_t EndForceDragControl(int status, int asaptiveFlag, int interfereDragFlag, int ingularityConstraintsFlag, std::vector<double> M, std::vector<double> B, std::vector<double> K, std::vector<double> F, double Fmax, double Vmax);
 
 	 /**
 	  * @brief  力传感器辅助拖动
 	  * @param  [in] status 控制状态，0-关闭；1-开启
 	  * @param  [in] asaptiveFlag 自适应开启标志，0-关闭；1-开启
 	  * @param  [in] interfereDragFlag 干涉区拖动标志，0-关闭；1-开启
-	  * @param  [in] ingularityConstraintsFlag 奇异点策略，0-规避；1-穿越
-	  * @param  [in] forceCollisionFlag 辅助拖动时机器人碰撞检测标志；0-关闭；1-开启
 	  * @param  [in] M 惯性系数
 	  * @param  [in] B 阻尼系数
 	  * @param  [in] K 刚度系数
@@ -2900,7 +2554,7 @@ public:
 	  * @param  [in] Vmax 最大关节速度限制
 	  * @return  错误码
 	  */
-	 errno_t EndForceDragControl(int status, int asaptiveFlag, int interfereDragFlag, int ingularityConstraintsFlag, int forceCollisionFlag, std::vector<double> M, std::vector<double> B, std::vector<double> K, std::vector<double> F, double Fmax, double Vmax);
+	 errno_t EndForceDragControl(int status, int asaptiveFlag, int interfereDragFlag, std::vector<double> M, std::vector<double> B, std::vector<double> K, std::vector<double> F, double Fmax, double Vmax);
 
 
 	 /**
@@ -3068,110 +2722,103 @@ public:
 	  */
 	errno_t AxleSensorRegWrite(int devAddr, int regHAddr, int regLAddr, int regNum, int data1, int data2, int isNoBlock);
 
-	/**
-	* @brief 设置控制箱DO停止/暂停后输出是否复位
-	* @param [in] resetFlag 0-不复位；1-复位
-	* @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
-	* @return 错误码
-	*/
-	errno_t SetOutputResetCtlBoxDO(int resetFlag, int reloadFlag = 0);
+		/**
+		 * @brief  设置控制箱DO停止/暂停后输出是否复位
+		 * @param  [in] resetFlag  0-不复位；1-复位
+		 * @return  错误码
+		 */
+		errno_t SetOutputResetCtlBoxDO(int resetFlag);
 
 	 /**
-	  * @brief 设置控制箱AO停止/暂停后输出是否复位
-	  * @param [in] resetFlag  0-不复位；1-复位
-	  * @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
-	  * @return 错误码
+	  * @brief  设置控制箱AO停止/暂停后输出是否复位
+	  * @param  [in] resetFlag  0-不复位；1-复位
+	  * @return  错误码
 	  */
-	errno_t SetOutputResetCtlBoxAO(int resetFlag, int reloadFlag = 0);
+		errno_t SetOutputResetCtlBoxAO(int resetFlag);
 
 	 /**
-	  * @brief 设置末端工具DO停止/暂停后输出是否复位
-	  * @param [in] resetFlag  0-不复位；1-复位
-	  * @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
-	  * @return 错误码
+	  * @brief  设置末端工具DO停止/暂停后输出是否复位
+	  * @param  [in] resetFlag  0-不复位；1-复位
+	  * @return  错误码
 	  */
-	errno_t SetOutputResetAxleDO(int resetFlag, int reloadFlag = 0);
+		errno_t SetOutputResetAxleDO(int resetFlag);
 	 
 	 /**
-	  * @brief 设置末端工具AO停止/暂停后输出是否复位
-	  * @param [in] resetFlag  0-不复位；1-复位
-	  * @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
+	  * @brief  设置末端工具AO停止/暂停后输出是否复位
+	  * @param  [in] resetFlag  0-不复位；1-复位
 	  * @return  错误码
 	  */
-	errno_t SetOutputResetAxleAO(int resetFlag, int reloadFlag = 0);
+		errno_t SetOutputResetAxleAO(int resetFlag);
 	
 	 /**
-	  * @brief 设置扩展DO停止/暂停后输出是否复位
-	  * @param [in] resetFlag  0-不复位；1-复位
-	  * @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
+	  * @brief  设置扩展DO停止/暂停后输出是否复位
+	  * @param  [in] resetFlag  0-不复位；1-复位
 	  * @return  错误码
 	  */
-	 errno_t SetOutputResetExtDO(int resetFlag, int reloadFlag = 0);
+		errno_t SetOutputResetExtDO(int resetFlag);
 
 	 /**
-	  * @brief 设置扩展AO停止/暂停后输出是否复位
-	  * @param [in] resetFlag  0-不复位；1-复位
-	  * @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
+	  * @brief  设置扩展AO停止/暂停后输出是否复位
+	  * @param  [in] resetFlag  0-不复位；1-复位
 	  * @return  错误码
 	  */
-	 errno_t SetOutputResetExtAO(int resetFlag, int reloadFlag = 0);
+		errno_t SetOutputResetExtAO(int resetFlag);
 
 	 /**
-	  * @brief 设置SmartTool停止/暂停后输出是否复位
-	  * @param [in] resetFlag  0-不复位；1-复位
-	  * @param [in] reloadFlag 暂停恢复后是否重加载，0-不加载；1-加载
+	  * @brief  设置SmartTool停止/暂停后输出是否复位
+	  * @param  [in] resetFlag  0-不复位；1-复位
 	  * @return  错误码
 	  */
-	 errno_t SetOutputResetSmartToolDO(int resetFlag, int reloadFlag = 0);
+		errno_t SetOutputResetSmartToolDO(int resetFlag);
 	
 	 /**
 	  * @brief  仿真摆动开始
 	  * @param  [in] weaveNum  摆动参数编号
 	  * @return  错误码
 	  */
-	errno_t WeaveStartSim(int weaveNum);
+		errno_t WeaveStartSim(int weaveNum);
 
 	 /**
 	  * @brief  仿真摆动结束
 	  * @param  [in] weaveNum  摆动参数编号
 	  * @return  错误码
 	  */
-	errno_t WeaveEndSim(int weaveNum);
+		errno_t WeaveEndSim(int weaveNum);
 
 	 /**
 	  * @brief  开始轨迹检测预警(不运动)
 	  * @param  [in] weaveNum   摆动参数编号
 	  * @return  错误码
 	  */
-	errno_t WeaveInspectStart(int weaveNum);
+		errno_t WeaveInspectStart(int weaveNum);
 
 	 /**
 	  * @brief 结束轨迹检测预警(不运动)
 	  * @param  [in] weaveNum   摆动参数编号
 	  * @return  错误码
 	  */
-	errno_t WeaveInspectEnd(int weaveNum);
+		errno_t WeaveInspectEnd(int weaveNum);
 
 	 /**
 	  * @brief 扩展IO-配置焊机气体检测信号
 	  * @param  [in] DONum  气体检测信号扩展DO编号
 	  * @return  错误码
 	  */
-	errno_t SetAirControlExtDoNum(int DONum);
+		errno_t SetAirControlExtDoNum(int DONum);
 	
 	 /**
 	  * @brief 扩展IO-配置焊机起弧信号
 	  * @param  [in] DONum  焊机起弧信号扩展DO编号
 	  * @return  错误码
 	  */
-	errno_t SetArcStartExtDoNum(int DONum);
+		errno_t SetArcStartExtDoNum(int DONum);
 
 	 /**
 	  * @brief 扩展IO-配置焊机反向送丝信号
 	  * @param  [in] DONum  反向送丝信号扩展DO编号
 	  * @return  错误码
 	  */
-	errno_t SetWireReverseFeedExtDoNum(int DONum);
+		errno_t SetWireReverseFeedExtDoNum(int DONum);
 
 	 /**
 	  * @brief 扩展IO-配置焊机正向送丝信号
@@ -3204,18 +2851,17 @@ public:
 
 	 /**
 	  * @brief 设置机器人碰撞检测方法
-	  * @param [in] method 碰撞检测方法：0-电流模式；1-双编码器；2-电流和双编码器同时开启
-	  * @param [in] thresholdMode 碰撞等级阈值方式；0-碰撞等级固定阈值方式；1-自定义碰撞检测阈值
+	  * @param  [in] method 碰撞检测方法：0-电流模式；1-双编码器；2-电流和双编码器同时开启
 	  * @return  错误码
 	  */
-	errno_t SetCollisionDetectionMethod(int method, int thresholdMode = 0);
+		errno_t SetCollisionDetectionMethod(int method);
 
 	 /**
 	  * @brief 设置静态下碰撞检测开始关闭
 	  * @param  [in] status 0-关闭；1-开启
 	  * @return  错误码
 	  */
-	errno_t SetStaticCollisionOnOff(int status);
+		errno_t SetStaticCollisionOnOff(int status);
 
 	 /**
 	  * @brief 关节扭矩功率检测
@@ -3238,17 +2884,6 @@ public:
 	* @return  错误码
 	*/
 	errno_t ServoJT(float torque[], double interval);
-
-	/**
-	* @brief 关节扭矩控制
-	* @param  [in] torque j1~j6关节扭矩，单位Nm
-	* @param  [in] interval 指令周期，单位s，范围[0.001~0.008]
-	* @param  [in] checkFlag 检测策略 0-不限制；1-限制功率；2-限制速度；3-功率和速度同时限制
-	* @param  [in] jPowerLimit 关节最大功率限制(W)
-	* @param  [in] jVelLimit 关节最大速度(°/s)
-	* @return  错误码
-	*/
-	errno_t ServoJT(float torque[], double interval, int checkFlag, double jPowerLimit[6], double jVelLimit[6]);
 
 	/**
 	* @brief 关节扭矩控制结束
@@ -3578,612 +3213,6 @@ public:
 	errno_t SingularAvoidEnd();
 
 	/**
-	* @brief 开始Ptp运动FIR滤波
-	* @param [in] maxAcc 最大加速度极值(deg/s2)
-	* @param [in] maxJek 统一关节急动度极值(deg/s3)
-	* @return 错误码
-	*/
-	errno_t PtpFIRPlanningStart(double maxAcc, double maxJek = 1000);
-
-	/**
-	* @brief 关闭Ptp运动FIR滤波
-	* @return 错误码
-	*/
-	errno_t PtpFIRPlanningEnd();
-
-	/**
-	* @brief 开始LIN、ARC运动FIR滤波
-	* @param [in] maxAccLin 线加速度极值(mm/s2)
-	* @param [in] maxAccDeg 角加速度极值(deg/s2)
-	* @param [in] maxJerkLin 线加加速度极值(mm/s3)
-	* @param [in] maxJerkDeg 角加加速度极值(deg/s3)
-	* @return 错误码
-	*/
-	errno_t LinArcFIRPlanningStart(double maxAccLin, double maxAccDeg, double maxJerkLin, double maxJerkDeg);
-
-	/**
-	* @brief 关闭LIN、ARC运动FIR滤波
-	* @return 错误码
-	*/
-	errno_t LinArcFIRPlanningEnd();
-
-	/**
-	 * @brief 上传轨迹J文件
-	 * @param [in] filePath 上传轨迹文件的全路径名   C://test/testJ.txt
-	 * @return 错误码
-	 */
-	errno_t TrajectoryJUpLoad(const std::string& filePath);
-
-	/**
-	 * @brief 删除轨迹J文件
-	 * @param [in] fileName 文件名称 testJ.txt
-	 * @return 错误码
-	 */
-	errno_t TrajectoryJDelete(const std::string& fileName);
-
-	/**
-	 * @brief 根据点位信息计算工具坐标系
-	 * @param [in] method 计算方法；0-四点法；1-六点法
-	 * @param [in] pos 关节位置组，四点法时数组长度为4个，六点法时数组长度为6个
-	 * @param [out] coord 工具坐标系结果
-	 * @return 错误码
-	 */
-	errno_t ComputeToolCoordWithPoints(int method, JointPos pos[], DescPose& coord);
-
-	/**
-	 * @brief 根据点位信息计算工件坐标系
-	 * @param [in] method 计算方法；0：原点-x轴-z轴  1：原点-x轴-xy平面
-	 * @param [in] pos 三个TCP位置组
-	 * @param [in] refFrame 参考坐标系
-	 * @param [out] coord 工具坐标系结果
-	 * @return 错误码
-	 */
-	errno_t ComputeWObjCoordWithPoints(int method, DescPose pos[], int refFrame, DescPose& coord);
-
-	/**
-	 * @brief 设置机器人焊接电弧意外中断检测参数
-	 * @param [in] checkEnable 是否使能检测；0-不使能；1-使能
-	 * @param [in] arcInterruptTimeLength 电弧中断确认时长(ms)
-	 * @return 错误码
-	 */
-	errno_t WeldingSetCheckArcInterruptionParam(int checkEnable, int arcInterruptTimeLength);
-
-	/**
-	 * @brief 获取机器人焊接电弧意外中断检测参数
-	 * @param [out] checkEnable 是否使能检测；0-不使能；1-使能
-	 * @param [out] arcInterruptTimeLength 电弧中断确认时长(ms)
-	 * @return 错误码
-	 */
-	errno_t WeldingGetCheckArcInterruptionParam(int* checkEnable, int* arcInterruptTimeLength);
-
-	/**
-	 * @brief 设置机器人焊接中断恢复参数
-	 * @param [in] enable 是否使能焊接中断恢复
-	 * @param [in] length 焊缝重叠距离(mm)
-	 * @param [in] velocity 机器人回到再起弧点速度百分比(0-100)
-	 * @param [in] moveType 机器人运动到再起弧点方式；0-LIN；1-PTP
-	 * @return 错误码
-	 */
-	errno_t WeldingSetReWeldAfterBreakOffParam(int enable, double length, double velocity, int moveType);
-
-	/**
-	 * @brief 获取机器人焊接中断恢复参数
-	 * @param [out] enable 是否使能焊接中断恢复
-	 * @param [out] length 焊缝重叠距离(mm)
-	 * @param [out] velocity 机器人回到再起弧点速度百分比(0-100)
-	 * @param [out] moveType 机器人运动到再起弧点方式；0-LIN；1-PTP
-	 * @return 错误码
-	 */
-	errno_t WeldingGetReWeldAfterBreakOffParam(int* enable, double* length, double* velocity, int* moveType);
-
-	/**
-	 * @brief 设置机器人焊接中断后恢复焊接
-	 * @return 错误码
-	 */
-	errno_t WeldingStartReWeldAfterBreakOff();
-
-	/**
-	 * @brief 设置机器人焊接中断后退出焊接
-	 * @return 错误码
-	 */
-	errno_t WeldingAbortWeldAfterBreakOff();
-
-	/**
-	 * @brief 激光轨迹记录
-	 * @param [in] status 0-停止记录；1-实时跟踪；2-开始记录；3-轨迹复现；4-边记录边复现
-	 * @param [in] delayMode 数据处理方式。0-延时时间；1-延时距离
-	 * @param [in] delayTime 激光传感器起始点运动到机器人焊枪处所需要的时间(ms)
-	 * @param [in] delayDisExAxisNum 延时距离对应外部轴号，bit0-3对应轴1-4
-	 * @param [in] delayDis 激光传感器起始点运动到机器人焊枪处所需要的距离(mm/°)
-	 * @param [in] sensitivePara 补偿灵敏度系数(0~1)
-	 * @param [in] trackMode 定点跟踪类型。0-扩展轴异步运动；1-机器人
-	 * @param [in] triggerMode 定点跟踪触发方式。0-跟踪时长；1-IO
-	 * @param [in] runTime 机器人定点跟踪时长(s)
-	 * @param [in] speed 机器人运动速度百分比
-	 * @return 错误码
-	 */
-	errno_t LaserSensorRecord(int status, int delayMode, int delayTime, int delayDisExAxisNum, double delayDis, double sensitivePara, int trackMode, int triggerMode, int runTime, double speed);
-
-	errno_t LaserTrackingLaserOn(int weldId);
-
-	errno_t LaserTrackingLaserOff();
-
-	errno_t LaserTrackingTrackOn(int coordId);
-
-	errno_t LaserTrackingTrackOff();
-
-	errno_t LaserTrackingSearchStart(int direction, DescTran directionPoint, int vel, int distance, int timeout, int posSensorNum);
-
-
-	/**
-	 * @brief 激光外设打开关闭函数
-	 * @param [in] OnOff 0-关闭 1-打开
-	 * @param [in] weldId 焊缝ID 默认为0
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingLaserOnOff(int OnOff,int weldId);
-
-	/**
-	 * @brief 激光跟踪开始结束函数
-	 * @param [in] OnOff 0-结束 1-开始
-	 * @param [in] coordId 激光外设工具坐标系编号
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingTrackOnOff(int OnOff, int coordId);
-
-	/**
-	 * @brief 激光寻位-固定方向
-	 * @param [in] direction 0-x+ 1-x- 2-y+ 3-y- 4-z+ 5-z-
-	 * @param [in] vel 速度 单位%
-	 * @param [in] distance 最大寻位距离 单位mm
-	 * @param [in] distance 寻位超时时间 单位ms
-	 * @param [in] posSensorNum 激光标定的工具坐标编号
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingSearchStart_xyz(int direction, int vel, int distance, int timeout, int posSensorNum);
-
-	/**
-	 * @brief 激光寻位-任意方向
-	 * @param [in] directionPoint 寻位输入的点的xyz左边
-	 * @param [in] vel 速度 单位%
-	 * @param [in] distance 最大寻位距离 单位mm
-	 * @param [in] distance 寻位超时时间 单位ms
-	 * @param [in] posSensorNum 激光标定的工具坐标编号
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingSearchStart_point(DescTran directionPoint, int vel, int distance, int timeout, int posSensorNum);
-
-	/**
-	 * @brief 激光寻位结束
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingSearchStop();
-
-	/**
-	 * @brief 激光网络参数配置
-	 * @param [in] ip 激光外设的ip地址
-	 * @param [in] port 激光外设的端口号
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingSensorConfig(std::string ip, int port);
-
-	/**
-	 * @brief 激光外设采样周期配置
-	 * @param [in] period 激光外设采样周期 单位ms
-	 * @return 错误码
-	 */
-	errno_t LaserTrackingSensorSamplePeriod(int period);
-
-	/**
-	 * @brief 激光外设驱动加载
-	 * @param [in] type 激光外设驱动的协议类型 101-睿牛 102-创想 103-全视 104-同舟 105-奥太
-	 * @return 错误码
-	 */
-	errno_t LoadPosSensorDriver(int type);
-
-	/**
-	 * @brief 激光外设驱动卸载
-	 * @return 错误码
-	 */
-	errno_t UnLoadPosSensorDriver();
-
-	/**
-	 * @brief 激光焊缝轨迹记录
-	 * @param [in] status 0-停止记录 1-实时跟踪  2-开始记录
-	 * @param [in] delayTime 延时时间 单位ms
-	 * @return 错误码
-	 */
-	errno_t LaserSensorRecord1(int status, int delayTime);
-
-	/**
-	 * @brief 激光焊缝轨迹复现
-	 * @param [in] delayTime 延时时间 单位ms
-	 * @param [in] speed 速度 单位%
-	 * @return 错误码
-	 */
-	errno_t LaserSensorReplay(int delayTime, double speed);
-
-
-	/**
-	 * @brief 激光跟踪复现
-	 * @return 错误码
-	 */
-	errno_t MoveLTR();
-
-	/**
-	 * @brief 激光焊缝轨迹复现
-	 * @param [in] delayMode 模式 0-延时时间 1-延时距离
-	 * @param [in] delayTime 延时时间 单位ms
-	 * @param [in] delayDisExAxisNum 扩展轴编号
-	 * @param [in] delayDis 延时距离 单位mm
-	 * @param [in] sensitivePara 补偿灵敏系数
-	 * @param [in] trackMode 定点跟踪类型。0-扩展轴异步运动；1-机器人
-	 * @param [in] triggerMode 定点跟踪触发方式。0-跟踪时长；1-IO
-	 * @param [in] runTime 机器人定点跟踪时长(s)
-	 * @param [in] speed 速度 单位%
-	 * @return 错误码
-	 */
-	errno_t LaserSensorRecordandReplay(int delayMode, int delayTime, int delayDisExAxisNum, double delayDis, double sensitivePara, int trackMode, int triggerMode, double runTime, double speed);
-
-	/**
-	 * @brief 运动到焊缝记录的起点
-	 * @param [in] moveType 0-moveJ 1-moveL
-	 * @param [in] ovl 速度 单位%
-	 * @return 错误码
-	 */
-	errno_t MoveToLaserRecordStart(int moveType, double ovl);
-
-	/**
-	 * @brief 运动到焊缝记录的终点
-	 * @param [in] moveType 0-moveJ 1-moveL
-	 * @param [in] ovl 速度 单位%
-	 * @return 错误码
-	 */
-	errno_t MoveToLaserRecordEnd(int moveType, double ovl);
-
-
-	/**
-	 * @brief 运动到激光传感器寻位点
-	 * @param [in] moveFlag 运动类型：0-PTP；1-LIN
-	 * @param [in] ovl 速度缩放因子，0-100
-	 * @param [in] dataFlag 焊缝缓存数据选择：0-执行规划数据；1-执行记录数据
-	 * @param [in] plateType 板材类型：0-波纹板；1-瓦楞板；2-围栏板；3-油桶；4-波纹甲壳钢
-	 * @param [in] trackOffectType 激光传感器偏移类型：0-不偏移；1-基坐标系偏移；2-工具坐标系偏移；3-激光传感器原始数据偏移
-	 * @param [in] offset 偏移量
-	 * @return 错误码
-	 */
-	errno_t MoveToLaserSeamPos(int moveFlag, double ovl, int dataFlag, int plateType, int trackOffectType, DescPose offset);
-
-	/**
-	 * @brief 获取激光传感器寻位点坐标信息
-	 * @param [in] trackOffectType 激光传感器偏移类型：0-不偏移；1-基坐标系偏移；2-工具坐标系偏移；3-激光传感器原始数据偏移
-	 * @param [in] offset 偏移量
-	 * @param [out] jPos 关节位置[°]
-	 * @param [out] descPos 笛卡尔位置[mm]
-	 * @param [out] tool 工具坐标系
-	 * @param [out] user 工件坐标系
-	 * @param [out] exaxis 扩展轴位置[mm]
-	 * @return 错误码
-	 */
-	errno_t GetLaserSeamPos(int trackOffectType, DescPose offset, JointPos& jPos, DescPose& descPos, int& tool, int& user, ExaxisPos& exaxis);
-
-	/**
-	 * @brief 摆动渐变开始
-	 * @param [in] weaveChangeFlag 1-变摆动参数；2-变摆动参数+焊接速度
-	 * @param [in] weaveNum 摆动编号 
-	 * @param [in] velStart 焊接开始速度，(cm/min)
-	 * @param [in] velEnd 焊接结束速度，(cm/min)
-	 * @return 错误码
-	 */
-	errno_t WeaveChangeStart(int weaveChangeFlag, int weaveNum, double velStart, double velEnd);
-
-	/**
-	 * @brief 摆动渐变结束
-	 * @return 错误码
-	 */
-	errno_t WeaveChangeEnd();
-
-	/**
-	 * @brief 轨迹预处理(轨迹前瞻)
-	 * @param [in] name  轨迹文件名
-	 * @param [in] mode 采样模式，0-不进行采样；1-等数据间隔采样；2-等误差限制采样
-	 * @param [in] errorLim 误差限制，使用直线拟合生效
-	 * @param [in] type 平滑方式，0-贝塞尔平滑
-	 * @param [in] precision 平滑精度，使用贝塞尔平滑时生效
-	 * @param [in] vamx 设定的最大速度，mm/s
-	 * @param [in] amax 设定的最大加速度，mm/s2
-	 * @param [in] jmax 设定的最大加加速度，mm/s3
-	 * @param [in] flag 匀速前瞻开启开关 0-不开启；1-开启
-	 * @return 错误码
-	 */
-	errno_t LoadTrajectoryLA(char name[30], int mode, double errorLim, int type, double precision, double vamx, double amax, double jmax, int flag = 0);
-
-	/**
-	 * @brief 轨迹复现(轨迹前瞻)
-	 * @return 错误码
-	 */
-	errno_t MoveTrajectoryLA();
-
-	/**
-	 * @brief 自定义碰撞检测阈值功能开始，设置关节端和TCP端的碰撞检测阈值
-	 * @param [in] flag 1-仅关节检测开启；2-仅TCP检测开启；3-关节和TCP检测同时开启
-	 * @param [in] jointDetectionThreshould 关节碰撞检测阈值 j1-j6
-	 * @param [in] tcpDetectionThreshould TCP碰撞检测阈值，xyzabc
-	 * @param [in] block 0-非阻塞；1-阻塞
-	 * @return 错误码
-	 */
-	errno_t CustomCollisionDetectionStart(int flag, double jointDetectionThreshould[6], double tcpDetectionThreshould[6], int block);
-
-	/**
-	 * @brief 自定义碰撞检测阈值功能关闭
-	 * @return 错误码
-	 */
-	errno_t CustomCollisionDetectionEnd();
-
-	/**
-	 * @brief 加速度平滑开启
-	 * @param [in] saveFlag 是否断电保存
-	 * @return 错误码
-	 */
-	errno_t AccSmoothStart(bool saveFlag);
-
-	/**
-	 * @brief 加速度平滑关闭
-	 * @param [in] saveFlag 是否断电保存
-	 * @return 错误码
-	 */
-	errno_t AccSmoothEnd(bool saveFlag);
-
-	/**
-	 * @brief 控制器日志下载
-	 * @param [in] savePath 保存文件路径"D://zDown/"
-	 * @return 错误码
-	 */
-	errno_t RbLogDownload(std::string savePath);
-
-	/**
-	 * @brief 所有数据源下载
-	 * @param [in] savePath 保存文件路径"D://zDown/"
-	 * @return 错误码
-	 */
-	errno_t AllDataSourceDownload(std::string savePath);
-
-	/**
-	 * @brief 数据备份包下载
-	 * @param [in] savePath 保存文件路径"D://zDown/"
-	 * @return 错误码
-	 */
-	errno_t DataPackageDownload(std::string savePath);
-
-	/**
-	 * @brief 获取控制箱SN码
-	 * @param [out] SNCode 控制箱SN码
-	 * @return 错误码
-	 */
-	errno_t GetRobotSN(std::string& SNCode);
-
-	/**
-	 * @brief 关闭机器人操作系统
-	 * @return 错误码
-	 */
-	errno_t ShutDownRobotOS();
-
-	/**
-	 * @brief 传送带通讯输入检测
-	 * @param [in] timeout 等待超时时间ms
-	 * @return 错误码
-	 */
-	errno_t ConveyorComDetect(int timeout);
-
-	/**
-	 * @brief 传送带通讯输入检测触发
-	 * @return 错误码
-	 */
-	errno_t ConveyorComDetectTrigger();
-
-	/**
-	 * @brief 电弧跟踪焊机电流反馈AI通道选择
-	 * @param [in]  channel 通道；0-扩展AI0；1-扩展AI1；2-扩展AI2；3-扩展AI3；4-控制箱AI0；5-控制箱AI1
-	 * @return 错误码
-	 */
-	errno_t ArcWeldTraceAIChannelCurrent(int channel);
-
-	/**
-	 * @brief 电弧跟踪焊机电压反馈AI通道选择
-	 * @param [in]  channel 通道；0-扩展AI0；1-扩展AI1；2-扩展AI2；3-扩展AI3；4-控制箱AI0；5-控制箱AI1
-	 * @return 错误码
-	 */
-	errno_t ArcWeldTraceAIChannelVoltage(int channel);
-
-	/**
-	 * @brief 电弧跟踪焊机电流反馈转换参数
-	 * @param [in] AILow AI通道下限，默认值0V，范围[0-10V]
-	 * @param [in] AIHigh AI通道上限，默认值10V，范围[0-10V]
-	 * @param [in] currentLow AI通道下限对应焊机电流值，默认值0V，范围[0-200V]
-	 * @param [in] currentHigh AI通道上限对应焊机电流值，默认值100V，范围[0-200V]
-	 * @return 错误码
-	 */
-	errno_t ArcWeldTraceCurrentPara(float AILow, float AIHigh, float currentLow, float currentHigh);
-
-	/**
-	 * @brief 电弧跟踪焊机电压反馈转换参数
-	 * @param [in] AILow AI通道下限，默认值0V，范围[0-10V]
-	 * @param [in] AIHigh AI通道上限，默认值10V，范围[0-10V]
-	 * @param [in] voltageLow AI通道下限对应焊机电压值，默认值0V，范围[0-200V]
-	 * @param [in] voltageHigh AI通道上限对应焊机电压值，默认值100V，范围[0-200V]
-	 * @return 错误码
-	 */
-	errno_t ArcWeldTraceVoltagePara(float AILow, float AIHigh, float voltageLow, float voltageHigh);
-
-	/**
-	 * @brief 设置焊接电压渐变开始
-	 * @param [in] IOType 控制类型；0-控制箱IO；1-数字通信协议(UDP);2-数字通信协议(ModbusTCP)
-	 * @param [in] voltageStart 起始焊接电压(V)
-	 * @param [in] voltageEnd 终止焊接电压(V)
-	 * @param [in] AOIndex 控制箱AO端口号(0-1)
-	 * @param [in] blend 是否平滑 0-不平滑；1-平滑
-	 * @return 错误码
-	 */
-	errno_t WeldingSetVoltageGradualChangeStart(int IOType, double voltageStart, double voltageEnd, int AOIndex, int blend);
-
-	/**
-	 * @brief 设置焊接电压渐变结束
-	 * @return 错误码
-	 */
-	errno_t WeldingSetVoltageGradualChangeEnd();
-
-	/**
-	 * @brief 设置焊接电流渐变开始
-	 * @param [in] IOType 控制类型；0-控制箱IO；1-数字通信协议(UDP);2-数字通信协议(ModbusTCP)
-	 * @param [in] voltageStart 起始焊接电流(A)
-	 * @param [in] voltageEnd 终止焊接电流(A)
-	 * @param [in] AOIndex 控制箱AO端口号(0-1)
-	 * @param [in] blend 是否平滑 0-不平滑；1-平滑
-	 * @return 错误码
-	 */
-	errno_t WeldingSetCurrentGradualChangeStart(int IOType, double currentStart, double currentEnd, int AOIndex, int blend);
-
-	/**
-	 * @brief 设置焊接电流渐变结束
-	 * @return 错误码
-	 */
-	errno_t WeldingSetCurrentGradualChangeEnd();
-
-	/**
-	 * @brief 获取SmartTool按钮状态
-	 * @param [out] state SmartTool手柄按钮状态;(bit0:0-通信正常；1-通信掉线；bit1-撤销操作；bit2-清空程序；
-	bit3-A键；bit4-B键；bit5-C键；bit6-D键；bit7-E键；bit8-IO键；bit9-手自动；bit10开始)
-	 * @return 错误码
-	 */
-	errno_t GetSmarttoolBtnState(int& state);
-
-	/**
-	 * @brief 获取扩展轴坐标系
-	 * @param [out] coord 扩展轴坐标系
-	 * @return 错误码
-	 */
-	errno_t ExtAxisGetCoord(DescPose& coord);
-
-	/**
-	 * @brief 设置宽电压控制箱温度及风扇电流监控参数
-	 * @param [in] enable 0-不使能监测；1-使能监测
-	 * @param [in] period 监测周期(s),范围1-100
-	 * @return 错误码
-	 */
-	errno_t SetWideBoxTempFanMonitorParam(int enable, int period);
-
-	/**
-	 * @brief 获取宽电压控制箱温度及风扇电流监控参数
-	 * @param [out] enable 0-不使能监测；1-使能监测
-	 * @param [out] period 监测周期(s),范围1-100
-	 * @return 错误码
-	 */
-	errno_t GetWideBoxTempFanMonitorParam(int &enable, int &period);
-
-	/**
-	 * @brief 设置焦点标定点
-	 * @param [in] pointNum 焦点标定点编号 1-8
-	 * @param [in] point 标定点坐标
-	 * @return 错误码
-	 */
-	errno_t SetFocusCalibPoint(int pointNum, DescPose point);
-
-	/**
-	 * @brief 计算焦点标定结果
-	 * @param [in] pointNum 标定点个数
-	 * @param [out] resultPos 标定结果XYZ
-	 * @param [out] accuracy 标定精度误差
-	 * @return 错误码
-	 */
-	errno_t ComputeFocusCalib(int pointNum, DescTran& resultPos, float& accuracy);
-
-	/**
-	 * @brief 开启焦点跟随
-	 * @param [in] kp 比例参数，默认50.0
-	 * @param [in] kpredict 前馈参数，默认19.0
-	 * @param [in] aMax 最大角加速度限制，默认1440°/s^2
-	 * @param [in] vMax 最大角速度限制，默认180°/s
-	 * @param [in] type 锁定X轴指向(0-参考输入矢量；1-水平；2-垂直)
-	 * @return 错误码
-	 */
-	errno_t FocusStart(double kp, double kpredict, double aMax, double vMax, int type);
-
-	/**
-	 * @brief 停止焦点跟随
-	 * @return 错误码
-	 */
-	errno_t FocusEnd();
-
-	/**
-	 * @brief 设置焦点坐标
-	 * @param [in] pos 焦点坐标XYZ
-	 * @return 错误码
-	 */
-	errno_t SetFocusPosition(DescTran pos);
-
-	/**
-	 * @brief 设置编码器升级(暂未开放)
-	 * @param [in] path 本地升级包全路径(D://zUP/XXXXX.bin)
-	 * @return 错误码
-	 */
-	errno_t SetEncoderUpgrade(std::string path);
-
-	/**
-	 * @brief 设置关节固件升级
-	 * @param [in] type 升级文件类型；1-升级固件(使用前需要使机器人进入boot模式)；2-升级从站配置文件(使用前需要去使能机器人)
-	 * @param [in] path 本地升级包全路径(D://zUP/XXXXX.bin)
-	 * @return 错误码
-	 */
-	errno_t SetJointFirmwareUpgrade(int type, std::string path);
-
-	/**
-	 * @brief 设置控制箱固件升级
-	 * @param [in] type 升级文件类型；1-升级固件(使用前需要使机器人进入boot模式)；2-升级从站配置文件(使用前需要去使能机器人)
-	 * @param [in] path 本地升级包全路径(D://zUP/XXXXX.bin)
-	 * @return 错误码
-	 */
-	errno_t SetCtrlFirmwareUpgrade(int type, std::string path);
-
-	/**
-	 * @brief 设置末端固件升级
-	 * @param [in] type 升级文件类型；1-升级固件(使用前需要使机器人进入boot模式)；2-升级从站配置文件(使用前需要去使能机器人)
-	 * @param [in] path 本地升级包全路径(D://zUP/XXXXX.bin)
-	 * @return 错误码
-	 */
-	errno_t SetEndFirmwareUpgrade(int type, std::string path);
-
-	/**
-	 * @brief 关节全参数配置文件升级(使用前需要去使能机器人)
-	 * @param [in] path 本地升级包全路径(D://zUP/XXXXX.bin)
-	 * @return 错误码
-	 */
-	errno_t JointAllParamUpgrade(std::string path);
-
-	/**
-	 * @brief 设置机器人型号(使用前需要去使能机器人)
-	 * @param [in] type 机器人型号
-	 * @return 错误码
-	 */
-	errno_t SetRobotType(int type);
-
-	/**
-	 * @brief 激光传感器记录点
-	 * @param [in] coordID 激光传感器坐标系
-	 * @param [out] desc 激光传感器识别点笛卡尔位置
-	 * @param [out] joint 激光传感器识别点关节位置
-	 * @param [out] exaxis 激光传感器识别点扩展轴位置
-	 * @return 错误码
-	 */
-	errno_t LaserRecordPoint(int coordID, DescPose& desc, JointPos& joint, ExaxisPos& exaxis);
-
-	/**
-	 * @brief 设置扩展轴与机器人同步运动策略
-	 * @param [in] strategy 策略；0-以机器人为主；1-扩展轴与机器人同步
-	 * @return 错误码
-	 */
-	errno_t SetExAxisRobotPlan(int strategy);
-
-	/**
 	* @brief  设置与机器人通讯重连参数
 	* @param  [in] enable  网络故障时使能重连 true-使能 false-不使能
 	* @param  [in] reconnectTime 重连时间，单位ms
@@ -4192,479 +3221,8 @@ public:
 	*/
 	errno_t SetReConnectParam(bool enable, int reconnectTime = 30000, int period = 50);
 
-	/**
-	 * @brief  获取从站板卡参数
-	 * @param  [out] type  0-Ethercat，1-CClink, 3-Ethercat, 4-EIP
-	 * @param  [out] version  协议版本
-	 * @param  [out] connState  0-未连接 1-已连接
-	 * @return  错误码
-	 */
-	errno_t GetFieldBusConfig(uint8_t* type, uint8_t* version, uint8_t* connState);
-	
-	/**
-	 * @brief  写入从站DO
-	 * @param  [in] DOIndex  DO编号
-	 * @param  [in] wirteNum  写入的数量
-	 * @param  [in] status[8] 写入的数值，最多写8个
-	 * @return  错误码
-	 */
-	errno_t FieldBusSlaveWriteDO(uint8_t DOIndex, uint8_t wirteNum, uint8_t status[8]);
-
-	/**
-	 * @brief  写入从站AO
-	 * @param  [in] AOIndex  AO编号
-	 * @param  [in] wirteNum  写入的数量
-	 * @param  [in] status[8] 写入的数值，最多写8个
-	 * @return  错误码
-	 */
-	errno_t FieldBusSlaveWriteAO(uint8_t AOIndex, uint8_t wirteNum, int status[8]);
-
-	/**
-	 * @brief  读取从站DI
-	 * @param  [in] DOIndex  DI编号
-	 * @param  [in] readeNum  读取的数量
-	 * @param  [out] status[8] 读取到的数值，最多读8个
-	 * @return  错误码
-	 */
-	errno_t FieldBusSlaveReadDI(uint8_t DOIndex, uint8_t readNum, uint8_t status[8]);
-
-	/**
-	 * @brief  读取从站AI
-	 * @param  [in] AOIndex  AI编号
-	 * @param  [in] readeNum  读取的数量
-	 * @param  [out] status[8] 读取到的数值，最多读8个
-	 * @return  错误码
-	 */
-	errno_t FieldBusSlaveReadAI(uint8_t AIIndex, uint8_t readNum, int status[8]);
-
-	/**
-	 * @brief 等待扩展DI输入
-	 * @param [in] DIIndex DI编号
-	 * @param [in] status 0-低电平；1-高电平
-	 * @param [in] waitMs 最大等待时间(ms)
-	 * @return 错误码
-	 */
-	errno_t FieldBusSlaveWaitDI(uint8_t DIIndex, bool status, int waitMs);
-
-	/**
-	 * @brief 等待扩展AI输入
-	 * @param [in] AIIndex AI编号
-	 * @param [in] waitType 0-大于；1-小于
-	 * @param [in] value AI值
-	 * @param [in] waitMs 最大等待时间(ms)
-	 * @return 错误码
-	 */
-	errno_t FieldBusSlaveWaitAI(uint8_t AIIndex, uint8_t waitType, double value, int waitMs);
-
-	/**
-	 * @brief 控制阵列式吸盘
-	 * @param [in] slaveID 从站号
-	 * @param [in] len 长度
-	 * @param [in] ctrlValue 控制值
-	 * @return 错误码
-	 */
-	errno_t SetSuckerCtrl(uint8_t slaveID, uint8_t len, uint8_t ctrlValue[20]);
-
-	/**
-	 * @brief 获取阵列式吸盘状态
-	 * @param [in] slaveID 从站号
-	 * @param [out] state 吸附状态 0-释放物体 1-检测到工件吸附成功 2-没有吸附到物体 3-物体脱离
-	 * @param [out] pressValue 当前真空度 单位kpa 
-	 * @param [out] error 吸盘当前的错误码
-	 * @return 错误码
-	 */
-	errno_t GetSuckerState(uint8_t slaveID, uint8_t* state, int* pressValue, int* error);
-
-	/**
-	 * @brief 等待吸盘状态
-	 * @param [in] slaveID 从站号
-	 * @param [in] state 吸附状态 0-释放物体 1-检测到工件吸附成功 2-没有吸附到物体 3-物体脱离
-	 * @param [in] ms 等待最大时间
-	 * @return 错误码
-	 */
-	errno_t WaitSuckerState(uint8_t slaveID, uint8_t state, int ms);
-
-	/**
-	 * @brief 上传Lua文件
-	 * @param [in] filePath 本地lua文件路径名
-	 * @return 错误码
-	 */
-	errno_t OpenLuaUpload(std::string filePath);
-
-
-	/**
-	* @brief 阻抗启停控制
-	* @param [in] status 0：关闭；1-开启
-	* @param [in] workSpace 0-关节空间；1-迪卡尔空间
-	* @param [in] forceThreshold 触发力阈值(N)
-	* @param [in] m 质量参数
-	* @param [in] b 阻尼参数
-	* @param [in] k 刚度参数
-	* @param [in] maxV 最大线速度(mm/s)
-	* @param [in] maxVA 最大线加速度(mm/s2)
-	* @param [in] maxW 最大角速度(°/s)
-	* @param [in] maxWA 最大角加速度(°/s2)
-	* @return 错误码
-	*/
-	errno_t ImpedanceControlStartStop(int status, int workSpace, double forceThreshold[6], double m[6], double b[6], double k[6], double maxV, double maxVA, double maxW, double maxWA);
-
-	/**
-	 * @brief 设置拖动开启前负载力检测
-	 * @param [in] flag 0-关闭；1-开启
-	 * @return 错误码
-	 */
-	errno_t SetTorqueDetectionSwitch(uint8_t flag);
-
-	/**
-	* @brief 根据编号获取工具坐标系
-	* @param [in] id 工具坐标系编号
-	* @param [out] coord 坐标系数值
-	 * @return 错误码
-	 */
-	errno_t GetToolCoordWithID(int id, DescPose& coord);
-
-	/**
-	* @brief 根据编号获取工件坐标系
-	* @param [in] id 工件坐标系编号
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetWObjCoordWithID(int id, DescPose& coord);
-
-	/**
-	* @brief 根据编号获取外部工具坐标系
-	* @param [in] id 外部工具坐标系编号
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetExToolCoordWithID(int id, DescPose& coord);
-
-	/**
-	* @brief 根据编号获取扩展轴坐标系
-	* @param [in] id 外部工具坐标系编号
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetExAxisCoordWithID(int id, DescPose& coord);
-
-	/**
-	* @brief 根据编号获取负载质量及质心
-	* @param [in] id 负载编号
-	* @param [out] weight 负载质量
-	* @param [out] cog 负载质心
-	* @return 错误码
-	*/
-	errno_t GetTargetPayloadWithID(int id, double& weight, DescTran& cog);
-
-	/**
-	* @brief 获取当前工具坐标系
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetCurToolCoord(DescPose& coord);
-
-	/**
-	* @brief 获取当前工件坐标系
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetCurWObjCoord(DescPose& coord);
-
-	/**
-	* @brief 获取当前外部工具坐标系
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetCurExToolCoord(DescPose& coord);
-
-	/**
-	* @brief 获取当前扩展轴坐标系
-	* @param [out] coord 坐标系数值
-	* @return 错误码
-	*/
-	errno_t GetCurExAxisCoord(DescPose& coord);
-
-	/**
-	 * @brief 机器人操作系统升级(LA控制箱)
-	 * @param [in] filePath 操作系统升级包全路径
-	 * @return  错误码
-	 */
-	errno_t KernelUpgrade(std::string filePath);
-
-	/**
-	 * @brief 获取机器人操作系统升级结果(LA控制箱)
-	 * @param [out] result 升级结果：0:成功；-1:失败
-	 * @return  错误码
-	 */
-	errno_t GetKernelUpgradeResult(int& result);
-
-	/**
-	 * @brief 设置自定义摆动参数
-	 * @param [in] id 自定义摆动编号：0-2
-	 * @param [in] pointNum 摆动点位个数 0-10
-	 * @param [in] point 移动端点数据x,y,z
-	 * @param [in] stayTime 摆动停留时间ms
-	 * @param [in] frequency 摆动频率 Hz
-	 * @param [in] incStayType 等待模式：0-周期不包含等待时间；1-周期包含等待时间
-	 * @param [in] stationary 摆动位置等待：0-等待时间内继续运动；1-等待时间内位置静止
-	 * @return  错误码
-	 */
-	errno_t CustomWeaveSetPara(int id, int pointNum, DescTran point[10], double stayTime[10], double frequency, int incStayType, int stationary);
-
-	/**
-	 * @brief 获取自定义摆动参数
-	 * @param [in] id 自定义摆动编号：0-2
-	 * @param [out] pointNum 摆动点位个数 0-10
-	 * @param [out] point 移动端点数据x,y,z
-	 * @param [out] stayTime 摆动停留时间ms
-	 * @param [out] frequency 摆动频率 Hz
-	 * @param [out] incStayType 等待模式：0-周期不包含等待时间；1-周期包含等待时间
-	 * @param [out] stationary 摆动位置等待：0-等待时间内继续运动；1-等待时间内位置静止
-	 * @return  错误码
-	 */
-	errno_t CustomWeaveGetPara(int id, int& pointNum, DescTran point[10], double stayTime[10], double& frequency, int& incStayType, int& stationary);
-
-	/**
-	 * @brief 关节扭矩传感器灵敏度标定功能开启
-	 * @param [in] status 0-关闭；1-开启
-	 * @return  错误码
-	 */
-	errno_t JointSensitivityEnable(int status);
-
-	/**
-	 * @brief 获取关节扭矩传感器灵敏度标定结果
-	 * @param [out] calibResult j1~j6关节灵敏度[0-1]
-	 * @param [out] linearityn j1~j6关节线性度[0-1]
-	 * @return 错误码
-	 */
-	errno_t JointSensitivityCalibration(double calibResult[6], double linearity[6]);
-
-	/**
-	 * @brief 关节扭矩传感器灵敏度数据采集
-	 * @return 错误码
-	 */
-	errno_t JointSensitivityCollect();
-
 	errno_t Sleep(int ms);
 
-	/**
-	 * @brief 清空运动指令队列
-	 * @return 错误码
-	 */
-	errno_t MotionQueueClear();
-
-	/**
-	 * @brief 获取机器人8个从站端口错误帧数
-	 * @param [out] inRecvErr 输入接收错误帧数 
-	 * @param [out] inCRCErr 输入CRC错误帧数 
-	 * @param [out] inTransmitErr 输入转发错误帧数 
-	 * @param [out] inLinkErr 输入链接错误帧数 
-	 * @param [out] outRecvErr 输出接收错误帧数
-	 * @param [out] outCRCErr 输出CRC错误帧数
-	 * @param [out] outTransmitErr 输出转发错误帧数
-	 * @param [out] outLinkErr 输出链接错误帧数
-	 * @return 错误码
-	 */
-	errno_t GetSlavePortErrCounter(int inRecvErr[8], int inCRCErr[8], int inTransmitErr[8], int inLinkErr[8],
-								   int outRecvErr[8], int outCRCErr[8], int outTransmitErr[8], int outLinkErr[8]);
-
-	/**
-	 * @brief 从站端口错误帧清零
-	 * @param [in] slaveID 从站编号0~7
-	 * @return 错误码
-	 */
-	errno_t SlavePortErrCounterClear(int slaveID);
-
-	/**
-	 * @brief 设置各轴速度前馈系数
-	 * @param [in] radio 各轴速度前馈系数
-	 * @return 错误码
-	 */
-	errno_t SetVelFeedForwardRatio(double radio[6]);
-
-	/**
-	 * @brief 获取各轴速度前馈系数
-	 * @param [out] radio 各轴速度前馈系数
-	 * @return 错误码
-	 */
-	errno_t GetVelFeedForwardRatio(double radio[6]);
-
-	/**
-	 * @brief 机器人MCU日志生成
-	 * @return 错误码
-	 */
-	errno_t RobotMCULogCollect();
-
-	/**
-	 * @brief 移动到相贯线起始点
-	 * @param [in] mainPoint 主管6个示教点的笛卡尔位姿
-	 * @param [in] piecePoint 辅管6个示教点的笛卡尔位姿
-	 * @param [in] tool 工具坐标系编号
-	 * @param [in] wobj 工件坐标系编号
-	 * @param [in] vel 速度百分比
-	 * @param [in] acc 加速度百分比
-	 * @param [in] ovl 速度缩放因子
-	 * @param [in] oacc 加速度缩放因子
-	 * @param [in] moveType 运动类型; 0-PTP；1-LIN
-	 * @return 错误码
-	 */
-	errno_t MoveToIntersectLineStart(DescPose mainPoint[6], DescPose piecePoint[6], int tool, int wobj, double vel, double acc, double ovl, double oacc, int moveType);
-
-	/**
-	 * @brief 移动到相贯线起始点
-	 * @param [in] mainPoint 主管6个示教点的笛卡尔位姿
-	 * @param [in] mainExaxisPos 主管6个示教点扩展轴位置
-	 * @param [in] piecePoint 辅管6个示教点的笛卡尔位姿
-	 * @param [in] pieceExaxisPos 拼接管6个示教点扩展轴位置
-	 * @param [in] extAxisFlag 是否启用扩展轴；0-不启用；1-启用
-	 * @param [in] exaxisPos 起点扩展轴位置
-	 * @param [in] tool 工具坐标系编号
-	 * @param [in] wobj 工件坐标系编号
-	 * @param [in] vel 速度百分比
-	 * @param [in] acc 加速度百分比
-	 * @param [in] ovl 速度缩放因子
-	 * @param [in] oacc 加速度缩放因子
-	 * @param [in] moveType 运动类型; 0-PTP；1-LIN
-	 * @param [in] moveDirection 运动方向；0-顺时针；1-逆时针
-	 * @param [in] offset 偏移量
-	 * @return 错误码
-	 */
-	errno_t MoveToIntersectLineStart(DescPose mainPoint[6], ExaxisPos mainExaxisPos[6], DescPose piecePoint[6], ExaxisPos pieceExaxisPos[6], int extAxisFlag, ExaxisPos exaxisPos, int tool, int wobj, double vel, double acc, double ovl, double oacc, int moveType, int moveDirection, DescPose offset);
-
-	/**
-	 * @brief 相贯线运动
-	 * @param [in] mainPoint 主管6个示教点的笛卡尔位姿
-	 * @param [in] piecePoint 辅管6个示教点的笛卡尔位姿
-	 * @param [in] tool 工具坐标系编号
-	 * @param [in] wobj 工件坐标系编号
-	 * @param [in] vel 速度百分比
-	 * @param [in] acc 加速度百分比
-	 * @param [in] ovl 速度缩放因子
-	 * @param [in] oacc 加速度缩放因子
-	 * @param [in] moveDirection 运动方向; 0-顺时针；1-逆时针
-	 * @return 错误码
-	 */
-	errno_t MoveIntersectLine(DescPose mainPoint[6], DescPose piecePoint[6], int tool, int wobj, double vel, double acc, double ovl, double oacc, int moveDirection);
-
-	/**
-	 * @brief 相贯线运动
-	 * @param [in] mainPoint 主管6个示教点的笛卡尔位姿
-	 * @param [in] mainExaxisPos 主管6个示教点扩展轴位置
-	 * @param [in] piecePoint 辅管6个示教点的笛卡尔位姿
-	 * @param [in] pieceExaxisPos 拼接管6个示教点扩展轴位置
-	 * @param [in] extAxisFlag 是否启用扩展轴；0-不启用；1-启用
-	 * @param [in] exaxisPos 起点扩展轴位置
-	 * @param [in] tool 工具坐标系编号
-	 * @param [in] wobj 工件坐标系编号
-	 * @param [in] vel 速度百分比
-	 * @param [in] acc 加速度百分比
-	 * @param [in] ovl 速度缩放因子
-	 * @param [in] oacc 加速度缩放因子
-	 * @param [in] moveDirection 运动方向; 0-顺时针；1-逆时针
-	 * @param [in] offset 偏移量
-	 * @return 错误码
-	 */
-	errno_t MoveIntersectLine(DescPose mainPoint[6], ExaxisPos mainExaxisPos[6], DescPose piecePoint[6], ExaxisPos pieceExaxisPos[6], int extAxisFlag, ExaxisPos exaxisPos[4], int tool, int wobj, double vel, double acc, double ovl, double oacc, int moveDirection, DescPose offset);
-	/**
-	 * @brief 获取关节扭矩传感器迟滞误差
-	 * @param [out] hysteresisError j1~j6关节迟滞误差
-	 * @return 错误码
-	 */
-	errno_t JointHysteresisError(double hysteresisError[6]);
-
-	/**
-	 * @brief 获取关节扭矩传感器重复精度
-	 * @param [out] repeatability j1~j6关节扭矩传感器重复精度
-	 * @return 错误码
-	 */
-	errno_t JointRepeatability(double repeatability[6]);
-
-	/**
-	 * @brief 设置关节力传感器参数
-	 * @param [in] M J1-J6质量系数[0.001 ~ 10]
-	 * @param [in] B J1-J6阻尼系数[0.001 ~ 10]
-	 * @param [in] K J1-J6刚度系数[0.001 ~ 10]
-	 * @param [in] threshold 力控制阈值，Nm
-	 * @param [in] sensitivity 灵敏度,Nm/V,[0 ~ 10]
-	 * @param [in] setZeroFlag 功能开启标志位；0-关闭；1-开启；2-位置1记录零点；3-位置2记录零点
-	 * @return 错误码
-	 */
-	errno_t SetAdmittanceParams(double M[6], double B[6], double K[6], double threshold[6], double sensitivity[6], int setZeroFlag);
-
-	/**
-	 * @brief 开启力矩补偿功能及补偿系数
-	 * @param [in] status 开关，0-关闭；1-开启
-	 * @param [in] torqueCoeff J1-J6力矩补偿系数[0-1]
-	 * @return 错误码
-	 */
-	errno_t SerCoderCompenParams(int status, double torqueCoeff[6]);
-
-	/**
-	 * @brief 光电传感器TCP标定-计算工具RPY
-	 * @param [in] Btool 机器人笛卡尔位置
-	 * @param [in] Etool 当前工具坐标系数值
-	 * @param [in] senser 当前传感器坐标系数值(暂未开放)
-	 * @param [in] radius 圆周运动半径mm(暂未开放)
-	 * @param [in] dz 沿基座标系z轴负方向运动距离；当dz = 10000时，函数直接返回工具RPY
-	 * @param [out] TCPRPY 工具RPY数值
-	 * @return 错误码
-	 */
-	errno_t TCPComputeRPY(DescPose Btool, DescPose Etool, DescPose sensor, double radius, double dz, Rpy& TCPRPY);
-
-	/**
-	 * @brief 光电传感器TCP标定-计算工具XYZ
-	 * @param [in] select 0-计算工具TCP；1-计算传感器原点；2-计算传感器姿态；3-直接返回工具TCP；4-记录当前工件坐标系和工具坐标系
-	 * @param [in] originDirection 0-X方向；1-Y方向；2-Z方向
-	 * @param [in] pos1 机器人笛卡尔位置1
-	 * @param [in] pos2 机器人笛卡尔位置2
-	 * @param [in] pos3 机器人笛卡尔位置3
-	 * @param [in] pos4 机器人笛卡尔位置4
-	 * @param [out] TCP 工具XYZ数值
-	 * @return 错误码
-	 */
-	errno_t TCPComputeXYZ(int select, double originDirection, DescTran pos1, DescTran pos2, DescTran pos3, DescTran pos4, DescTran& TCP);
-
-	/**
-	 * @brief 光电传感器TCP标定-开始记录末端法兰中心位置
-	 * @return 错误码
-	 */
-	errno_t TCPRecordFlangePosStart();
-
-	/**
-	 * @brief 光电传感器TCP标定-停止记录末端法兰中心位置
-	 * @return 错误码
-	 */
-	errno_t TCPRecordFlangePosEnd();
-
-	/**
-	 * @brief 光电传感器TCP标定-获取末端工具中心点位置
-	 * @param [out] TCP 工具中心点位置(x,y,z)
-	 * @return 错误码
-	 */
-	errno_t TCPGetRecordFlangePos(DescTran& TCP);
-
-	/**
-	 * @brief 光电传感器TCP标定
-	 * @param [in] luaPath 自动标定lua程序路径：QX版本机器人-"/fruser/FR_CalibrateTheToolTcp.lua";LA版本机器人-"/usr/local/etc/controller/lua/FR_CalibrateTheToolTcp.lua"
-	 * @param [in] offsetX 示教点偏移(x,y,z)mm
-	 * @param [out] TCP 标定后的工具坐标系(x,y,z,rx,ry,rz)
-	 * @return 错误码
-	 */
-	errno_t PhotoelectricSensorTCPCalibration(std::string luaPath, DescTran offset, DescPose& TCP);
-
-	/**
-	 * @brief 原地空运动
-	 * @return 错误码
-	 */
-	errno_t MoveStationary();
-
-	/**
-	 * @brief 获取lua程序错误行号和错误码
-	 * @param [out] errLinNum lua程序执行错误行号
-	 * @param [out] luaErrCode lua程序执行错误码
-	 * @return 错误码
-	 */
-	errno_t GetProgramRunErrCode(int& errLinNum, int& luaErrCode);
 
 	/**
 	 *@brief  机器人接口类析构函数
@@ -4696,10 +3254,7 @@ private:
 	 * @param [in] upLoadFilePath 保存文件路径    “C：//test/”
 	 * @return 错误码
 	 */
-	errno_t FileUpLoad(int fileType, std::string filePath, int reUp = 0);
-
-
-	errno_t GetFileUploadBreakState(int& breakFlag, std::string& md5, int& fileSize, int& curSentSize);
+	errno_t FileUpLoad(int fileType, std::string filePath);
 
 	/**
 	 * @brief 上传文件
@@ -4718,9 +3273,6 @@ private:
 	//判断当前通信是否正常  正常返回false，异常反馈true
 	bool IsSockError();
 
-	//判断当前安全状态，安全停止、主子故障等
-	int GetSafetyCode();
-
 private:
 	uint8_t robot_realstate_exit = 0;
 	uint8_t robot_instcmd_send_exit = 0;
@@ -4731,13 +3283,12 @@ private:
 	char g_recvbuf[1024 * 4] = { 0 };
 	int g_sock_com_err;
 	double fileUploadPercent;
-	int robotProgramErrLinNum = 0;
-	int robotProgramErrCode = 0;
 
 	char robot_ip[64];
-	std::shared_ptr<ROBOT_STATE_PKG> robot_state_pkg;
-	std::shared_ptr <FRTcpClient> rtClient;
-	std::shared_ptr <FRTcpClient> cmdClient;
+	ROBOT_STATE_PKG robot_state_pkg;
+
+	FRTcpClient* rtClient = nullptr;
+	FRTcpClient* cmdClient = nullptr;
 
 };
 

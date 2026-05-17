@@ -9,6 +9,7 @@ endif()
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 17)
 
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -26,7 +27,7 @@ file(GLOB EXP_SRC_DIR ./examples/src/*.cpp)
 
 #compile
 file(CREATE_LINK 
-"${CMAKE_CURRENT_SOURCE_DIR}/libfairino/lib/libfairino.so.2.3.3"
+"${CMAKE_CURRENT_SOURCE_DIR}/libfairino/lib/libfairino.so.2.1.4"
 "${CMAKE_CURRENT_SOURCE_DIR}/libfairino/lib/libfairino.so.2"
 SYMBOLIC)
 
@@ -36,6 +37,7 @@ file(CREATE_LINK
 SYMBOLIC)
 
 add_executable(ros2_cmd_server ${SRC_DIR})
+target_link_options(ros2_cmd_server PRIVATE "-Wl,-rpath,'$ORIGIN'")
 add_executable(srv_test_client ${EXP_SRC_DIR})
 add_library(
   fairino_hardware 
@@ -43,16 +45,10 @@ add_library(
   ./src/fairino_hardware_interface.cpp
 )
 
-#target_compile_definitions(ros2_cmd_server PRIVATE CHN_VERSION)
-#target_compile_definitions(ros2_cmd_server PRIVATE ENG_VERSION)
-
-
 #add headfile source
-target_include_directories(ros2_cmd_server PUBLIC 
-${CMAKE_CURRENT_SOURCE_DIR}/include/ 
-${CMAKE_CURRENT_SOURCE_DIR}/)
-
+target_include_directories(ros2_cmd_server PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${CMAKE_CURRENT_SOURCE_DIR}/)
 target_include_directories(srv_test_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/examples/include)
+message("current source dir is: ")
 target_include_directories(fairino_hardware PUBLIC 
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
@@ -99,18 +95,18 @@ file(MAKE_DIRECTORY
 "${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}"
 )
 
-file(COPY_FILE "libfairino/lib/libfairino.so.2.3.3" 
-"${CMAKE_INSTALL_PREFIX}/lib/libfairino.so.2.3.3" 
+file(COPY_FILE "libfairino/lib/libfairino.so.2.1.4" 
+"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/libfairino.so.2.1.4" 
 )
 
 file(CREATE_LINK 
-"${CMAKE_INSTALL_PREFIX}/lib/libfairino.so.2.3.3" 
-"${CMAKE_INSTALL_PREFIX}/lib/libfairino.so.2" 
+"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/libfairino.so.2.1.4" 
+"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/libfairino.so.2" 
 SYMBOLIC)
 
 file(CREATE_LINK 
-"${CMAKE_INSTALL_PREFIX}/lib/libfairino.so.2" 
-"${CMAKE_INSTALL_PREFIX}/lib/libfairino.so" 
+"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/libfairino.so.2" 
+"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/libfairino.so" 
 SYMBOLIC)
 
 
