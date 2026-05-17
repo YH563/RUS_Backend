@@ -22,7 +22,9 @@ namespace RusCloudNode
     {
     public:
         CloudNode();
+
     private:
+        
 
         // 私有成员变量
         std::unique_ptr<CloudPreprocess> cloud_preprocess;  // 点云预处理对象

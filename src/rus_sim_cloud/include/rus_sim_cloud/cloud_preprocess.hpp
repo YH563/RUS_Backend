@@ -9,12 +9,14 @@
 #include <pcl/search/kdtree.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/common/transforms.h>
+#include <pcl/filters/voxel_grid.h>
 #include <rclcpp/rclcpp.hpp>
 #include <pcl/common/transforms.h>
 #include <geometry_msgs/msg/pose.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
-namespace RusCloudPreprocess {
+namespace RusCloudPreprocess 
+{
     using CloudRGBPtr = pcl::PointCloud<pcl::PointXYZRGB>::Ptr;  // 彩色点云数据指针，为智能指针对象
     using CloudRGB = pcl::PointCloud<pcl::PointXYZRGB>;  // 彩色点云
     using CloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;  // 点云数据指针，为智能指针对象
@@ -39,14 +41,16 @@ namespace RusCloudPreprocess {
         CloudPreprocess() = default;
         ~CloudPreprocess() = default;
 
+        // 对点云数据进行处理
+        bool ProcessClouds();
         // 获取处理后点云数据
         const CloudRGBPtr& GetCloud() const;
         // 添加点云数据
         bool AddCloud(const CloudRGBPtr& cloud, const Pose& end_pose);
-        // 设置滤波参数
+        // 设置点云预处理参数
         void SetFilterParamter(CloudParameter& param) { parameter_ = param; }
         // 清空数据
-        void Clear();
+        void Clear(){ cloud_rgb_ptr_ = nullptr; clouds_.clear();}
 
     private:
         // 进行体素滤波
