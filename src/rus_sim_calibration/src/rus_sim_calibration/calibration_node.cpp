@@ -70,7 +70,7 @@ namespace RusCalibrationNode
             std::bind(&CalibrationNode::on_image, this, _1)
         );
 
-        robot_pose_sub_ = this->create_subscription<Pose>(
+        robot_pose_sub_ = this->create_subscription<RobotNonrtState>(
             robot_pose_topic, 1,
             std::bind(&CalibrationNode::on_robot_pose, this, std::placeholders::_1)
         );
@@ -97,6 +97,31 @@ namespace RusCalibrationNode
         return true;
     }
 
+    Pose CalibrationNode::flange_to_pose(double x, double y, double z, double a, double b, double c)
+    {
+        // 1. 角度转弧度 (a, b, c 单位为度)
+        double a_rad = a * M_PI / 180.0;
+        double b_rad = b * M_PI / 180.0;
+        double c_rad = c * M_PI / 180.0;
+
+        // 2. 使用 Eigen 构建 RPY 旋转矩阵并转换为四元数
+        Eigen::AngleAxisd roll(a_rad, Eigen::Vector3d::UnitX());
+        Eigen::AngleAxisd pitch(b_rad, Eigen::Vector3d::UnitY());
+        Eigen::AngleAxisd yaw(c_rad, Eigen::Vector3d::UnitZ());
+        Eigen::Quaterniond q = yaw * pitch * roll;
+        // 3. 构造 Pose
+        geometry_msgs::msg::Pose pose;
+        pose.position.x = x;
+        pose.position.y = y;
+        pose.position.z = z;
+        pose.orientation.x = q.x();
+        pose.orientation.y = q.y();
+        pose.orientation.z = q.z();
+        pose.orientation.w = q.w();
+
+        return pose;
+    }
+
     void CalibrationNode::on_image(const sensor_msgs::msg::Image::ConstSharedPtr msg)
     {
         // 图像回调：将 ROS 图像消息转为 cv::Mat 并缓存
@@ -112,9 +137,16 @@ namespace RusCalibrationNode
         }
     }
 
-    void CalibrationNode::on_robot_pose(const Pose::SharedPtr msg)
+    void CalibrationNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
     {
-        latest_robot_pose_ = *msg;
+        latest_robot_pose_ = flange_to_pose(
+            msg->flange_x_cur_pos,
+            msg->flange_y_cur_pos,
+            msg->flange_y_cur_pos,
+            msg->flange_a_cur_pos,
+            msg->flange_b_cur_pos,
+            msg->flange_c_cur_pos
+        );
         has_robot_pose_ = true;
     }
 

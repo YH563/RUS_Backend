@@ -9,6 +9,7 @@
 #include <memory>
 #include <functional>
 
+#include "fairino_msgs/msg/robot_nonrt_state.hpp"
 #include "rus_sim_interfaces/srv/calibration_capture.hpp"
 #include "rus_sim_interfaces/srv/calibration_compute.hpp"
 #include "rus_sim_interfaces/srv/calibration_save.hpp"
@@ -19,6 +20,7 @@ namespace RusCalibrationNode {
     using RusCalibration::PatternParameter;
     using RusCalibration::CameraParameter;
     using geometry_msgs::msg::Pose;
+    using fairino_msgs::msg::RobotNonrtState;
     using std::placeholders::_1;
     using std::placeholders::_2;
 
@@ -34,13 +36,13 @@ namespace RusCalibrationNode {
         // 初始化函数
         bool Initialize();
     private:
-        // 初始化话题和服务
-        void set_topics_and_services();
+        // 法兰坐标转pose
+        Pose flange_to_pose(double x, double y, double z, double a, double b, double c);
 
         // 接收图像的回调函数
         void on_image(const sensor_msgs::msg::Image::ConstSharedPtr msg);
         // 接收机械臂末端位姿的回调函数
-        void on_robot_pose(const Pose::SharedPtr msg);
+        void on_robot_pose(const RobotNonrtState::SharedPtr msg);
 
         // 捕获图像+位姿信息
         void handle_capture(
@@ -64,7 +66,7 @@ namespace RusCalibrationNode {
         // 话题
         std::unique_ptr<image_transport::ImageTransport> it_;  // 改为指针，延迟初始化
         image_transport::Subscriber image_sub_;  // 图像数据订阅
-        rclcpp::Subscription<Pose>::SharedPtr robot_pose_sub_;  // 机械臂末端位姿订阅
+        rclcpp::Subscription<RobotNonrtState>::SharedPtr robot_pose_sub_;  // 机械臂末端位姿订阅
 
         // 服务
         rclcpp::Service<rus_sim_interfaces::srv::CalibrationCapture>::SharedPtr capture_service_;  // 捕获服务

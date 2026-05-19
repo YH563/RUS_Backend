@@ -20,6 +20,7 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(yaml-cpp REQUIRED)  # yaml 解析库
 find_package(rus_sim_interfaces REQUIRED)
+find_package(fairino_msgs REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 file(GLOB SRC_FILES src/${PROJECT_NAME}/*.cpp)
@@ -37,6 +38,7 @@ ament_target_dependencies(calibration_core PUBLIC
   image_transport
   geometry_msgs
   rus_sim_interfaces
+  fairino_msgs
 )
 
 target_link_libraries(calibration_core PUBLIC
@@ -58,6 +60,7 @@ ament_target_dependencies(rus_sim_calibration PUBLIC
   image_transport
   geometry_msgs
   rus_sim_interfaces
+  fairino_msgs
 )
 
 install(TARGETS rus_sim_calibration

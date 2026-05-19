@@ -20,6 +20,8 @@
   <depend>tf2_ros</depend>
   <depend>tf2_geometry_msgs</depend>
   <depend>rus_sim_interfaces</depend>
+  <build_depend>fairino_msgs</build_depend>
+  <exec_depend>fairino_msgs</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

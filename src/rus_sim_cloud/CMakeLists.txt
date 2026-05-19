@@ -22,6 +22,7 @@ find_package(Eigen3 REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(rus_sim_interfaces REQUIRED)
+find_package(fairino_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 # uncomment the following section in order to fill in
@@ -48,6 +49,7 @@ ament_target_dependencies(cloud_core PUBLIC
   rus_sim_interfaces
   tf2_ros
   tf2_geometry_msgs
+  fairino_msgs
 )
 
 target_link_libraries(cloud_core PUBLIC
@@ -80,6 +82,7 @@ ament_target_dependencies(rus_sim_cloud PUBLIC
   tf2_geometry_msgs
   tf2_ros
   rus_sim_interfaces
+  fairino_msgs
 )
 
 target_include_directories(rus_sim_cloud PRIVATE

@@ -8,7 +8,7 @@ calibration_node:
     # 彩色图像话题（相机发布的图像）
     image_topic: "/camera/color/image_raw"
     # 机械臂末端位姿话题
-    robot_pose_topic: "/robot/end_effector_pose"
+    robot_pose_topic: "/nonrt_state_data"
     # 捕获标定数据服务
     capture_service: "calibration_capture"
     # 执行标定计算服务
