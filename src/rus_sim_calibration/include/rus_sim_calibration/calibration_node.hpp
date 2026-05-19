@@ -3,6 +3,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.hpp>
 #include <opencv2/opencv.hpp>
@@ -38,6 +39,8 @@ namespace RusCalibrationNode {
     private:
         // 法兰坐标转pose
         Pose flange_to_pose(double x, double y, double z, double a, double b, double c);
+        // 将图像信息与位姿信息进行对齐并保存
+        void align_image_pose();
 
         // 接收图像的回调函数
         void on_image(const sensor_msgs::msg::Image::ConstSharedPtr msg);
@@ -73,11 +76,14 @@ namespace RusCalibrationNode {
         rclcpp::Service<rus_sim_interfaces::srv::CalibrationCompute>::SharedPtr compute_service_;  // 计算服务
         rclcpp::Service<rus_sim_interfaces::srv::CalibrationSave>::SharedPtr save_service_;  // 保存服务
 
-        // --- 缓存最新数据 ---
-        cv::Mat latest_color_image_;
-        Pose latest_robot_pose_;
-        bool has_image_ = false;
-        bool has_robot_pose_ = false;
+        // 缓存数据
+        sensor_msgs::msg::Image::SharedPtr image_cache;  // 缓存图像消息
+        std::deque<geometry_msgs::msg::PoseStamped::SharedPtr> pose_cache_;  // 缓存最近的位姿消息
+        size_t max_cache_size_ = 50; // 缓存位姿信息的最大数量
+        double max_allowed_diff_sec_ = 0.05;  // 允许对齐时间的容忍范围，默认为50毫秒
+
+        cv::Mat latest_color_image_;  // 缓存最近的图像
+        Pose latest_pose_;  // 缓存与图像匹配的位姿信息
 
         // 求解器和参数
         std::unique_ptr<CalibrationSolver> calibration_solver_;  // 手眼标定求解器

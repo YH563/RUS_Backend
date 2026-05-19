@@ -18,7 +18,7 @@ namespace RusMoveitManagerNode
         request->end_pose = end;
         auto future = planner_client_->async_send_request(
             request,
-            std::bind(&MoveitManagerNode::response_trajectory_callback, this, _1)
+            std::bind(&MoveitManagerNode::response_trajectory, this, _1)
         );
     }
 
@@ -66,7 +66,7 @@ namespace RusMoveitManagerNode
         }
     }
 
-    void MoveitManagerNode::response_trajectory_callback(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future)
+    void MoveitManagerNode::response_trajectory(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future)
     {
         auto response = future.get();
         if (!response->success)

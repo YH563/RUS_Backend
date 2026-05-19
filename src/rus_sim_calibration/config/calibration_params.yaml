@@ -38,3 +38,6 @@ calibration_node:
     # 畸变系数，共 5 个值
     # [k1, k2, p1, p2, k3]
     dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+    # 允许对齐时间的容忍范围，默认为50毫秒
+    max_allowed_diff_sec: 0.05

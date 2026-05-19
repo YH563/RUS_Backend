@@ -25,7 +25,7 @@ namespace RusMoveitManagerNode
 
     private:
         // 接收到轨迹生成服务的回调函数
-        void response_trajectory_callback(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future);
+        void response_trajectory(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future);
         
         std::unique_ptr<MoveitManager> moveit_manager_;  // 规划器
         rclcpp::Client<ServiceGenerateTrajectory>::SharedPtr planner_client_;  // 客户端，发布规划请求

@@ -20,7 +20,11 @@ namespace RusCalibrationNode
         // 相机内参（经由参数传入）
         this->declare_parameter<std::vector<double>>("camera_matrix", std::vector<double>());
         this->declare_parameter<std::vector<double>>("dist_coeffs", std::vector<double>());
+
+        // 对齐的容忍误差
+        this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         
+        max_allowed_diff_sec_ = this->get_parameter("max_allowed_diff_sec").as_double();
         result_file_path_ = this->get_parameter("result_file_path").as_string();
 
         pattern_param_.pattern_width  = this->get_parameter("pattern_width").as_int();
@@ -45,6 +49,7 @@ namespace RusCalibrationNode
                 "相机内参未提供或尺寸不正确（需9个内参值 + 5个畸变系数），将使用默认值。");
         }
 
+        image_cache = std::make_shared<sensor_msgs::msg::Image>();
         calibration_solver_ = std::make_unique<CalibrationSolver>();
 
         if (!calibration_solver_->Initialize(pattern_param_, camera_param_))
@@ -72,25 +77,25 @@ namespace RusCalibrationNode
 
         robot_pose_sub_ = this->create_subscription<RobotNonrtState>(
             robot_pose_topic, 1,
-            std::bind(&CalibrationNode::on_robot_pose, this, std::placeholders::_1)
+            std::bind(&CalibrationNode::on_robot_pose, this, _1)
         );
 
         capture_service_ = this->create_service<rus_sim_interfaces::srv::CalibrationCapture>(
             capture_service,
             std::bind(&CalibrationNode::handle_capture, this,
-                std::placeholders::_1, std::placeholders::_2)
+                _1, _2)
         );
 
         compute_service_ = this->create_service<rus_sim_interfaces::srv::CalibrationCompute>(
             compute_service,
             std::bind(&CalibrationNode::handle_compute, this,
-                std::placeholders::_1, std::placeholders::_2)
+                _1, _2)
         );
 
         save_service_ = this->create_service<rus_sim_interfaces::srv::CalibrationSave>(
             save_service,
             std::bind(&CalibrationNode::handle_save, this,
-                std::placeholders::_1, std::placeholders::_2)
+                _1, _2)
         );
 
         RCLCPP_INFO(this->get_logger(), "标定节点初始化完成。");
@@ -122,24 +127,52 @@ namespace RusCalibrationNode
         return pose;
     }
 
+    void CalibrationNode::align_image_pose()
+    {
+        rclcpp::Time img_time(image_cache->header.stamp);
+        geometry_msgs::msg::PoseStamped::SharedPtr best_pose = nullptr;
+        double min_diff = std::numeric_limits<double>::max();
+        
+        for (const auto &pose : pose_cache_) {
+            rclcpp::Time pose_time(pose->header.stamp);
+            double diff = std::abs((img_time - pose_time).seconds());
+            if (diff < min_diff) {
+                min_diff = diff;
+                best_pose = pose;
+            }
+        }
+        if (min_diff > max_allowed_diff_sec_) 
+            RCLCPP_WARN(this->get_logger(), "点云与位姿的时间差过大(%.4f秒)，可能导致计算不准", min_diff);
+        if (best_pose)
+        {
+            try
+            {
+                cv::Mat cv_image = cv_bridge::toCvCopy(image_cache, sensor_msgs::image_encodings::BGR8)->image;
+                latest_color_image_ = cv_image.clone();
+                latest_pose_ = best_pose->pose;
+            }
+            catch (cv_bridge::Exception &e)
+            {
+                RCLCPP_ERROR(this->get_logger(), "cv_bridge 转换失败: %s", e.what());
+            }
+        }
+    }
+
     void CalibrationNode::on_image(const sensor_msgs::msg::Image::ConstSharedPtr msg)
     {
-        // 图像回调：将 ROS 图像消息转为 cv::Mat 并缓存
-        try
+        if (msg == nullptr)
         {
-            auto cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-            latest_color_image_ = cv_ptr->image.clone();
-            has_image_ = true;
+            RCLCPP_ERROR(this->get_logger(), "尚未接收到图像数据，请确相机话题正确发布。");
+            return;
         }
-        catch (cv_bridge::Exception& e)
-        {
-            RCLCPP_ERROR(this->get_logger(), "cv_bridge 转换失败: %s", e.what());
-        }
+        *image_cache = *msg;
+        return ;
     }
 
     void CalibrationNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
     {
-        latest_robot_pose_ = flange_to_pose(
+        geometry_msgs::msg::PoseStamped::SharedPtr pose_stamped_ptr;
+        auto pose = flange_to_pose(
             msg->flange_x_cur_pos,
             msg->flange_y_cur_pos,
             msg->flange_y_cur_pos,
@@ -147,7 +180,13 @@ namespace RusCalibrationNode
             msg->flange_b_cur_pos,
             msg->flange_c_cur_pos
         );
-        has_robot_pose_ = true;
+        pose_stamped_ptr->set__pose(pose);
+        pose_stamped_ptr->header.stamp = this->get_clock()->now();
+        pose_stamped_ptr->header.frame_id = "base_link";
+        pose_cache_.push_back(pose_stamped_ptr);
+        // 超过最大缓存数量的时候出队
+        while (pose_cache_.size() > max_cache_size_) 
+            pose_cache_.pop_front();
     }
 
     void CalibrationNode::handle_capture(
@@ -156,34 +195,17 @@ namespace RusCalibrationNode
     )
     {
         (void)request;
-
-        // 检查数据是否已就绪
-        if (!has_image_)
+        if (image_cache == nullptr || pose_cache_.empty())
         {
             response->success = false;
-            response->message = "尚未接收到图像数据，请确保相机话题正在发布。";
-            RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
+            response->message = "尚未接收到机械臂位姿或图像数据，请确保机械臂话题或相机正在发布。";
+            RCLCPP_ERROR(this->get_logger(), "%s", response->message.c_str());
             return;
         }
 
-        if (!has_robot_pose_)
-        {
-            response->success = false;
-            response->message = "尚未接收到机械臂位姿数据，请确保机械臂话题正在发布。";
-            RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
-            return;
-        }
-
-        if (latest_color_image_.empty())
-        {
-            response->success = false;
-            response->message = "缓存的图像为空，数据无效。";
-            RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
-            return;
-        }
-
-        // 将捕获的数据传给求解器
-        bool ok = calibration_solver_->AddCalibrationData(latest_robot_pose_, latest_color_image_);
+        // 进行数据对齐操作，并传递给求解器
+        align_image_pose();
+        bool ok = calibration_solver_->AddCalibrationData(latest_pose_, latest_color_image_);
 
         if (ok)
         {

@@ -31,7 +31,7 @@ namespace RusTrajectoryPlannerNode
         planner_ = std::make_unique<RusTrajectoryPlanner::TrajectoryPlanner>();
         
         // 订阅话题，创建服务
-        point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
+        cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
             point_cloud_topic, 10, 
             [this](const sensor_msgs::msg::PointCloud2::SharedPtr msg){
                 pcl::fromROSMsg(*msg, *cloud_);

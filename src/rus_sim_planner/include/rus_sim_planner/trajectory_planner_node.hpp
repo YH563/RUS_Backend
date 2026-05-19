@@ -37,7 +37,7 @@ namespace RusTrajectoryPlannerNode
 
         bool is_initialized_ = false;  // 是否已经初始化
         std::unique_ptr<TrajectoryPlanner> planner_;  // 轨迹规划器实例
-        rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_sub_;  // 点云数据订阅
+        rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;  // 点云数据订阅
         rclcpp::Service<rus_sim_interfaces::srv::GenerateTrajectory>::SharedPtr planner_server_;  // 规划服务
         rclcpp::Service<rus_sim_interfaces::srv::ModuleInit>::SharedPtr init_server_;  // 初始化服务
         PointCloudPtr cloud_;  // 保存点云数据

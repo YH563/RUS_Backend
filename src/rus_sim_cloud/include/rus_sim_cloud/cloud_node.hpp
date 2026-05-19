@@ -12,6 +12,7 @@
 #include <pcl/surface/gp3.h>
 
 #include "rus_sim_cloud/cloud_preprocess.hpp"
+#include "fairino_msgs/msg/robot_nonrt_state.hpp"
 
 namespace RusCloudNode 
 {
@@ -24,9 +25,14 @@ namespace RusCloudNode
         CloudNode();
 
     private:
-        
+        // 接收点云数据
+        void on_cloud(const sensor_msgs::msg::PointCloud2::ConstSharedPtr msg);
+        // 发布预处理后的点云数据
+
 
         // 私有成员变量
         std::unique_ptr<CloudPreprocess> cloud_preprocess;  // 点云预处理对象
+        rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;  // 点云数据订阅
+        rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_pub_;  // 处理后的点云数据发布
     };
 }
