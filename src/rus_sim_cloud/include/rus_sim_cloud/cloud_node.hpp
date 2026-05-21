@@ -1,10 +1,10 @@
 #pragma once
 
-#include <fairino_msgs/msg/detail/robot_nonrt_state__struct.hpp>
-#include <geometry_msgs/msg/detail/pose__struct.hpp>
 #include <memory>
 #include <deque>
 #include <chrono>
+#include <functional>
+
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <rclcpp/subscription.hpp>
@@ -16,6 +16,7 @@
 #include <geometry_msgs/msg/point.hpp>
 #include <std_msgs/msg/detail/string__struct.hpp>
 #include <std_msgs/msg/string.hpp>
+
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -53,7 +54,7 @@ namespace RusCloudNode
         // 接收点云数据
         void on_cloud(const PointCloud2::SharedPtr msg);
         // 发布预处理后的点云数据
-        void publish_cloud(const PointCloud2::SharedPtr msg);
+        void publish_cloud();
 
         // ============== 私有成员变量 ==============
         // 话题
@@ -69,10 +70,9 @@ namespace RusCloudNode
         double max_allowed_diff_sec_ = 0.05;  // 允许对齐时间的容忍范围，默认为50毫秒
         CloudRGBPtr latest_cloud_;  // 缓存用于匹配的点云信息
 
-        // 状态信息
         bool enabled_ = false;  // 是否接受点云与位姿信息
-
         std::unique_ptr<CloudPreprocess> cloud_preprocess_;  // 点云预处理对象
         rclcpp::TimerBase::SharedPtr timer_;  // 计时器
+        double cloud_sample_period_;  // 点云的采样周期，单位秒
     };
 }

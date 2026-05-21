@@ -12,7 +12,7 @@ namespace RusCloudPreprocess
         return merge_clouds();
     }
 
-    const CloudRGBPtr& CloudPreprocess::GetCloud() const
+    CloudRGBPtr CloudPreprocess::GetCloud() const
     {
         if (cloud_rgb_ptr_ == nullptr)
         {
@@ -30,7 +30,7 @@ namespace RusCloudPreprocess
             return false;
         }
         Eigen::Matrix4f T_base_ee;  // 末端在基坐标系下的位姿
-        tf2::fromMsg(end_pose, T_base_ee);
+        pose_to_matrix(end_pose, T_base_ee);
         auto transform_matrix = T_base_ee * parameter_.camera_to_flange;  // 计算基坐标系下的变换矩阵
         CloudRGBPtr transform_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
         // 执行点云变换
@@ -120,5 +120,21 @@ namespace RusCloudPreprocess
         // 合并后整体做一次体素滤波，去除重叠冗余点
         voxel_filter(*cloud_rgb_ptr_);
         return true;
+    }
+
+    void CloudPreprocess::pose_to_matrix(const Pose& pose, Eigen::Matrix4f& matrix)
+    {
+        // 从四元数构造旋转矩阵
+        Eigen::Quaternionf q(
+            pose.orientation.w,
+            pose.orientation.x,
+            pose.orientation.y,
+            pose.orientation.z
+        );
+        matrix.setIdentity();
+        matrix.block<3,3>(0,0) = q.toRotationMatrix();
+        matrix(0,3) = pose.position.x;
+        matrix(1,3) = pose.position.y;
+        matrix(2,3) = pose.position.z;
     }
 }

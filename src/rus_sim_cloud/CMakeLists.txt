@@ -5,6 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# 编译优化配置
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif()
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG" CACHE STRING "Flags used by the compiler during release builds." FORCE)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g" CACHE STRING "Flags used by the compiler during debug builds." FORCE)
+add_compile_options(-Wall -Wextra)
+
 # 测试选项设置
 option(ENABLE_TEST "Include test code in executable" ON)
 # option(ENABLE_TEST "Include test code in executable" OFF)
@@ -22,6 +30,7 @@ find_package(shape_msgs REQUIRED)
 find_package(fairino_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(tf2_eigen REQUIRED)
 find_package(std_msgs REQUIRED)
 # 第三方包
 find_package(PCL REQUIRED)
@@ -52,6 +61,7 @@ ament_target_dependencies(cloud_core PUBLIC
   pcl_conversions
   rus_sim_interfaces
   tf2_ros
+  tf2_eigen
   tf2_geometry_msgs
   fairino_msgs
   std_msgs
@@ -86,6 +96,7 @@ ament_target_dependencies(rus_sim_cloud PUBLIC
   pcl_conversions
   tf2_geometry_msgs
   tf2_ros
+  tf2_eigen
   rus_sim_interfaces
   fairino_msgs
   std_msgs
@@ -99,6 +110,13 @@ install(TARGETS rus_sim_cloud
   DESTINATION lib/${PROJECT_NAME}
 )
 
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+install(DIRECTORY launch/
+  DESTINATION share/${PROJECT_NAME}/launch
+)
 
 # if(BUILD_TESTING)
 #   find_package(ament_lint_auto REQUIRED)

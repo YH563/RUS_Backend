@@ -1,9 +1,4 @@
 #include "rus_sim_cloud/cloud_node.hpp"
-#include "pcl_conversions/pcl_conversions.h"
-#include <functional>
-#include <memory>
-#include <rclcpp/logging.hpp>
-#include <std_msgs/msg/detail/string__struct.hpp>
 
 namespace RusCloudNode 
 {
@@ -14,10 +9,17 @@ namespace RusCloudNode
         this->declare_parameter<std::string>("output_cloud_topic", "/output_cloud");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
         this->declare_parameter<std::string>("cmd_topic", "/pre_sacn_cmd");
+        this->declare_parameter<double>("cloud_sample_period", 2);
         this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         this->declare_parameter<int>("max_cache_size", 50);
         this->declare_parameter<bool>("use_voxel_filter", true);
         this->declare_parameter<double>("voxel_leaf_size", 0.003);
+        this->declare_parameter<std::vector<double>>("camera_to_flange", {
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        });
 
         // 读取参数
         auto input_cloud_topic  = this->get_parameter("input_cloud_topic").as_string();
@@ -26,6 +28,9 @@ namespace RusCloudNode
         auto cmd_topic          = this->get_parameter("cmd_topic").as_string();
         max_allowed_diff_sec_   = this->get_parameter("max_allowed_diff_sec").as_double();
         max_cache_size_         = this->get_parameter("max_cache_size").as_int();
+        cloud_sample_period_    = this->get_parameter("cloud_sample_period").as_double();
+        std::vector<double> mat_vec = this->get_parameter("camera_to_flange").as_double_array();
+        
 
         // 初始化点云预处理对象
         cloud_preprocess_ = std::make_unique<CloudPreprocess>();
@@ -36,6 +41,15 @@ namespace RusCloudNode
         RusCloudPreprocess::CloudParameter param;
         param.use_voxel_filter = this->get_parameter("use_voxel_filter").as_bool();
         param.voxel_leaf_size  = static_cast<float>(this->get_parameter("voxel_leaf_size").as_double());
+        if (mat_vec.size() == 16) {
+            param.camera_to_flange.row(0) << mat_vec[0], mat_vec[1], mat_vec[2], mat_vec[3];
+            param.camera_to_flange.row(1) << mat_vec[4], mat_vec[5], mat_vec[6], mat_vec[7];
+            param.camera_to_flange.row(2) << mat_vec[8], mat_vec[9], mat_vec[10], mat_vec[11];
+            param.camera_to_flange.row(3) << mat_vec[12], mat_vec[13], mat_vec[14], mat_vec[15];
+        } else {
+            RCLCPP_WARN(this->get_logger(), "camera_to_flange 参数大小不为16，使用单位矩阵");
+            param.camera_to_flange = Eigen::Matrix4f::Identity();
+        }
         cloud_preprocess_->SetFilterParamter(param);
 
         // 创建发布器
@@ -122,16 +136,17 @@ namespace RusCloudNode
         if (msg->data == "start" && !enabled_)
         {
             RCLCPP_INFO(this->get_logger(), "启动点云预处理节点");
+            cloud_preprocess_->Clear();
             enabled_ = true;
             // 创建计时器
             timer_ = this->create_wall_timer(
-                std::chrono::seconds(2), 
+                std::chrono::duration<double>(cloud_sample_period_), 
                 std::bind(&CloudNode::add_cloud_pose, this)
             );
         }
         if (msg->data == "stop" && enabled_)
         {
-            
+            publish_cloud();
             RCLCPP_INFO(this->get_logger(), "点云预处理计算完成");
             enabled_ = false;
         }
@@ -168,5 +183,15 @@ namespace RusCloudNode
             return;
         }
         cloud_cache_ = msg;
+    }
+
+    void CloudNode::publish_cloud()
+    {
+        cloud_preprocess_->ProcessClouds();
+        PointCloud2::SharedPtr cloud_result = std::make_shared<PointCloud2>();
+        cloud_result->header.frame_id = "base_link";
+        cloud_result->header.stamp = this->now();
+        pcl::toROSMsg(*cloud_preprocess_->GetCloud(), *cloud_result);
+        cloud_pub_->publish(*cloud_result);
     }
 }

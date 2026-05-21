@@ -1,0 +1,26 @@
+# 点云数据处理节点参数配置
+/rus_sim_cloud:
+  ros__parameters:
+    # 话题名称参数
+    input_cloud_topic: "/origin_cloud"       # 输入点云话题，输入原始点云数据
+    output_cloud_topic: "/preprocessed_cloud"     # 输出点云话题，输出预处理后的点云
+    robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
+    cmd_topic: "/pre_sacn_cmd"              # 控制指令话题
+
+    # 时间同步参数
+    max_allowed_diff_sec: 0.05              # 点云与位姿的最大允许时间差（秒）
+
+    # 缓存参数
+    max_cache_size: 50                      # 最大缓存点云帧数
+
+    # 点云的采样周期，单位为秒
+    cloud_sample_period: 2
+
+    # 体素滤波参数
+    use_voxel_filter: true                  # 是否启用体素滤波
+    voxel_leaf_size: 0.003                  # 体素滤波器叶子大小（米）
+    # 标定后的相机相对法兰的变换矩阵
+    camera_to_flange: [1.0, 0.0, 0.0, 0.0,
+                       0.0, 1.0, 0.0, 0.0,
+                       0.0, 0.0, 1.0, 0.0,
+                       0.0, 0.0, 0.0, 1.0]

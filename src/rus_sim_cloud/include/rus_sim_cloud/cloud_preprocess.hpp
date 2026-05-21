@@ -2,6 +2,13 @@
 
 #include <vector>
 #include <string>
+
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <tf2_eigen/tf2_eigen.hpp> 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
 #include <Eigen/Dense>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -10,10 +17,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/common/transforms.h>
 #include <pcl/filters/voxel_grid.h>
-#include <rclcpp/rclcpp.hpp>
 #include <pcl/common/transforms.h>
-#include <geometry_msgs/msg/pose.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 namespace RusCloudPreprocess 
 {
@@ -44,7 +48,7 @@ namespace RusCloudPreprocess
         // 对点云数据进行处理
         bool ProcessClouds();
         // 获取处理后点云数据
-        const CloudRGBPtr& GetCloud() const;
+        CloudRGBPtr GetCloud() const;
         // 添加点云数据
         bool AddCloud(const CloudRGBPtr& cloud, const Pose& end_pose);
         // 设置点云预处理参数
@@ -57,6 +61,8 @@ namespace RusCloudPreprocess
         bool voxel_filter(CloudRGB& cloud);
         // 合并点云数据
         bool merge_clouds();
+        // 末端Pose转为矩阵
+        void pose_to_matrix(const Pose& pose, Eigen::Matrix4f& matrix);
 
         // ============== 私有成员变量 ==============
         std::string class_name_ = "cloud_preprocess";  // 保存类名，用于日志保存以及输出
