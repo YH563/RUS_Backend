@@ -58,7 +58,7 @@ namespace RusCloudPreprocess
         // 合并点云数据
         bool merge_clouds();
 
-        // 私有成员变量
+        // ============== 私有成员变量 ==============
         std::string class_name_ = "cloud_preprocess";  // 保存类名，用于日志保存以及输出
         CloudRGBPtr cloud_rgb_ptr_;  // 保存处理完的点云数据
         std::vector<CloudRGBPtr> clouds_;  // 保存捕获的多次点云数据，用于后续点云数据的拼接

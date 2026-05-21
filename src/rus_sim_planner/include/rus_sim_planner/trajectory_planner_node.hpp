@@ -35,6 +35,7 @@ namespace RusTrajectoryPlannerNode
             std::shared_ptr<rus_sim_interfaces::srv::ModuleInit::Response> response
         );
 
+        // ============== 私有成员变量 ==============
         bool is_initialized_ = false;  // 是否已经初始化
         std::unique_ptr<TrajectoryPlanner> planner_;  // 轨迹规划器实例
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;  // 点云数据订阅

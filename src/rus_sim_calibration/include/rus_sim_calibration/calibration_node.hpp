@@ -65,7 +65,7 @@ namespace RusCalibrationNode {
             const rus_sim_interfaces::srv::CalibrationSave::Response::SharedPtr response
         );
         
-        // 私有成员变量
+        // ============== 私有成员变量 ==============
         // 话题
         std::unique_ptr<image_transport::ImageTransport> it_;  // 改为指针，延迟初始化
         image_transport::Subscriber image_sub_;  // 图像数据订阅
@@ -77,7 +77,8 @@ namespace RusCalibrationNode {
         rclcpp::Service<rus_sim_interfaces::srv::CalibrationSave>::SharedPtr save_service_;  // 保存服务
 
         // 缓存数据
-        sensor_msgs::msg::Image::SharedPtr image_cache;  // 缓存图像消息
+        sensor_msgs::msg::Image::ConstSharedPtr image_cache_;  // 缓存图像信息
+        std::mutex image_mutex_;  // 需要加锁保证线程安全
         std::deque<geometry_msgs::msg::PoseStamped::SharedPtr> pose_cache_;  // 缓存最近的位姿消息
         size_t max_cache_size_ = 50; // 缓存位姿信息的最大数量
         double max_allowed_diff_sec_ = 0.05;  // 允许对齐时间的容忍范围，默认为50毫秒
@@ -92,4 +93,3 @@ namespace RusCalibrationNode {
         std::string result_file_path_;  // 文件保存路径
     };
 }
-

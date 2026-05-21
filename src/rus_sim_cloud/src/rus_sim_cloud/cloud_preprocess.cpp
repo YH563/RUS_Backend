@@ -29,9 +29,9 @@ namespace RusCloudPreprocess
             RCLCPP_ERROR(rclcpp::get_logger(class_name_), "传入的点云数据无效，请检查数据");
             return false;
         }
-        Eigen::Matrix4f T_ee_base;  // 基坐标系到末端的变换矩阵
-        tf2::fromMsg(end_pose, T_ee_base);
-        auto transform_matrix = T_ee_base * parameter_.camera_to_flange;  // 计算基坐标系下的变换矩阵
+        Eigen::Matrix4f T_base_ee;  // 末端在基坐标系下的位姿
+        tf2::fromMsg(end_pose, T_base_ee);
+        auto transform_matrix = T_base_ee * parameter_.camera_to_flange;  // 计算基坐标系下的变换矩阵
         CloudRGBPtr transform_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
         // 执行点云变换
         pcl::transformPointCloud(

@@ -49,7 +49,7 @@ namespace RusCalibrationNode
                 "相机内参未提供或尺寸不正确（需9个内参值 + 5个畸变系数），将使用默认值。");
         }
 
-        image_cache = std::make_shared<sensor_msgs::msg::Image>();
+        image_cache_ = std::make_shared<sensor_msgs::msg::Image>();
         calibration_solver_ = std::make_unique<CalibrationSolver>();
 
         if (!calibration_solver_->Initialize(pattern_param_, camera_param_))
@@ -129,7 +129,7 @@ namespace RusCalibrationNode
 
     void CalibrationNode::align_image_pose()
     {
-        rclcpp::Time img_time(image_cache->header.stamp);
+        rclcpp::Time img_time(image_cache_->header.stamp);
         geometry_msgs::msg::PoseStamped::SharedPtr best_pose = nullptr;
         double min_diff = std::numeric_limits<double>::max();
         
@@ -147,7 +147,7 @@ namespace RusCalibrationNode
         {
             try
             {
-                cv::Mat cv_image = cv_bridge::toCvCopy(image_cache, sensor_msgs::image_encodings::BGR8)->image;
+                cv::Mat cv_image = cv_bridge::toCvCopy(image_cache_, sensor_msgs::image_encodings::BGR8)->image;
                 latest_color_image_ = cv_image.clone();
                 latest_pose_ = best_pose->pose;
             }
@@ -160,18 +160,13 @@ namespace RusCalibrationNode
 
     void CalibrationNode::on_image(const sensor_msgs::msg::Image::ConstSharedPtr msg)
     {
-        if (msg == nullptr)
-        {
-            RCLCPP_ERROR(this->get_logger(), "尚未接收到图像数据，请确相机话题正确发布。");
-            return;
-        }
-        *image_cache = *msg;
-        return ;
+        std::lock_guard<std::mutex> lock(image_mutex_);
+        image_cache_ = msg;  // 只拷贝智能指针，不拷贝数据
     }
 
     void CalibrationNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
     {
-        geometry_msgs::msg::PoseStamped::SharedPtr pose_stamped_ptr;
+        auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
         auto pose = flange_to_pose(
             msg->flange_x_cur_pos,
             msg->flange_y_cur_pos,
@@ -180,7 +175,7 @@ namespace RusCalibrationNode
             msg->flange_b_cur_pos,
             msg->flange_c_cur_pos
         );
-        pose_stamped_ptr->set__pose(pose);
+        pose_stamped_ptr->pose = pose;
         pose_stamped_ptr->header.stamp = this->get_clock()->now();
         pose_stamped_ptr->header.frame_id = "base_link";
         pose_cache_.push_back(pose_stamped_ptr);
@@ -195,7 +190,7 @@ namespace RusCalibrationNode
     )
     {
         (void)request;
-        if (image_cache == nullptr || pose_cache_.empty())
+        if (image_cache_->data.empty()|| pose_cache_.empty())
         {
             response->success = false;
             response->message = "尚未接收到机械臂位姿或图像数据，请确保机械臂话题或相机正在发布。";

@@ -103,7 +103,7 @@ namespace RusTrajectoryPlanner
         // 根据点坐标查询点云中与之距离最近的点
         int find_nearest_point(const Point& p);
 
-        // 私有成员变量
+        // ============== 私有成员变量 ==============
         bool is_initialized_ = false;  // 是否已初始化
         std::string class_name_ = "trajectory_planner";  // 保存类名，用于日志保存以及输出
         Pose start_pose_ {};  // 起始位姿

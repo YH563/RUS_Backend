@@ -77,7 +77,7 @@ namespace RusCalibration
         // 从图像直接提取标定板位姿（组合 detect_chessboard_corners + generate_chessboard_points + estimate_board_pose）
         bool ExtractBoardPose(const cv::Mat& image, cv::Mat& camera_to_target);
 
-        // 私有成员变量
+        // ============== 私有成员变量 ==============
         bool is_initialized_ = false;  // 是否已初始化
         PatternParameter pattern_parameter_;  // 棋盘格参数
         CameraParameter camera_parameter_;  // 相机内参
