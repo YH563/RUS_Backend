@@ -1,15 +1,19 @@
 #include "rus_sim_cloud/cloud_node.hpp"
 #include "pcl_conversions/pcl_conversions.h"
+#include <functional>
 #include <memory>
+#include <rclcpp/logging.hpp>
+#include <std_msgs/msg/detail/string__struct.hpp>
 
 namespace RusCloudNode 
 {
-    CloudNode::CloudNode() : rclcpp::Node("cloud_node")
+    CloudNode::CloudNode() : rclcpp::Node("cloud_node"), timer_(nullptr)
     {
         // 声明参数
         this->declare_parameter<std::string>("input_cloud_topic", "/input_cloud");
         this->declare_parameter<std::string>("output_cloud_topic", "/output_cloud");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
+        this->declare_parameter<std::string>("cmd_topic", "/pre_sacn_cmd");
         this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         this->declare_parameter<int>("max_cache_size", 50);
         this->declare_parameter<bool>("use_voxel_filter", true);
@@ -19,11 +23,12 @@ namespace RusCloudNode
         auto input_cloud_topic  = this->get_parameter("input_cloud_topic").as_string();
         auto output_cloud_topic = this->get_parameter("output_cloud_topic").as_string();
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
+        auto cmd_topic          = this->get_parameter("cmd_topic").as_string();
         max_allowed_diff_sec_   = this->get_parameter("max_allowed_diff_sec").as_double();
         max_cache_size_         = this->get_parameter("max_cache_size").as_int();
 
         // 初始化点云预处理对象
-        cloud_preprocess = std::make_unique<CloudPreprocess>();
+        cloud_preprocess_ = std::make_unique<CloudPreprocess>();
         cloud_cache_ = std::make_shared<PointCloud2>();
         latest_cloud_ = std::make_shared<CloudRGB>();
 
@@ -31,7 +36,7 @@ namespace RusCloudNode
         RusCloudPreprocess::CloudParameter param;
         param.use_voxel_filter = this->get_parameter("use_voxel_filter").as_bool();
         param.voxel_leaf_size  = static_cast<float>(this->get_parameter("voxel_leaf_size").as_double());
-        cloud_preprocess->SetFilterParamter(param);
+        cloud_preprocess_->SetFilterParamter(param);
 
         // 创建发布器
         cloud_pub_ = this->create_publisher<PointCloud2>(output_cloud_topic, 10);
@@ -47,7 +52,11 @@ namespace RusCloudNode
             std::bind(&CloudNode::on_robot_pose, this, std::placeholders::_1)
         );
 
-        RCLCPP_INFO(this->get_logger(), "CloudNode 初始化完成");
+        cmd_sub_ = this->create_subscription<std_msgs::msg::String>(
+            cmd_topic, 10,
+            std::bind(&CloudNode::on_cmd, this, std::placeholders::_1)
+        );
+        RCLCPP_INFO(this->get_logger(), "点云数据处理节点初始化完成");
     }
 
     Pose CloudNode::flange_to_pose(double x, double y, double z, double a, double b, double c)
@@ -75,8 +84,20 @@ namespace RusCloudNode
         return pose;
     }
 
-    void CloudNode::align_cloud_pose()
+    void CloudNode::add_cloud_pose()
     {
+        // 只在开启与扫查后进行操作
+        if (!enabled_) return;
+        if (cloud_cache_->data.empty())
+        {
+            RCLCPP_ERROR(this->get_logger(), "缓存的点云数据为空，请检查深度相机点云话题发布。");
+            return;
+        }
+        if (pose_cache_.empty())
+        {
+            RCLCPP_ERROR(this->get_logger(), "缓存的位姿数据为空，请检查机械臂位姿话题发布。");
+            return;
+        }
         rclcpp::Time cloud_time(cloud_cache_->header.stamp);
         geometry_msgs::msg::PoseStamped::SharedPtr best_pose = nullptr;
         double min_diff = std::numeric_limits<double>::max();
@@ -93,6 +114,28 @@ namespace RusCloudNode
             RCLCPP_WARN(this->get_logger(), "点云与位姿的时间差过大(%.4f秒)，可能导致计算不准", min_diff);
         if (best_pose)
             pcl::fromROSMsg(*cloud_cache_, *latest_cloud_);
+        cloud_preprocess_->AddCloud(latest_cloud_, best_pose->pose);
+    }
+
+    void CloudNode::on_cmd(const std_msgs::msg::String::SharedPtr msg)
+    {
+        if (msg->data == "start" && !enabled_)
+        {
+            RCLCPP_INFO(this->get_logger(), "启动点云预处理节点");
+            enabled_ = true;
+            // 创建计时器
+            timer_ = this->create_wall_timer(
+                std::chrono::seconds(2), 
+                std::bind(&CloudNode::add_cloud_pose, this)
+            );
+        }
+        if (msg->data == "stop" && enabled_)
+        {
+            
+            RCLCPP_INFO(this->get_logger(), "点云预处理计算完成");
+            enabled_ = false;
+        }
+        return;
     }
 
     void CloudNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
@@ -119,5 +162,11 @@ namespace RusCloudNode
     void CloudNode::on_cloud(const PointCloud2::SharedPtr msg)
     {
         if (!enabled_) return;
+        if (msg->data.empty())
+        {
+            RCLCPP_ERROR(this->get_logger(), "传入的点云数据为空，请检查深度相机点云话题发布。");
+            return;
+        }
+        cloud_cache_ = msg;
     }
 }

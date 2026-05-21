@@ -142,7 +142,7 @@ namespace RusCalibrationNode
             }
         }
         if (min_diff > max_allowed_diff_sec_) 
-            RCLCPP_WARN(this->get_logger(), "点云与位姿的时间差过大(%.4f秒)，可能导致计算不准", min_diff);
+            RCLCPP_WARN(this->get_logger(), "图像与位姿的时间差过大(%.4f秒)，可能导致计算不准", min_diff);
         if (best_pose)
         {
             try
