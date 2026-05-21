@@ -9,7 +9,7 @@ namespace RusCloudNode
         this->declare_parameter<std::string>("output_cloud_topic", "/output_cloud");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
         this->declare_parameter<std::string>("cmd_topic", "/pre_sacn_cmd");
-        this->declare_parameter<double>("cloud_sample_period", 2);
+        this->declare_parameter<double>("cloud_sample_period", 2.);
         this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         this->declare_parameter<int>("max_cache_size", 50);
         this->declare_parameter<bool>("use_voxel_filter", true);

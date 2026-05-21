@@ -14,7 +14,7 @@
     max_cache_size: 50                      # 最大缓存点云帧数
 
     # 点云的采样周期，单位为秒
-    cloud_sample_period: 2
+    cloud_sample_period: 2.
 
     # 体素滤波参数
     use_voxel_filter: true                  # 是否启用体素滤波
