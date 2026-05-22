@@ -12,14 +12,20 @@ namespace RusCloudNode
         this->declare_parameter<double>("cloud_sample_period", 2.);
         this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         this->declare_parameter<int>("max_cache_size", 50);
-        this->declare_parameter<bool>("use_voxel_filter", true);
         this->declare_parameter<double>("voxel_leaf_size", 0.003);
+        this->declare_parameter<std::string>("passthrough_field", "z");
+        this->declare_parameter<double>("passthrough_limit_min", -0.5);
+        this->declare_parameter<double>("passthrough_limit_max", 0.5);
+        this->declare_parameter<bool>("passthrough_negative", false);
+        this->declare_parameter<int>("statistical_mean_k", 50);
+        this->declare_parameter<double>("statistical_std_dev_mul", 1.0);
         this->declare_parameter<std::vector<double>>("camera_to_flange", {
             1.0, 0.0, 0.0, 0.0,
             0.0, 1.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0
         });
+
 
         // 读取参数
         auto input_cloud_topic  = this->get_parameter("input_cloud_topic").as_string();
@@ -39,8 +45,13 @@ namespace RusCloudNode
 
         // 配置预处理参数
         RusCloudPreprocess::CloudParameter param;
-        param.use_voxel_filter = this->get_parameter("use_voxel_filter").as_bool();
         param.voxel_leaf_size  = static_cast<float>(this->get_parameter("voxel_leaf_size").as_double());
+        param.passthrough_field = this->get_parameter("passthrough_field").as_string();
+        param.passthrough_limit_min = static_cast<float>(this->get_parameter("passthrough_limit_min").as_double());
+        param.passthrough_limit_max = static_cast<float>(this->get_parameter("passthrough_limit_max").as_double());
+        param.passthrough_negative = this->get_parameter("passthrough_negative").as_bool();
+        param.statistical_mean_k = this->get_parameter("statistical_mean_k").as_int();
+        param.statistical_std_dev_mul = static_cast<float>(this->get_parameter("statistical_std_dev_mul").as_double());
         if (mat_vec.size() == 16) {
             param.camera_to_flange.row(0) << mat_vec[0], mat_vec[1], mat_vec[2], mat_vec[3];
             param.camera_to_flange.row(1) << mat_vec[4], mat_vec[5], mat_vec[6], mat_vec[7];
@@ -51,7 +62,6 @@ namespace RusCloudNode
             param.camera_to_flange = Eigen::Matrix4f::Identity();
         }
         cloud_preprocess_->SetFilterParamter(param);
-
         // 创建发布器
         cloud_pub_ = this->create_publisher<PointCloud2>(output_cloud_topic, 10);
 
@@ -71,6 +81,11 @@ namespace RusCloudNode
             std::bind(&CloudNode::on_cmd, this, std::placeholders::_1)
         );
         RCLCPP_INFO(this->get_logger(), "点云数据处理节点初始化完成");
+    }
+
+    bool CloudNode::SaveCloud(const std::string &file_path)
+    {
+        return cloud_preprocess_->SaveCloud(file_path);
     }
 
     Pose CloudNode::flange_to_pose(double x, double y, double z, double a, double b, double c)

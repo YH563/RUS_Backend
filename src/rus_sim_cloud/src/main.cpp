@@ -28,13 +28,16 @@ int main(int argc, char **argv)
             auto cloud_preprocess = RusCloudPreprocess::CloudPreprocess();
             geometry_msgs::msg::Pose pose{};
             pose.orientation.w = 1;
-            std::string pcd_folder = "";  // 读取的点云文件夹路径
-            std::string pcd_file_path = "";  // 保存的点云文件路径
+            std::string pcd_folder = "/home/hp/cpp_test/scripts";  // 读取的点云文件夹路径
+            std::string origin_pcd = "/home/hp/cpp_test/noisy_surface_full.pcd";  // 测试用的原始完整点云数据路径
+            std::string pcd_file_path = "/home/hp/cpp_test/1.pcd";  // 保存的点云文件路径
             auto clouds = TestLocalCloud::LoadPCDsFromFolder(pcd_folder);
             for (const auto &cloud : clouds) 
                 cloud_preprocess.AddCloud(cloud, pose);
             cloud_preprocess.ProcessClouds();
-            TestLocalCloud::SavePCDFile(cloud_preprocess.GetCloud(), pcd_file_path);
+            cloud_preprocess.SaveCloud(pcd_file_path);
+            TestLocalCloud::PrintCloudQualityReport(cloud_preprocess.GetCloud());
+            TestLocalCloud::PrintCloudQualityReport(TestLocalCloud::LoadPCD(origin_pcd));
             return 0;
         }
     #endif

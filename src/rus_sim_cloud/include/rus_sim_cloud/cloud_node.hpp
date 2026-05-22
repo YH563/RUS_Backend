@@ -40,6 +40,8 @@ namespace RusCloudNode
     {
     public:
         CloudNode();
+        // 保存处理好的点云数据
+        bool SaveCloud(const std::string& file_path);
 
     private:
         // 法兰坐标转pose

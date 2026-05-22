@@ -9,7 +9,11 @@ namespace RusCloudPreprocess
             RCLCPP_ERROR(rclcpp::get_logger(class_name_), "尚无点云数据，检查是否成功传入");
             return false;
         }
-        return merge_clouds();
+
+        // 合并后整体做一次体素滤波，去除重叠冗余点
+        merge_clouds();
+        voxel_filter(*cloud_rgb_ptr_);
+        return true;
     }
 
     CloudRGBPtr CloudPreprocess::GetCloud() const
@@ -39,8 +43,10 @@ namespace RusCloudPreprocess
             *transform_cloud,
             transform_matrix.cast<float>()
         );
-        // 进行体素滤波
-        if (voxel_filter(*transform_cloud))
+        // 进行直通滤波+统计滤波
+        bool filter1 = passthrough_filter(*transform_cloud);
+        bool filter2 = statistical_outlier_filter(*transform_cloud);
+        if (filter1 && filter2)
         {
             clouds_.emplace_back(transform_cloud);
             return true;
@@ -48,12 +54,22 @@ namespace RusCloudPreprocess
         else return false;
     }
 
+    bool CloudPreprocess::SaveCloud(const std::string& file_path)
+    {
+        if (!cloud_rgb_ptr_ || cloud_rgb_ptr_->empty()) {
+            RCLCPP_ERROR(rclcpp::get_logger("cloud_test"), "点云为空或无效，无法保存: %s", file_path.c_str());
+            return false;
+        }
+        if (pcl::io::savePCDFileBinary(file_path, *cloud_rgb_ptr_) == -1) {
+            RCLCPP_ERROR(rclcpp::get_logger("cloud_test"), "保存PCD文件失败: %s", file_path.c_str());
+            return false;
+        }
+        RCLCPP_INFO(rclcpp::get_logger("cloud_test"), "成功保存点云: %s (%zu 点)", file_path.c_str(), cloud_rgb_ptr_->size());
+        return true;
+    }
+
     bool CloudPreprocess::voxel_filter(CloudRGB& cloud)
     {
-        if (!parameter_.use_voxel_filter)
-        {
-            return true;
-        }
         // 创建体素滤波器对象
         pcl::VoxelGrid<pcl::PointXYZRGB> voxel_grid;
         
@@ -87,6 +103,45 @@ namespace RusCloudPreprocess
         return true;
     }
 
+    bool CloudPreprocess::passthrough_filter(CloudRGB& cloud)
+    {
+        if (cloud.empty())
+        {
+            RCLCPP_WARN(rclcpp::get_logger(class_name_), "直通滤波: 输入点云为空");
+            return false;
+        }
+
+        pcl::PassThrough<pcl::PointXYZRGB> pass;
+        pass.setInputCloud(cloud.makeShared());
+        pass.setFilterFieldName(parameter_.passthrough_field);
+        pass.setFilterLimits(parameter_.passthrough_limit_min, parameter_.passthrough_limit_max);
+        pass.setNegative(parameter_.passthrough_negative);
+        pass.filter(cloud);
+
+        RCLCPP_DEBUG(rclcpp::get_logger(class_name_), 
+                    "直通滤波完成, 剩余点数: %zu", cloud.size());
+        return true;
+    }
+
+    bool CloudPreprocess::statistical_outlier_filter(CloudRGB& cloud)
+    {
+        if (cloud.empty())
+        {
+            RCLCPP_WARN(rclcpp::get_logger(class_name_), "统计滤波: 输入点云为空");
+            return false;
+        }
+
+        pcl::StatisticalOutlierRemoval<pcl::PointXYZRGB> sor;
+        sor.setInputCloud(cloud.makeShared());
+        sor.setMeanK(parameter_.statistical_mean_k);
+        sor.setStddevMulThresh(parameter_.statistical_std_dev_mul);
+        sor.filter(cloud);
+
+        RCLCPP_DEBUG(rclcpp::get_logger(class_name_), 
+                    "统计滤波完成, 剩余点数: %zu", cloud.size());
+        return true;
+    }
+
     bool CloudPreprocess::merge_clouds()
     {
         // 创建合并后的点云
@@ -117,8 +172,6 @@ namespace RusCloudPreprocess
                     "点云合并完成，共 %zu 帧，总点数: %zu",
                     clouds_.size(), cloud_rgb_ptr_->size());
 
-        // 合并后整体做一次体素滤波，去除重叠冗余点
-        voxel_filter(*cloud_rgb_ptr_);
         return true;
     }
 

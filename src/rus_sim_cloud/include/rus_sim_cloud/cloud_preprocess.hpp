@@ -18,6 +18,8 @@
 #include <pcl/common/transforms.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/common/transforms.h>
+#include <pcl/filters/passthrough.h>
+#include <pcl/filters/statistical_outlier_removal.h>
 
 namespace RusCloudPreprocess 
 {
@@ -31,8 +33,17 @@ namespace RusCloudPreprocess
     struct CloudParameter
     {
         // 体素滤波参数
-        bool use_voxel_filter = true;       // 是否启用体素滤波
         float voxel_leaf_size = 0.003f;     // 体素大小（米），默认3mm
+
+        // 直通滤波参数
+        std::string passthrough_field = "z";       // 可选 "x", "y", "z"
+        float passthrough_limit_min = -0.5f;       // 最小值
+        float passthrough_limit_max = 0.5f;        // 最大值
+        bool passthrough_negative = false;         // 取反（提取范围外的点）
+
+        // 统计滤波参数
+        int statistical_mean_k = 50;                // 邻域点数
+        float statistical_std_dev_mul = 1.0f;       // 标准差倍数
 
         // 眼在手上变换矩阵，深度相机相对于法兰的变换矩阵
         Eigen::Matrix4f camera_to_flange = Eigen::Matrix4f::Identity();  
@@ -55,10 +66,16 @@ namespace RusCloudPreprocess
         void SetFilterParamter(CloudParameter& param) { parameter_ = param; }
         // 清空数据
         void Clear(){ cloud_rgb_ptr_ = nullptr; clouds_.clear();}
+        // 保存点云数据
+        bool SaveCloud(const std::string& path);
 
     private:
         // 进行体素滤波
         bool voxel_filter(CloudRGB& cloud);
+        // 进行直通滤波
+        bool passthrough_filter(CloudRGB& cloud);
+        // 进行统计滤波
+        bool statistical_outlier_filter(CloudRGB& cloud);
         // 合并点云数据
         bool merge_clouds();
         // 末端Pose转为矩阵

@@ -16,9 +16,20 @@
     # 点云的采样周期，单位为秒
     cloud_sample_period: 2.
 
+    # -------------------- 预处理滤波器参数 --------------------
     # 体素滤波参数
-    use_voxel_filter: true                  # 是否启用体素滤波
     voxel_leaf_size: 0.003                  # 体素滤波器叶子大小（米）
+
+    # 直通滤波参数
+    passthrough_field: "z"                  # 直通滤波字段，可选 "x", "y", "z"
+    passthrough_limit_min: -0.5             # 直通滤波最小值
+    passthrough_limit_max: 0.5              # 直通滤波最大值
+    passthrough_negative: false             # 是否取反（提取范围外的点）
+
+    # 统计滤波参数
+    statistical_mean_k: 50                  # 统计滤波邻域点数
+    statistical_std_dev_mul: 1.0            # 统计滤波标准差倍数
+
     # 标定后的相机相对法兰的变换矩阵
     camera_to_flange: [1.0, 0.0, 0.0, 0.0,
                        0.0, 1.0, 0.0, 0.0,
