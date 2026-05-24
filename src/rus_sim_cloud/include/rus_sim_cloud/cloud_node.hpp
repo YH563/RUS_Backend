@@ -23,11 +23,16 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/surface/gp3.h>
 
+#include "rus_sim_interfaces/srv/cmd.hpp"
 #include "rus_sim_cloud/cloud_preprocess.hpp"
 #include "fairino_msgs/msg/robot_nonrt_state.hpp"
+#include "rus_sim_utils/utils.hpp"
+#include "rus_sim_utils/command_definitions.hpp"
 
 namespace RusCloudNode 
 {
+    using std::placeholders::_1;
+    using std::placeholders::_2;
     using RusCloudPreprocess::CloudPreprocess;
     using geometry_msgs::msg::Pose;
     using sensor_msgs::msg::PointCloud2;
@@ -44,13 +49,15 @@ namespace RusCloudNode
         bool SaveCloud(const std::string& file_path);
 
     private:
-        // 法兰坐标转pose
-        Pose flange_to_pose(double x, double y, double z, double a, double b, double c);
         // 将位姿与点云数据进行对齐并保存数据，以进行预处理
         void add_cloud_pose();
 
-        // 接收指令
-        void on_cmd(const std_msgs::msg::String::SharedPtr msg);
+        // 处理指令服务
+        void handle_cmd(
+            const std::shared_ptr<rus_sim_interfaces::srv::Cmd::Request> request,
+            std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
+        );
+
         // 接收位姿数据
         void on_robot_pose(const RobotNonrtState::SharedPtr msg);
         // 接收点云数据
@@ -63,7 +70,7 @@ namespace RusCloudNode
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;  // 点云数据订阅
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_pub_;  // 处理后的点云数据发布
         rclcpp::Subscription<RobotNonrtState>::SharedPtr robot_pose_sub_;  // 机械臂末端位姿订阅
-        rclcpp::Subscription<std_msgs::msg::String>::SharedPtr cmd_sub_;  // 指令话题订阅
+        rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
 
         // 缓存数据
         PointCloud2::SharedPtr cloud_cache_;  // 缓存最近的点云数据

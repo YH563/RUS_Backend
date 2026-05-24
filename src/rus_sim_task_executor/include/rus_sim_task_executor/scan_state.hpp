@@ -10,6 +10,8 @@
 #include "yasmin/state.hpp"
 #include "yasmin_ros/monitor_state.hpp"
 
+#include "fairino_msgs/msg/robot_nonrt_state.hpp"
+
 namespace RusScanState {
     // 状态字符串常量
     constexpr const char* kInitState = "INIT";                  // 初始化

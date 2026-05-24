@@ -21,6 +21,7 @@
   <depend>moveit_visual_tools</depend>
   <depend>geometry_msgs</depend>
   <depend>rus_sim_interfaces</depend>
+  <depend>fairino_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -1,0 +1,29 @@
+# 运动控制节点参数配置
+rus_sim_motion:
+  ros__parameters:
+    # 服务/话题配置
+    robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
+    planner_service: "generate_trajectory"
+    cmd_service: "motiom_cmd"
+
+    # ---------- 规划组配置 ----------
+    # 规划组名称（需与 MoveIt Setup Assistant 中定义的一致）
+    planning_group: "fairino3_v6_group"
+
+    # 基座坐标系（机械臂基座的 frame_id）
+    base_frame: "base_link"
+
+    # 末端执行器 link 名称（Franka 为 panda_hand，UR 为 tool0 等）
+    end_effector_link: "wrist3_link"
+
+    # ---------- 运动参数 ----------
+    # 最大速度缩放因子，范围 0.0 ~ 1.0，值越小运动越慢
+    velocity_scaling_factor: 0.25
+
+    # 笛卡尔空间轨迹插值步长，单位：米
+    # 步长越小轨迹越密集，计算量越大
+    max_step: 0.01
+
+    # 关节空间跳跃阈值，单位：弧度
+    # 设为 0.0 表示禁用跳跃检测（允许任意关节角度变化）
+    jump_threshold: 0.0

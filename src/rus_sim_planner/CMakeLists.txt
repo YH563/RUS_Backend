@@ -47,7 +47,6 @@ find_package(rus_sim_interfaces REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 # 设置包含目录和源文件
-set(LIBIGL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/libigl/include)  # libigl 库目录
 file(GLOB SRC_FILES src/rus_sim_planner/*.cpp)
 file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cpp)  # 测试源文件
 
@@ -114,7 +113,6 @@ ament_target_dependencies(rus_sim_planner PUBLIC
 
 target_include_directories(rus_sim_planner PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/test  # 链接测试用头文件
-  ${LIBIGL_INCLUDE_DIR}
 )
 
 install(TARGETS rus_sim_planner

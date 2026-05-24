@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(rus_sim_task_executor)
+project(rus_sim_motion)
 # 设置使用C++17标准，并启用编译命令导出
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
@@ -9,16 +9,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# 测试选项设置
-option(ENABLE_TEST "Include test code in executable" ON)
-# option(ENABLE_TEST "Include test code in executable" OFF)
-
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(yasmin REQUIRED)           # YASMIN 核心库，实现状态机逻辑
-find_package(yasmin_ros REQUIRED)       # YASMIN ROS2 集成（包含 YasminNode、Blackboard 等）
-find_package(yasmin_viewer REQUIRED)    # Web 可视化（可选，用于 YasminViewerPub）
 # MoveIt核心接口包
 find_package(moveit_ros_planning_interface REQUIRED)
 # 可选：可视化工具，推荐引入
@@ -26,30 +19,29 @@ find_package(moveit_visual_tools REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+find_package(rus_sim_utils REQUIRED)
 find_package(rus_sim_interfaces REQUIRED)
 find_package(fairino_msgs REQUIRED)
 
-file(GLOB SRC_FILES src/rus_sim_task_executor/*.cpp)
+file(GLOB SRC_FILES src/${PROJECT_NAME}/*.cpp)
 file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cpp)  # 测试源文件
 
 # ------------------- 核心静态库 -------------------
-add_library(task_executor_core STATIC ${SRC_FILES})
+add_library(motion_core STATIC ${SRC_FILES})
 
-target_include_directories(task_executor_core PUBLIC
+target_include_directories(motion_core PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-ament_target_dependencies(task_executor_core PUBLIC
+ament_target_dependencies(motion_core PUBLIC
   rclcpp
-  yasmin
-  yasmin_ros
-  yasmin_viewer
   moveit_ros_planning_interface
   moveit_visual_tools
   std_msgs
   geometry_msgs
   rus_sim_interfaces
   fairino_msgs
+  rus_sim_utils
 )
 
 # ------------------- 主程序 -------------------
@@ -64,30 +56,28 @@ if(ENABLE_TEST)
 endif()
 
 # 创建可执行文件
-add_executable(rus_sim_task_executor ${MAIN_SOURCES})
+add_executable(${PROJECT_NAME} ${MAIN_SOURCES})
 
-target_link_libraries(rus_sim_task_executor PRIVATE
-  task_executor_core
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  motion_core
 )
 
-ament_target_dependencies(rus_sim_task_executor PUBLIC
+ament_target_dependencies(${PROJECT_NAME} PUBLIC
   rclcpp
-  yasmin
-  yasmin_ros
-  yasmin_viewer
-  std_msgs
   moveit_ros_planning_interface
   moveit_visual_tools
+  std_msgs
   geometry_msgs
   rus_sim_interfaces
   fairino_msgs
+  rus_sim_utils
 )
 
-target_include_directories(rus_sim_task_executor PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/test  # 链接测试用头文件
 )
 
-install(TARGETS rus_sim_task_executor
+install(TARGETS ${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
 )
 

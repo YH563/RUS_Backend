@@ -16,9 +16,11 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
+
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(yaml-cpp REQUIRED)  # yaml 解析库
+
 find_package(rus_sim_interfaces REQUIRED)
 find_package(fairino_msgs REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)

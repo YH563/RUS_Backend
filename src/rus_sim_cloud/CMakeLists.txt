@@ -27,7 +27,6 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(shape_msgs REQUIRED)
-find_package(fairino_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_eigen REQUIRED)
@@ -38,11 +37,12 @@ find_package(Eigen3 REQUIRED)
 find_package(pcl_conversions REQUIRED)
 # 自定义包
 find_package(rus_sim_interfaces REQUIRED)
+find_package(fairino_msgs REQUIRED)
+find_package(rus_sim_utils REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-set(LIBIGL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/libigl/include)  # libigl 库目录
 file(GLOB SRC_FILES src/${PROJECT_NAME}/*.cpp)  # 核心源文件
 file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cpp)  # 测试源文件
 
@@ -50,7 +50,6 @@ file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cpp)  # 测试源文
 add_library(cloud_core STATIC ${SRC_FILES})
 
 target_include_directories(cloud_core PUBLIC
-  ${LIBIGL_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -65,6 +64,7 @@ ament_target_dependencies(cloud_core PUBLIC
   tf2_geometry_msgs
   fairino_msgs
   std_msgs
+  rus_sim_utils
 )
 
 target_link_libraries(cloud_core PUBLIC
@@ -100,6 +100,7 @@ ament_target_dependencies(rus_sim_cloud PUBLIC
   rus_sim_interfaces
   fairino_msgs
   std_msgs
+  rus_sim_utils
 )
 
 target_include_directories(rus_sim_cloud PRIVATE

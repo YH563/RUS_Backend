@@ -168,7 +168,7 @@ ament_package()
 - **常量**：使用 `kPascalCase`，以 `k` 开头，表示为常量；对于宏定义，使用**全大写+下划线**
 - **命名空间**：见上文，不再赘述
 - **话题回调函数**：接收方以 `on` 开头，用蛇形命名，如 `on_cloud`，发布方以 `publish` 开头，如 `publish_cloud`。话题订阅者用 `sub_` 结尾，如 `cloud_sub_`，发布者用 `pub_` 结尾，如 `cloud_pub_`。回调函数结尾不需要写 `callback`。变量末尾的下划线表示为私有成员变量。
-- **服务回调函数**：服务方以 `handle` 开头，用蛇形命名，如 `handle_cloud`，客户方以 `response` 开头，如 `response_cloud`。服务端变量用 `service_` 结尾，如 `cloud_service_`，客户端变量用 `client_` 结尾，如 `cloud_client_`。回调函数结尾不需要写 `callback`。
+- **服务回调函数**：服务方以 `handle` 开头，用蛇形命名，如 `handle_cloud`，客户方以 `response` 或 `request` 开头，如 `response_cloud`。服务端变量用 `server_` 结尾，如 `cloud_server_`，客户端变量用 `client_` 结尾，如 `cloud_client_`。回调函数结尾不需要写 `callback`。
 
 ### 注释规范
 

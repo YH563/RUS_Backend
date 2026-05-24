@@ -8,7 +8,7 @@ namespace RusCloudNode
         this->declare_parameter<std::string>("input_cloud_topic", "/input_cloud");
         this->declare_parameter<std::string>("output_cloud_topic", "/output_cloud");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
-        this->declare_parameter<std::string>("cmd_topic", "/pre_sacn_cmd");
+        this->declare_parameter<std::string>("cmd_service", "pre_sacn_cmd");
         this->declare_parameter<double>("cloud_sample_period", 2.);
         this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         this->declare_parameter<int>("max_cache_size", 50);
@@ -26,12 +26,11 @@ namespace RusCloudNode
             0.0, 0.0, 0.0, 1.0
         });
 
-
         // 读取参数
         auto input_cloud_topic  = this->get_parameter("input_cloud_topic").as_string();
         auto output_cloud_topic = this->get_parameter("output_cloud_topic").as_string();
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
-        auto cmd_topic          = this->get_parameter("cmd_topic").as_string();
+        auto cmd_service          = this->get_parameter("cmd_service").as_string();
         max_allowed_diff_sec_   = this->get_parameter("max_allowed_diff_sec").as_double();
         max_cache_size_         = this->get_parameter("max_cache_size").as_int();
         cloud_sample_period_    = this->get_parameter("cloud_sample_period").as_double();
@@ -76,9 +75,10 @@ namespace RusCloudNode
             std::bind(&CloudNode::on_robot_pose, this, std::placeholders::_1)
         );
 
-        cmd_sub_ = this->create_subscription<std_msgs::msg::String>(
-            cmd_topic, 10,
-            std::bind(&CloudNode::on_cmd, this, std::placeholders::_1)
+        // 创建指令服务
+        cmd_server_ = this->create_service<rus_sim_interfaces::srv::Cmd>(
+            cmd_service,
+            std::bind(&CloudNode::handle_cmd, this, _1, _2)
         );
         RCLCPP_INFO(this->get_logger(), "点云数据处理节点初始化完成");
     }
@@ -86,31 +86,6 @@ namespace RusCloudNode
     bool CloudNode::SaveCloud(const std::string &file_path)
     {
         return cloud_preprocess_->SaveCloud(file_path);
-    }
-
-    Pose CloudNode::flange_to_pose(double x, double y, double z, double a, double b, double c)
-    {
-        // 1. 角度转弧度 (a, b, c 单位为度)
-        double a_rad = a * M_PI / 180.0;
-        double b_rad = b * M_PI / 180.0;
-        double c_rad = c * M_PI / 180.0;
-
-        // 2. 使用 Eigen 构建 RPY 旋转矩阵并转换为四元数
-        Eigen::AngleAxisd roll(a_rad, Eigen::Vector3d::UnitX());
-        Eigen::AngleAxisd pitch(b_rad, Eigen::Vector3d::UnitY());
-        Eigen::AngleAxisd yaw(c_rad, Eigen::Vector3d::UnitZ());
-        Eigen::Quaterniond q = yaw * pitch * roll;
-        // 3. 构造 Pose
-        geometry_msgs::msg::Pose pose;
-        pose.position.x = x;
-        pose.position.y = y;
-        pose.position.z = z;
-        pose.orientation.x = q.x();
-        pose.orientation.y = q.y();
-        pose.orientation.z = q.z();
-        pose.orientation.w = q.w();
-
-        return pose;
     }
 
     void CloudNode::add_cloud_pose()
@@ -146,9 +121,11 @@ namespace RusCloudNode
         cloud_preprocess_->AddCloud(latest_cloud_, best_pose->pose);
     }
 
-    void CloudNode::on_cmd(const std_msgs::msg::String::SharedPtr msg)
-    {
-        if (msg->data == "start" && !enabled_)
+    void CloudNode::handle_cmd(
+        const std::shared_ptr<rus_sim_interfaces::srv::Cmd::Request> request,
+        std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
+    ){
+        if (request->command == RusUtils::Commands::kPreScanStart && !enabled_)
         {
             RCLCPP_INFO(this->get_logger(), "启动点云预处理节点");
             cloud_preprocess_->Clear();
@@ -158,13 +135,19 @@ namespace RusCloudNode
                 std::chrono::duration<double>(cloud_sample_period_), 
                 std::bind(&CloudNode::add_cloud_pose, this)
             );
+            response->success = true;
+            response->message = "已启动点云预处理节点";
         }
-        if (msg->data == "stop" && enabled_)
+        if (request->command == RusUtils::Commands::kPreScanEnd && enabled_)
         {
             publish_cloud();
-            RCLCPP_INFO(this->get_logger(), "点云预处理计算完成");
+            RCLCPP_INFO(this->get_logger(), "点云数据处理完成");
             enabled_ = false;
+            response->success = true;
+            response->message = "点云数据处理完成";
         }
+        response->success = false;
+        response->message = "请检查指令是否准确，以及是否重复";
         return;
     }
 
@@ -172,7 +155,7 @@ namespace RusCloudNode
     {
         if (!enabled_) return;
         auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
-        auto pose = flange_to_pose(
+        auto pose = RusUtils::Flange2Pose(
             msg->flange_x_cur_pos,
             msg->flange_y_cur_pos,
             msg->flange_y_cur_pos,

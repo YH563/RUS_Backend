@@ -1,0 +1,60 @@
+#pragma once
+
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/string.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+
+#include "rus_sim_motion/moveit_manager.hpp"
+#include "rus_sim_interfaces/srv/generate_trajectory.hpp"
+#include "rus_sim_interfaces/srv/cmd.hpp"
+#include "fairino_msgs/msg/robot_nonrt_state.hpp"
+#include "rus_sim_utils/utils.hpp"
+#include "rus_sim_utils/command_definitions.hpp"
+
+namespace RusMoveitManagerNode
+{
+    using MoveitManager = RusMoveitManager::MoveitManager;  // 规划器管理类
+    using MoveitParameter = RusMoveitManager::MoveitParameter;  // 规划器参数
+    using ServiceGenerateTrajectory = rus_sim_interfaces::srv::GenerateTrajectory;  // 生成轨迹的服务
+    using Pose = geometry_msgs::msg::Pose;  // 位姿
+    using namespace std::placeholders;
+
+    class MoveitManagerNode : public rclcpp::Node
+    {
+    public:
+        MoveitManagerNode();
+
+    private:
+        // 接收机械臂末端位姿
+        void on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg);
+
+        // 处理指令服务
+        void handle_cmd(
+            const std::shared_ptr<rus_sim_interfaces::srv::Cmd::Request> request,
+            std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
+        );
+
+        // 发送请求，生成轨迹
+        void request_trajectory(const Pose& start, const Pose& end);
+        
+        // 接收到轨迹生成服务的回调函数
+        void response_trajectory(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future);
+
+        // 执行轨迹
+        bool execute_trajectory();
+        
+        // 私有成员变量
+        // 话题订阅，服务端，客户端
+        rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
+        rclcpp::Client<ServiceGenerateTrajectory>::SharedPtr planner_client_;  // 客户端，发布规划请求
+        rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
+        
+        std::unique_ptr<MoveitManager> moveit_manager_;  // 规划器
+        std::vector<Pose> trajectory_;  // 计算生成的轨迹
+        MoveitParameter parameter_;  // 存储机械臂参数
+        Pose start_pose_;  // 起点
+        Pose end_pose_;  // 终点
+        int pose_flag_ = 0;  // 接收起点、终点位姿，0表示不接收，1表示为起点，2表示为终点
+        bool generate_success_;  // 轨迹是否生成成功
+    };
+}

@@ -26,6 +26,7 @@ set(srv_files
   "srv/CalibrationCapture.srv"
   "srv/CalibrationCompute.srv"
   "srv/CalibrationSave.srv"
+  "srv/Cmd.srv"
 )
 set(action_files
   "action/ScanTask.action"

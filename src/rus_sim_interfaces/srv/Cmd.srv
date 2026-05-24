@@ -1,0 +1,5 @@
+# 用于传递字符串指令信息的服务
+string command
+---
+bool success
+string message

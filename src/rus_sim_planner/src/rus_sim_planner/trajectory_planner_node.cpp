@@ -26,6 +26,19 @@ namespace RusTrajectoryPlannerNode
         auto init_service      = this->get_parameter("init_service").as_string();
         auto planner_service   = this->get_parameter("planner_service").as_string();
 
+        // 设置规划器参数
+        RusTrajectoryPlanner::TrajectoryParameter param;
+        param.alpha         = this->get_parameter("alpha").as_double();
+        param.graph_k       = this->get_parameter("graph_k").as_int();
+        param.normal_k      = this->get_parameter("normal_k").as_int();
+        param.projection_k  = this->get_parameter("projection_k").as_int();
+        param.tol           = this->get_parameter("tol").as_double();
+        param.max_iter      = this->get_parameter("max_iter").as_int();
+        param.use_smoothing = this->get_parameter("use_smoothing").as_bool();
+        param.lambda        = this->get_parameter("lambda_").as_double();
+        param.mu            = this->get_parameter("mu").as_double();
+        planner_->SetParameter(param);
+
         // 创建轨迹规划器实例
         cloud_ = std::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
         planner_ = std::make_unique<RusTrajectoryPlanner::TrajectoryPlanner>();
@@ -112,20 +125,8 @@ namespace RusTrajectoryPlannerNode
         const std::shared_ptr<rus_sim_interfaces::srv::ModuleInit::Request> request,
         std::shared_ptr<rus_sim_interfaces::srv::ModuleInit::Response> response
     ){
+        // TODO
         (void)request;
-        // 设置规划器参数
-        RusTrajectoryPlanner::TrajectoryParameter param;
-        param.alpha         = this->get_parameter("alpha").as_double();
-        param.graph_k       = this->get_parameter("graph_k").as_int();
-        param.normal_k      = this->get_parameter("normal_k").as_int();
-        param.projection_k  = this->get_parameter("projection_k").as_int();
-        param.tol           = this->get_parameter("tol").as_double();
-        param.max_iter      = this->get_parameter("max_iter").as_int();
-        param.use_smoothing = this->get_parameter("use_smoothing").as_bool();
-        param.lambda        = this->get_parameter("lambda_").as_double();
-        param.mu            = this->get_parameter("mu").as_double();
-        planner_->SetParameter(param);
-
         response->success = true;
         is_initialized_ = response->success;
         response->error_message = "轨迹规划器节点已初始化";
