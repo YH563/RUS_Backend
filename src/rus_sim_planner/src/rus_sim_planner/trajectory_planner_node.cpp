@@ -26,6 +26,10 @@ namespace RusTrajectoryPlannerNode
         auto init_service      = this->get_parameter("init_service").as_string();
         auto planner_service   = this->get_parameter("planner_service").as_string();
 
+        // 创建轨迹规划器实例
+        cloud_ = std::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+        planner_ = std::make_unique<RusTrajectoryPlanner::TrajectoryPlanner>();
+
         // 设置规划器参数
         RusTrajectoryPlanner::TrajectoryParameter param;
         param.alpha         = this->get_parameter("alpha").as_double();
@@ -38,10 +42,6 @@ namespace RusTrajectoryPlannerNode
         param.lambda        = this->get_parameter("lambda_").as_double();
         param.mu            = this->get_parameter("mu").as_double();
         planner_->SetParameter(param);
-
-        // 创建轨迹规划器实例
-        cloud_ = std::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
-        planner_ = std::make_unique<RusTrajectoryPlanner::TrajectoryPlanner>();
         
         // 订阅话题，创建服务
         cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
@@ -67,12 +67,12 @@ namespace RusTrajectoryPlannerNode
         const std::shared_ptr<rus_sim_interfaces::srv::GenerateTrajectory::Request> request,
         std::shared_ptr<rus_sim_interfaces::srv::GenerateTrajectory::Response> response
     ){
-        if (!is_initialized_)
-        {
-            response->success = false;
-            RCLCPP_ERROR(this->get_logger(), "请先对节点进行初始化！");
-            return;
-        }
+        // if (!is_initialized_)
+        // {
+        //     response->success = false;
+        //     RCLCPP_ERROR(this->get_logger(), "请先对节点进行初始化！");
+        //     return;
+        // }
         if (cloud_ == nullptr)
         {
             response->success = false;

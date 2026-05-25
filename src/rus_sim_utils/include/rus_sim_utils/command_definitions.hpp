@@ -9,7 +9,7 @@ namespace RusUtils
     {
         // 开始进行预扫查
         inline constexpr std::string_view kPreScanStart = "pre_scan_start";
-        // 开始进行预扫查
+        // 预扫查完成
         inline constexpr std::string_view kPreScanEnd = "pre_scan_end";
         // 设置起始位姿
         inline constexpr std::string_view kSetStartPose = "set_start_pose";

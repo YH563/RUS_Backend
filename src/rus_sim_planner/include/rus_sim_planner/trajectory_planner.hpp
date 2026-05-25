@@ -1,14 +1,17 @@
 #pragma once
 
-#include <functional> 
+#include <functional>
+#include <optional>
+
 #include <rclcpp/rclcpp.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <shape_msgs/msg/mesh.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 #include <Eigen/IterativeLinearSolvers>
-#include <optional>
+#include <Eigen/Dense>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/kdtree/kdtree_flann.h>
@@ -21,6 +24,7 @@
 namespace RusTrajectoryPlanner 
 {
     using Vector3d = Eigen::Vector3d;  // 3D向量
+    using Matrix4d = Eigen::Matrix4d;  // 4x4矩阵
     using Quaterniond = Eigen::Quaterniond;  // 四元数
     using SparseMatrixd = Eigen::SparseMatrix<double>;  // 稀疏矩阵
     using Pose = geometry_msgs::msg::Pose;  // ROS2 Pose
@@ -61,6 +65,8 @@ namespace RusTrajectoryPlanner
         bool use_smoothing = true;  // 是否开启平滑
         double lambda = 0.63;  // 平滑参数
         double mu = -0.65;  // 平滑参数
+        double flange_offset = 0.0938;  // 法兰相对TF树末端的Z轴方向的偏移量
+        Matrix4d probe_to_flange = Matrix4d::Identity();  // 法兰到探头的变换矩阵
     };
 
     // 轨迹规划器

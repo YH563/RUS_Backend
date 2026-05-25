@@ -90,7 +90,7 @@ namespace RusCloudNode
 
     void CloudNode::add_cloud_pose()
     {
-        // 只在开启与扫查后进行操作
+        // 只在开启预扫查后进行操作
         if (!enabled_) return;
         if (cloud_cache_->data.empty())
         {
@@ -127,7 +127,7 @@ namespace RusCloudNode
     ){
         if (request->command == RusUtils::Commands::kPreScanStart && !enabled_)
         {
-            RCLCPP_INFO(this->get_logger(), "启动点云预处理节点");
+            RCLCPP_INFO(this->get_logger(), "正在启动点云预处理节点");
             cloud_preprocess_->Clear();
             enabled_ = true;
             // 创建计时器
@@ -135,8 +135,10 @@ namespace RusCloudNode
                 std::chrono::duration<double>(cloud_sample_period_), 
                 std::bind(&CloudNode::add_cloud_pose, this)
             );
+            RCLCPP_INFO(this->get_logger(), "已启动点云预处理节点");
             response->success = true;
             response->message = "已启动点云预处理节点";
+            return;
         }
         if (request->command == RusUtils::Commands::kPreScanEnd && enabled_)
         {
@@ -145,6 +147,7 @@ namespace RusCloudNode
             enabled_ = false;
             response->success = true;
             response->message = "点云数据处理完成";
+            return;
         }
         response->success = false;
         response->message = "请检查指令是否准确，以及是否重复";

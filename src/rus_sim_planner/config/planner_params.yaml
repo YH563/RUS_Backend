@@ -4,6 +4,7 @@
     point_cloud_topic: "/pointcloud_data"
     init_service: "init_planner"
     planner_service: "generate_trajectory"
+
     # 规划器初始化所需参数
     alpha: 1.0          # 椭圆 Gabriel 条件检查参数
     graph_k: 30         # 构建初始图的 k-NN 参数
@@ -14,3 +15,11 @@
     use_smoothing: true # 是否开启平滑
     lambda: 0.63       # 平滑参数
     mu: -0.65           # 平滑参数
+    
+    # 偏移量
+    flange_offset: 0.0938  # 法兰相对TF树末端的Z轴方向的偏移量
+    # 法兰到探头的变换矩阵
+    probe_to_flange: [1.0, 0.0, 0.0, 0.0,
+                      0.0, 1.0, 0.0, 0.0,
+                      0.0, 0.0, 1.0, 0.0,
+                      0.0, 0.0, 0.0, 1.0]

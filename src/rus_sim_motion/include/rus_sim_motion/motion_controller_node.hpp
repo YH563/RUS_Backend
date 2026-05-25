@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <geometry_msgs/msg/pose.hpp>
@@ -10,8 +11,9 @@
 #include "fairino_msgs/msg/robot_nonrt_state.hpp"
 #include "rus_sim_utils/utils.hpp"
 #include "rus_sim_utils/command_definitions.hpp"
+#include "rus_sim_motion/service_clients.hpp"
 
-namespace RusMoveitManagerNode
+namespace RusMotionControllerNode
 {
     using MoveitManager = RusMoveitManager::MoveitManager;  // 规划器管理类
     using MoveitParameter = RusMoveitManager::MoveitParameter;  // 规划器参数
@@ -19,10 +21,10 @@ namespace RusMoveitManagerNode
     using Pose = geometry_msgs::msg::Pose;  // 位姿
     using namespace std::placeholders;
 
-    class MoveitManagerNode : public rclcpp::Node
+    class MotionControllerNode : public rclcpp::Node
     {
     public:
-        MoveitManagerNode();
+        MotionControllerNode();
 
     private:
         // 接收机械臂末端位姿
@@ -34,20 +36,14 @@ namespace RusMoveitManagerNode
             std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
         );
 
-        // 发送请求，生成轨迹
-        void request_trajectory(const Pose& start, const Pose& end);
-        
-        // 接收到轨迹生成服务的回调函数
-        void response_trajectory(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future);
-
         // 执行轨迹
         bool execute_trajectory();
         
         // 私有成员变量
         // 话题订阅，服务端，客户端
         rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
-        rclcpp::Client<ServiceGenerateTrajectory>::SharedPtr planner_client_;  // 客户端，发布规划请求
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
+        std::unique_ptr<RusServiceClients::ServiceClients> service_clients_;  // 指令客户端
         
         std::unique_ptr<MoveitManager> moveit_manager_;  // 规划器
         std::vector<Pose> trajectory_;  // 计算生成的轨迹

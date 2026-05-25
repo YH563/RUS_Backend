@@ -3,8 +3,8 @@ rus_sim_motion:
   ros__parameters:
     # 服务/话题配置
     robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
-    planner_service: "generate_trajectory"
-    cmd_service: "motiom_cmd"
+    cmd_service: "motiom_cmd"  # 状态机发布指令的服务
+    cmd_services_list: ["pre_sacn_cmd", "generate_trajectory"]  # 由运动控制节点发送请求的服务
 
     # ---------- 规划组配置 ----------
     # 规划组名称（需与 MoveIt Setup Assistant 中定义的一致）

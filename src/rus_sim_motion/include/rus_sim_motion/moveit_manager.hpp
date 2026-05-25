@@ -43,6 +43,8 @@ namespace RusMoveitManager
                 return Pose();
             }
         }
+        // 预扫查，执行从起点到终点的直线运动，TODO
+        bool PreScan(const Pose& start, const Pose& end);
         
     private:
         rclcpp::Node::SharedPtr node_;  // 持有管理类的节点

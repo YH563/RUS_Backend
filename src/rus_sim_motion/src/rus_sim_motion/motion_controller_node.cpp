@@ -1,13 +1,16 @@
-#include "rus_sim_motion/moveit_manager_node.hpp"
+#include "rus_sim_motion/motion_controller_node.hpp"
+#include "rus_sim_motion/service_clients.hpp"
+#include <memory>
+#include <rus_sim_utils/command_definitions.hpp>
 
-namespace RusMoveitManagerNode
+namespace RusMotionControllerNode
 {
-    MoveitManagerNode::MoveitManagerNode() : rclcpp::Node("moveit_manager_node")
+    MotionControllerNode::MotionControllerNode() : rclcpp::Node("moveit_manager_node")
     {
         // ========== 声明并加载参数 ==========
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
-        this->declare_parameter<std::string>("planner_service", "generate_trajectory");
         this->declare_parameter<std::string>("cmd_service", "motion_cmd");
+        this->declare_parameter("cmd_services_list", std::vector<std::string>());
 
         this->declare_parameter<std::string>("planning_group", "fairino3_v6_group");
         this->declare_parameter<std::string>("base_frame", "base_link");
@@ -17,8 +20,8 @@ namespace RusMoveitManagerNode
         this->declare_parameter<double>("jump_threshold", 0.0);
 
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
-        auto planner_service = this->get_parameter("planner_service").as_string();
         auto cmd_service = this->get_parameter("cmd_service").as_string();
+        auto cmd_services_list = this->get_parameter("cmd_services_list").as_string_array();
 
         parameter_.planning_group          = this->get_parameter("planning_group").as_string();
         parameter_.base_frame              = this->get_parameter("base_frame").as_string();
@@ -34,24 +37,19 @@ namespace RusMoveitManagerNode
         robot_pose_sub_ = this->create_subscription<fairino_msgs::msg::RobotNonrtState>(
             robot_pose_topic,
             10,
-            std::bind(&MoveitManagerNode::on_robot_pose, this, _1)
+            std::bind(&MotionControllerNode::on_robot_pose, this, _1)
         );
 
         // 创建服务器
         cmd_server_ = this->create_service<rus_sim_interfaces::srv::Cmd>(
             cmd_service,
-            std::bind(&MoveitManagerNode::handle_cmd, this, _1, _2)
+            std::bind(&MotionControllerNode::handle_cmd, this, _1, _2)
         );
 
-        // 加载客户端
-        planner_client_ = this->create_client<ServiceGenerateTrajectory>(planner_service);
-        while (!planner_client_->wait_for_service(std::chrono::seconds(2))) {
-            RCLCPP_INFO(this->get_logger(), "等待轨迹生成服务端上线");
-        }
-        RCLCPP_INFO(this->get_logger(), "客户端已连接服务端");
+        service_clients_ = std::make_unique<RusServiceClients::ServiceClients>(shared_from_this(), cmd_services_list);
     }
 
-    void MoveitManagerNode::on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg)
+    void MotionControllerNode::on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg)
     {
         if (pose_flag_ == 0) return;
         if (pose_flag_ == 1) 
@@ -80,7 +78,7 @@ namespace RusMoveitManagerNode
         }
     }
 
-    void MoveitManagerNode::handle_cmd(
+    void MotionControllerNode::handle_cmd(
         const std::shared_ptr<rus_sim_interfaces::srv::Cmd::Request> request,
         std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
     ){
@@ -90,6 +88,7 @@ namespace RusMoveitManagerNode
             pose_flag_ = 1;
             response->success = true;
             response->message = "";
+            RCLCPP_INFO(this->get_logger(), "成功设置起点");
             return ;
         }
         // 设置终点位姿
@@ -98,24 +97,24 @@ namespace RusMoveitManagerNode
             pose_flag_ = 2;
             response->success = true;
             response->message = "";
+            RCLCPP_INFO(this->get_logger(), "成功设置终点");
             return ;
         }
         // 开始执行预扫查
         if (request->command == RusUtils::Commands::kPreScanStart)
         {
-
-        }
-        // 预扫查结束
-        if (request->command == RusUtils::Commands::kPreScanEnd)
-        {
-
+            auto [ok_start, msg_start] = service_clients_->RequestPreScan(std::string(RusUtils::Commands::kPreScanStart));
+            bool ok = moveit_manager_->PreScan(start_pose_, end_pose_);
+            auto [ok_end, msg_end] = service_clients_->RequestPreScan(std::string(RusUtils::Commands::kPreScanEnd));
+            response->success = ok_start && ok && ok_end;
+            response->message = ok ? "预扫查完成" : "预扫查失败";
+            return;
         }
         // 进行规划
         if (request->command == RusUtils::Commands::kPlan)
         {
-            request_trajectory(start_pose_, end_pose_);
-            response->success = generate_success_;
-            response->message = generate_success_ ? "轨迹生成成功" : "轨迹生成失败";
+            response->success = service_clients_->RequestTrajectory(start_pose_, end_pose_, trajectory_);
+            response->message = response->success ? "轨迹生成成功" : "轨迹生成失败";
             return ;
         }
         // 执行
@@ -129,36 +128,8 @@ namespace RusMoveitManagerNode
         response->message = "请检查指令是否准确";
         return;
     }
-        
-    void MoveitManagerNode::request_trajectory(const Pose& start, const Pose& end)
-    {
-        auto request = std::make_shared<ServiceGenerateTrajectory::Request>();
-        request->start_pose = start;
-        request->end_pose = end;
-        auto future = planner_client_->async_send_request(
-            request,
-            std::bind(&MoveitManagerNode::response_trajectory, this, _1)
-        );
-    }
 
-    void MoveitManagerNode::response_trajectory(rclcpp::Client<ServiceGenerateTrajectory>::SharedFuture future)
-    {
-        auto response = future.get();
-        generate_success_ = response->success;
-        if (!response->success)
-        {
-            RCLCPP_ERROR(
-                this->get_logger(),
-                "轨迹生成失败"
-            );
-            return;
-        }
-        RCLCPP_INFO(this->get_logger(), "收到轨迹点数：%zu", response->poses.size());
-        trajectory_ = std::move(response->poses);
-        return;
-    }
-
-    bool MoveitManagerNode::execute_trajectory()
+    bool MotionControllerNode::execute_trajectory()
     {
         if (trajectory_.empty())
         {
