@@ -1,4 +1,7 @@
 #include "rus_sim_planner/trajectory_planner_node.hpp"
+#include <Eigen/src/Core/Matrix.h>
+#include <rclcpp/logging.hpp>
+#include <vector>
 
 namespace RusTrajectoryPlannerNode
 {
@@ -20,6 +23,8 @@ namespace RusTrajectoryPlannerNode
         this->declare_parameter<bool>("use_smoothing", true);
         this->declare_parameter<double>("lambda", 0.63);
         this->declare_parameter<double>("mu", -0.65);
+        this->declare_parameter<double>("flange_offset", 0.0938);
+        this->declare_parameter<std::vector<double>>("probe_to_flange", std::vector<double>());
 
         // 读取参数
         auto point_cloud_topic = this->get_parameter("point_cloud_topic").as_string();
@@ -41,6 +46,19 @@ namespace RusTrajectoryPlannerNode
         param.use_smoothing = this->get_parameter("use_smoothing").as_bool();
         param.lambda        = this->get_parameter("lambda_").as_double();
         param.mu            = this->get_parameter("mu").as_double();
+        param.flange_offset = this->get_parameter("flange_offset").as_double();
+        std::vector<double> probe_to_flange = this->get_parameter("probe_to_flange").as_double_array();
+        if (probe_to_flange.size() != 16)
+        {
+            RCLCPP_ERROR(this->get_logger(), "载入的探头标定矩阵参数不足16个，检查参数输入");
+            param.probe_to_flange = Eigen::Matrix4d::Identity();
+        }
+        else {
+            param.probe_to_flange.row(0) << probe_to_flange[0], probe_to_flange[1],probe_to_flange[2],probe_to_flange[3];
+            param.probe_to_flange.row(1) << probe_to_flange[4], probe_to_flange[5],probe_to_flange[6],probe_to_flange[7];
+            param.probe_to_flange.row(2) << probe_to_flange[8], probe_to_flange[9],probe_to_flange[10],probe_to_flange[11];
+            param.probe_to_flange.row(3) << probe_to_flange[12], probe_to_flange[13],probe_to_flange[14],probe_to_flange[15];
+        }
         planner_->SetParameter(param);
         
         // 订阅话题，创建服务

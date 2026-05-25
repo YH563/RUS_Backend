@@ -6,7 +6,7 @@ calibration_node:
 
     # ---------- 话题和服务名称 ----------
     # 彩色图像话题（相机发布的图像）
-    image_topic: "/camera/color/image_raw"
+    image_topic: "/camera/camera/color/image_raw"
     # 机械臂末端位姿话题
     robot_pose_topic: "/nonrt_state_data"
     # 捕获标定数据服务
@@ -16,11 +16,11 @@ calibration_node:
     # 保存标定结果服务
     save_service: "calibration_save"
     # 保存结果文件的默认路径（为空时需通过服务请求指定）
-    result_file_path: ""
+    result_file_path: "/home/hp/桌面/test.yaml"
 
     # ---------- 棋盘格参数 ----------
     # 棋盘格内角点列数（建议 9）
-    pattern_width: 9
+    pattern_width: 8
     # 棋盘格内角点行数（建议 6）
     pattern_height: 6
     # 棋盘格方格边长（单位：米）
@@ -32,7 +32,7 @@ calibration_node:
     #   0, fy, cy,
     #   0,  0,  1]
     # 这里给的是典型的 RGB 相机参数示例，请根据实际相机标定结果修改
-    camera_matrix: [603.94, 0, 321.53, 0, 603.93, 244.27, 0, 0, 1]
+    camera_matrix: [603.94, 0., 321.53, 0., 603.93, 244.27, 0., 0., 1.]
     # 畸变系数，共 5 个值
     # [k1, k2, p1, p2, k3]
     dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]

@@ -69,8 +69,13 @@ namespace RusTrajectoryPlanner {
             RCLCPP_ERROR(rclcpp::get_logger(class_name_), "请先对规划器进行初始化");
             return false;
         }
-        int start_idx = find_nearest_point(Point(start.position.x, start.position.y, start.position.z));
-        int end_idx = find_nearest_point(Point(goal.position.x, goal.position.y, goal.position.z));
+
+        // 将读取到的法兰位姿信息，转换为探头位姿
+        auto start_probe = cal_probe_pose(start);
+        auto goal_probe = cal_probe_pose(goal);
+
+        int start_idx = find_nearest_point(Point(start_probe.position.x, start_probe.position.y, start_probe.position.z));
+        int end_idx = find_nearest_point(Point(goal_probe.position.x, goal_probe.position.y, goal_probe.position.z));
         // 1.初始化，生成初始轨迹
         if(!generate_origin_path(start_idx, end_idx))
         {
@@ -114,7 +119,8 @@ namespace RusTrajectoryPlanner {
                 temp_pose.orientation.y = q.y();
                 temp_pose.orientation.z = q.z();
                 temp_pose.orientation.w = q.w();
-                this->trajectory_.push_back(temp_pose);
+                // 再做一次坐标变换
+                this->trajectory_.push_back(cal_end_pose(temp_pose));
             }
         };
         if (m < 3) 
@@ -464,5 +470,24 @@ namespace RusTrajectoryPlanner {
         std::vector<float> nearest_distance(1); // 存储距离
         tree_.nearestKSearch(p, 1, nearest_index, nearest_distance);
         return nearest_index[0];
+    }
+
+    // 计算末端探头的Pose
+    Pose TrajectoryPlanner::cal_probe_pose(const Pose& pose)
+    {
+        auto mat = RusUtils::PoseToMatrix4d(pose);
+        Pose probe_pose = RusUtils::Matrix4dToPose(mat * parameter_.probe_to_flange);
+        return probe_pose;
+    }
+
+    // 计算Moveit规划末端的真实位姿
+    Pose TrajectoryPlanner::cal_end_pose(const Pose& pose)
+    {
+        Matrix4d mat1 = Matrix4d::Identity();
+        mat1(2, 3) = parameter_.flange_offset;
+        auto relative_transform = mat1 * parameter_.probe_to_flange;
+        auto origin_mat = RusUtils::PoseToMatrix4d(pose);
+        Pose end_pose = RusUtils::Matrix4dToPose(origin_mat * relative_transform.inverse());
+        return end_pose;
     }
 }

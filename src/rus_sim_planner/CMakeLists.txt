@@ -41,7 +41,10 @@ find_package(Boost REQUIRED COMPONENTS graph)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
+
+
 find_package(rus_sim_interfaces REQUIRED)
+find_package(rus_sim_utils REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -71,6 +74,7 @@ ament_target_dependencies(planner_core PUBLIC
   pcl_conversions
   visualization_msgs
   tf2_geometry_msgs
+  rus_sim_utils
 )
 
 target_link_libraries(planner_core PUBLIC
@@ -109,6 +113,7 @@ ament_target_dependencies(rus_sim_planner PUBLIC
   visualization_msgs
   pcl_conversions
   tf2_geometry_msgs
+  rus_sim_utils
 )
 
 target_include_directories(rus_sim_planner PRIVATE

@@ -25,6 +25,11 @@ namespace RusMotionControllerNode
     {
     public:
         MotionControllerNode();
+        // 初始化
+        bool Initialize();
+        // 测试用接口，完成后删除
+        void SetStartPose(Pose& pose){start_pose_ = pose;}
+        void SetEndPose(Pose& pose){end_pose_ = pose;}
 
     private:
         // 接收机械臂末端位姿

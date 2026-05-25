@@ -1,11 +1,12 @@
 #include "rus_sim_motion/motion_controller_node.hpp"
 #include "rus_sim_motion/service_clients.hpp"
 #include <memory>
+#include <rclcpp/logging.hpp>
 #include <rus_sim_utils/command_definitions.hpp>
 
 namespace RusMotionControllerNode
 {
-    MotionControllerNode::MotionControllerNode() : rclcpp::Node("moveit_manager_node")
+    MotionControllerNode::MotionControllerNode() : rclcpp::Node("motion_controller_node")
     {
         // ========== 声明并加载参数 ==========
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
@@ -21,17 +22,6 @@ namespace RusMotionControllerNode
 
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
         auto cmd_service = this->get_parameter("cmd_service").as_string();
-        auto cmd_services_list = this->get_parameter("cmd_services_list").as_string_array();
-
-        parameter_.planning_group          = this->get_parameter("planning_group").as_string();
-        parameter_.base_frame              = this->get_parameter("base_frame").as_string();
-        parameter_.end_effector_link       = this->get_parameter("end_effector_link").as_string();
-        parameter_.velocity_scaling_factor = this->get_parameter("velocity_scaling_factor").as_double();
-        parameter_.max_step                = this->get_parameter("max_step").as_double();
-        parameter_.jump_threshold          = this->get_parameter("jump_threshold").as_double();
-
-        // 加载moveit规划组
-        moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), parameter_);
 
         // 创建订阅
         robot_pose_sub_ = this->create_subscription<fairino_msgs::msg::RobotNonrtState>(
@@ -45,8 +35,25 @@ namespace RusMotionControllerNode
             cmd_service,
             std::bind(&MotionControllerNode::handle_cmd, this, _1, _2)
         );
+        RCLCPP_INFO(this->get_logger(), "运动控制节点构造完成");
+    }
 
+    bool MotionControllerNode::Initialize()
+    {
+        auto cmd_services_list = this->get_parameter("cmd_services_list").as_string_array();
+        parameter_.planning_group          = this->get_parameter("planning_group").as_string();
+        parameter_.base_frame              = this->get_parameter("base_frame").as_string();
+        parameter_.end_effector_link       = this->get_parameter("end_effector_link").as_string();
+        parameter_.velocity_scaling_factor = this->get_parameter("velocity_scaling_factor").as_double();
+        parameter_.max_step                = this->get_parameter("max_step").as_double();
+        parameter_.jump_threshold          = this->get_parameter("jump_threshold").as_double();
+
+        // 加载moveit规划组
+        moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), parameter_);
+        // 加载服务客户端
         service_clients_ = std::make_unique<RusServiceClients::ServiceClients>(shared_from_this(), cmd_services_list);
+        RCLCPP_INFO(this->get_logger(), "运动控制初始化完成");
+        return true;
     }
 
     void MotionControllerNode::on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg)

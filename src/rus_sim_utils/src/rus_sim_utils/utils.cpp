@@ -27,4 +27,29 @@ namespace RusUtils
 
         return pose;
     }
+
+    // Pose 和 Matrix4d 的相互转换
+    Matrix4d PoseToMatrix4d(const Pose& pose)
+    {
+        Eigen::Matrix4d mat = Eigen::Matrix4d::Identity();
+        Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, 
+                            pose.orientation.y, pose.orientation.z);
+        mat.block<3,3>(0,0) = q.toRotationMatrix();
+        mat.block<3,1>(0,3) = Eigen::Vector3d(pose.position.x, pose.position.y, pose.position.z);
+        return mat;
+    }
+
+    Pose Matrix4dToPose(const Matrix4d& mat)
+    {
+        Pose pose;
+        pose.position.x = mat(0,3);
+        pose.position.y = mat(1,3);
+        pose.position.z = mat(2,3);
+        Eigen::Quaterniond q(mat.block<3,3>(0,0));
+        pose.orientation.x = q.x();
+        pose.orientation.y = q.y();
+        pose.orientation.z = q.z();
+        pose.orientation.w = q.w();
+        return pose;
+    }
 }

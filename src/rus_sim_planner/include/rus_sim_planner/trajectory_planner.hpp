@@ -7,6 +7,8 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <shape_msgs/msg/mesh.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <tf2/LinearMath/Transform.h>
 
 #include <Eigen/Core>
 #include <Eigen/Sparse>
@@ -20,6 +22,8 @@
 #include <pcl/features/normal_3d.h>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
+
+#include "rus_sim_utils/utils.hpp"
 
 namespace RusTrajectoryPlanner 
 {
@@ -108,6 +112,10 @@ namespace RusTrajectoryPlanner
         void taubin_smooth();
         // 根据点坐标查询点云中与之距离最近的点
         int find_nearest_point(const Point& p);
+        // 计算末端探头的Pose
+        Pose cal_probe_pose(const Pose& pose);
+        // 计算Moveit规划末端的真实位姿
+        Pose cal_end_pose(const Pose& pose);
 
         // ============== 私有成员变量 ==============
         bool is_initialized_ = false;  // 是否已初始化

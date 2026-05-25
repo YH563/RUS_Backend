@@ -67,4 +67,9 @@ namespace RusMoveitManager
             return false;
         }
     }
+
+    bool MoveitManager::PreScan(const Pose& start, const Pose& end)
+    {
+        return true;
+    }
 }
