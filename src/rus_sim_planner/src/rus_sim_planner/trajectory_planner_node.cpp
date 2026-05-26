@@ -1,6 +1,7 @@
 #include "rus_sim_planner/trajectory_planner_node.hpp"
 #include <Eigen/src/Core/Matrix.h>
 #include <rclcpp/logging.hpp>
+#include <string>
 #include <vector>
 
 namespace RusTrajectoryPlannerNode
@@ -44,7 +45,7 @@ namespace RusTrajectoryPlannerNode
         param.tol           = this->get_parameter("tol").as_double();
         param.max_iter      = this->get_parameter("max_iter").as_int();
         param.use_smoothing = this->get_parameter("use_smoothing").as_bool();
-        param.lambda        = this->get_parameter("lambda_").as_double();
+        param.lambda        = this->get_parameter("lambda").as_double();
         param.mu            = this->get_parameter("mu").as_double();
         param.flange_offset = this->get_parameter("flange_offset").as_double();
         std::vector<double> probe_to_flange = this->get_parameter("probe_to_flange").as_double_array();
@@ -94,6 +95,7 @@ namespace RusTrajectoryPlannerNode
         if (cloud_ == nullptr)
         {
             response->success = false;
+            response->message = "请先输入点云数据！";
             RCLCPP_ERROR(this->get_logger(), "请先输入点云数据！");
             return;
         }
@@ -108,6 +110,7 @@ namespace RusTrajectoryPlannerNode
         if (!planner_->GenerateTrajectory(start, end))
         {
             response->success = false;
+            response->message = "轨迹生成失败！";
             RCLCPP_ERROR(this->get_logger(), "轨迹生成失败！");
             return;
         }
@@ -117,6 +120,7 @@ namespace RusTrajectoryPlannerNode
             if (!trajectory)
             {
                 response->success = false;
+                response->message = "所生成的轨迹点数量为0";
                 RCLCPP_ERROR(this->get_logger(), "所生成的轨迹点数量为0");
                 return;
             }
@@ -124,6 +128,7 @@ namespace RusTrajectoryPlannerNode
             {
                 response->poses = trajectory.value().get();
                 response->success = true;
+                response->message = "已生成轨迹点，数量为" + std::to_string(response->poses.size()) + "。";
                 RCLCPP_INFO(this->get_logger(), "已生成轨迹点，数量为%.zu，坐标如下：", response->poses.size());
                 for (const auto& p : response->poses)
                 {
@@ -135,6 +140,7 @@ namespace RusTrajectoryPlannerNode
                     );
                 }
                 RCLCPP_INFO(this->get_logger(), "轨迹生成完毕");
+                return;
             }
         }
     }

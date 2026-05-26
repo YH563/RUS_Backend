@@ -15,6 +15,7 @@
 
 import sys
 import threading
+import time
 
 import rclpy
 from rclpy.node import Node
@@ -86,14 +87,23 @@ class CalibrationController(Node):
     def _call_capture(self):
         req = CalibrationCapture.Request()
         future = self.capture_cli.call_async(req)
-        try:
-            resp = future.result(timeout=10.0)   # 阻塞等待服务响应
-            icon = "✓" if resp.success else "✗"
-            print(f"  [{icon}] {resp.message}")
-            sys.stdout.flush()
-        except Exception as e:
-            print(f"  [✗] 捕获服务调用失败: {e}")
-            sys.stdout.flush()
+        # 等待最多10秒，为了避免 future.result(timeout) 的问题，采用轮询方式
+        end_time = time.time() + 10.0
+        while rclpy.ok() and not future.done():
+            timeout = end_time - time.time()
+            if timeout <= 0:
+                break
+            # 短暂休眠让出CPU，不阻塞事件循环
+            time.sleep(0.1)
+        if future.done():
+            try:
+                resp = future.result()
+                icon = "✓" if resp.success else "✗"
+                print(f"  [{icon}] {resp.message}")
+            except Exception as e:
+                print(f"  [✗] 捕获服务调用失败: {e}")
+        else:
+            print("  [✗] 捕获超时")
 
     def _call_compute(self):
         """调用计算服务"""

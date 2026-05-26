@@ -68,18 +68,27 @@ namespace RusCalibration
 
     cv::Mat PoseToCvMat(const Pose& pose)
     {
-        cv::Mat transform = cv::Mat::eye(4, 4, CV_64F);
-        transform.at<double>(0, 3) = pose.position.x;
-        transform.at<double>(1, 3) = pose.position.y;
-        transform.at<double>(2, 3) = pose.position.z;
-        cv::Mat rvec(3, 1, CV_64F);
-        rvec.at<double>(0) = pose.orientation.x;
-        rvec.at<double>(1) = pose.orientation.y;
-        rvec.at<double>(2) = pose.orientation.z;
-        cv::Mat rot;
-        cv::Rodrigues(rvec, rot);
-        rot.copyTo(transform(cv::Rect(0, 0, 3, 3)));
-        return transform;
+        Eigen::Quaterniond q(
+            pose.orientation.w,
+            pose.orientation.x,
+            pose.orientation.y,
+            pose.orientation.z
+        );
+        Eigen::Matrix3d rot_eigen = q.toRotationMatrix();
+
+        // 转成 cv::Mat (3x3)
+        cv::Mat rot_cv(3, 3, CV_64F);
+        for (int r = 0; r < 3; ++r)
+            for (int c = 0; c < 3; ++c)
+                rot_cv.at<double>(r, c) = rot_eigen(r, c);
+
+        cv::Mat T = cv::Mat::eye(4, 4, CV_64F);
+        rot_cv.copyTo(T(cv::Rect(0, 0, 3, 3)));
+        T.at<double>(0, 3) = pose.position.x;
+        T.at<double>(1, 3) = pose.position.y;
+        T.at<double>(2, 3) = pose.position.z;
+
+        return T;
     }
 
     bool CalibrationSolver::Initialize(

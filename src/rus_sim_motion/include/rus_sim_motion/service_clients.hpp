@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include <rclcpp/node.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -17,7 +18,7 @@ namespace RusServiceClients
     using geometry_msgs::msg::Pose;
     using ServiceCmd = rus_sim_interfaces::srv::Cmd;  // 服务指令
     using ServiceGenerateTrajectory = rus_sim_interfaces::srv::GenerateTrajectory;  // 生成轨迹的服务
-    
+
     // 客户端类，管理发布的客户端
     class ServiceClients
     {
@@ -31,13 +32,15 @@ namespace RusServiceClients
         );
 
         // 发送请求，生成轨迹，同步阻塞
-        bool RequestTrajectory(
+        std::pair<bool, std::string> RequestTrajectory(
             const Pose& start, 
             const Pose& end, 
             std::vector<Pose>& out_poses,
-            std::chrono::seconds timeout = std::chrono::seconds(10)
+            std::chrono::seconds timeout = std::chrono::seconds(20)
         );
     private:
+        // 等待所有注册的服务都上线
+        bool wait_for_services(std::chrono::seconds timeout = std::chrono::seconds(5));
 
         // 私有成员变量
         rclcpp::Node::SharedPtr node_;

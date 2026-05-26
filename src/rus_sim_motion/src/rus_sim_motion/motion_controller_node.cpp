@@ -1,5 +1,7 @@
 #include "rus_sim_motion/motion_controller_node.hpp"
 #include "rus_sim_motion/service_clients.hpp"
+#include <functional>
+#include <future>
 #include <memory>
 #include <rclcpp/logging.hpp>
 #include <rus_sim_utils/command_definitions.hpp>
@@ -33,7 +35,7 @@ namespace RusMotionControllerNode
         // 创建服务器
         cmd_server_ = this->create_service<rus_sim_interfaces::srv::Cmd>(
             cmd_service,
-            std::bind(&MotionControllerNode::handle_cmd, this, _1, _2)
+            std::bind(&MotionControllerNode::handle_cmd, this, _1, _2, _3)
         );
         RCLCPP_INFO(this->get_logger(), "运动控制节点构造完成");
     }
@@ -86,6 +88,7 @@ namespace RusMotionControllerNode
     }
 
     void MotionControllerNode::handle_cmd(
+        const std::shared_ptr<rmw_request_id_t> req_id,
         const std::shared_ptr<rus_sim_interfaces::srv::Cmd::Request> request,
         std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
     ){
@@ -120,8 +123,16 @@ namespace RusMotionControllerNode
         // 进行规划
         if (request->command == RusUtils::Commands::kPlan)
         {
-            response->success = service_clients_->RequestTrajectory(start_pose_, end_pose_, trajectory_);
-            response->message = response->success ? "轨迹生成成功" : "轨迹生成失败";
+            pending_tasks_.push_back(std::async(std::launch::async, [this, req_id, response, request](){
+                auto [ok, message] = service_clients_->RequestTrajectory(
+                    start_pose_, end_pose_, trajectory_
+                );
+                response->success = ok;
+                response->message = message;
+                cmd_server_->send_response(*req_id, *response);
+                if(ok) RCLCPP_INFO(this->get_logger(), "%s",response->message.c_str());
+                else RCLCPP_ERROR(this->get_logger(), "%s",response->message.c_str());
+            }));
             return ;
         }
         // 执行

@@ -25,21 +25,27 @@ namespace RusMoveitManager
             auto const ok = static_cast<bool>(this->move_group_->plan(msg));
             return std::make_pair(ok, msg);
         }();
-        if (success)
-        {
-            move_group_->execute(plan);
-            RCLCPP_INFO(
-                node_->get_logger(), 
-                "执行末端移动到目标点指令，目标点为：[%.2f, %.2f,%.2f, %.2f, %.2f,%.2f, %.2f]", 
-                target_pose.position.x, target_pose.position.y, target_pose.position.z,
-                target_pose.orientation.x, target_pose.orientation.y, target_pose.orientation.z, target_pose.orientation.w
-            );
-            return true;
-        }
-        else {
-            RCLCPP_ERROR(node_->get_logger(), "无法移动到目标点！");
+        
+        if (!success) {
+            RCLCPP_ERROR(node_->get_logger(), "无法规划到目标点！");
             return false;
         }
+        
+        // 执行并检查结果
+        auto exec_result = move_group_->execute(plan);
+        if (exec_result != moveit::core::MoveItErrorCode::SUCCESS) {
+            RCLCPP_ERROR(node_->get_logger(), "执行目标点失败，错误码: %d", exec_result.val);
+            return false;
+        }
+        
+        RCLCPP_INFO(
+            node_->get_logger(), 
+            "执行末端移动到目标点指令，目标点为：[%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f]", 
+            target_pose.position.x, target_pose.position.y, target_pose.position.z,
+            target_pose.orientation.x, target_pose.orientation.y, 
+            target_pose.orientation.z, target_pose.orientation.w
+        );
+        return true;
     }
 
     bool MoveitManager::ExecuteCartesianPath(const std::vector<Pose>& trajectory)

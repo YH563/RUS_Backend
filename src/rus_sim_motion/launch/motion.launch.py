@@ -14,7 +14,7 @@ def generate_launch_description():
     pkg_share = get_package_share_directory("rus_sim_motion")
     config_path = os.path.join(pkg_share, "config", "motion_params.yaml")
 
-    cloud_node = Node(
+    motion_node = Node(
         package="rus_sim_motion",
         executable="rus_sim_motion",
         name="rus_sim_motion",
@@ -22,4 +22,4 @@ def generate_launch_description():
         parameters=[config_path],
     )
 
-    return LaunchDescription([cloud_node])
+    return LaunchDescription([motion_node])

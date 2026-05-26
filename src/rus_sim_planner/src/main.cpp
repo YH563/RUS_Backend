@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
     auto planner_node = std::make_shared<RusTrajectoryPlannerNode::TrajectoryPlannerNode>();
     rclcpp::executors::MultiThreadedExecutor executor;
     executor.add_node(planner_node);
-    executor.spin_some();
 
     #ifdef ENABLE_TESTING
         if (test_mode) {

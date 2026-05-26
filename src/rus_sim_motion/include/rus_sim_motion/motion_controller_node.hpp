@@ -37,6 +37,7 @@ namespace RusMotionControllerNode
 
         // 处理指令服务
         void handle_cmd(
+            const std::shared_ptr<rmw_request_id_t> req_id,
             const std::shared_ptr<rus_sim_interfaces::srv::Cmd::Request> request,
             std::shared_ptr<rus_sim_interfaces::srv::Cmd::Response> response
         );
@@ -57,5 +58,7 @@ namespace RusMotionControllerNode
         Pose end_pose_;  // 终点
         int pose_flag_ = 0;  // 接收起点、终点位姿，0表示不接收，1表示为起点，2表示为终点
         bool generate_success_;  // 轨迹是否生成成功
+
+        std::vector<std::future<void>> pending_tasks_;  // 储存所有异步任务的结果
     };
 }

@@ -1,7 +1,7 @@
 /rus_sim_planner:
   ros__parameters:
     # 话题，服务相关的参数
-    point_cloud_topic: "/pointcloud_data"
+    point_cloud_topic: "/preprocessed_cloud"
     init_service: "init_planner"
     planner_service: "generate_trajectory"
 
