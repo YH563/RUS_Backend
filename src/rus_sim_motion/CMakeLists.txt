@@ -14,10 +14,14 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 # MoveIt核心接口包
 find_package(moveit_ros_planning_interface REQUIRED)
+find_package(moveit_servo REQUIRED)  # 伺服控制
 # 可选：可视化工具，推荐引入
 find_package(moveit_visual_tools REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 find_package(rus_sim_utils REQUIRED)
 find_package(rus_sim_interfaces REQUIRED)
@@ -39,6 +43,10 @@ ament_target_dependencies(motion_core PUBLIC
   moveit_visual_tools
   std_msgs
   geometry_msgs
+  moveit_servo
+  rclcpp_action
+  tf2
+  tf2_geometry_msgs
   rus_sim_interfaces
   fairino_msgs
   rus_sim_utils
@@ -68,6 +76,10 @@ ament_target_dependencies(${PROJECT_NAME} PUBLIC
   moveit_visual_tools
   std_msgs
   geometry_msgs
+  moveit_servo
+  rclcpp_action
+  tf2
+  tf2_geometry_msgs
   rus_sim_interfaces
   fairino_msgs
   rus_sim_utils

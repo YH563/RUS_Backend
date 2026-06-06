@@ -1,10 +1,4 @@
 #include "rus_sim_motion/motion_controller_node.hpp"
-#include "rus_sim_motion/service_clients.hpp"
-#include <functional>
-#include <future>
-#include <memory>
-#include <rclcpp/logging.hpp>
-#include <rus_sim_utils/command_definitions.hpp>
 
 namespace RusMotionControllerNode
 {
@@ -15,15 +9,39 @@ namespace RusMotionControllerNode
         this->declare_parameter<std::string>("cmd_service", "motion_cmd");
         this->declare_parameter("cmd_services_list", std::vector<std::string>());
 
+        this->declare_parameter<std::vector<double>>("probe_to_flange", std::vector<double>());
+
         this->declare_parameter<std::string>("planning_group", "fairino3_v6_group");
         this->declare_parameter<std::string>("base_frame", "base_link");
         this->declare_parameter<std::string>("end_effector_link", "wrist3_link");
+
         this->declare_parameter<double>("velocity_scaling_factor", 0.25);
         this->declare_parameter<double>("max_step", 0.01);
         this->declare_parameter<double>("jump_threshold", 0.0);
 
+        this->declare_parameter<double>("servo_publish_period", 0.01);
+        this->declare_parameter<double>("linear_scale", 0.5);
+        this->declare_parameter<double>("rotational_scale", 0.5);
+        this->declare_parameter<double>("kp_linear", 0.5);
+        this->declare_parameter<double>("kp_angular", 0.5);
+        this->declare_parameter<double>("position_tolerance", 0.005);
+        this->declare_parameter<double>("orientation_tolerance", 0.05);
+        
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
         auto cmd_service = this->get_parameter("cmd_service").as_string();
+
+        std::vector<double> probe_to_flange = this->get_parameter("probe_to_flange").as_double_array();
+        if (probe_to_flange.size() != 16)
+        {
+            RCLCPP_ERROR(this->get_logger(), "载入的探头标定矩阵参数不足16个，检查参数输入");
+            probe_to_flange_ = Eigen::Matrix4d::Identity();
+        }
+        else {
+            probe_to_flange_.row(0) << probe_to_flange[0], probe_to_flange[1],probe_to_flange[2],probe_to_flange[3];
+            probe_to_flange_.row(1) << probe_to_flange[4], probe_to_flange[5],probe_to_flange[6],probe_to_flange[7];
+            probe_to_flange_.row(2) << probe_to_flange[8], probe_to_flange[9],probe_to_flange[10],probe_to_flange[11];
+            probe_to_flange_.row(3) << probe_to_flange[12], probe_to_flange[13],probe_to_flange[14],probe_to_flange[15];
+        }
 
         // 创建订阅
         robot_pose_sub_ = this->create_subscription<fairino_msgs::msg::RobotNonrtState>(
@@ -43,17 +61,25 @@ namespace RusMotionControllerNode
     bool MotionControllerNode::Initialize()
     {
         auto cmd_services_list = this->get_parameter("cmd_services_list").as_string_array();
-        parameter_.planning_group          = this->get_parameter("planning_group").as_string();
-        parameter_.base_frame              = this->get_parameter("base_frame").as_string();
-        parameter_.end_effector_link       = this->get_parameter("end_effector_link").as_string();
-        parameter_.velocity_scaling_factor = this->get_parameter("velocity_scaling_factor").as_double();
-        parameter_.max_step                = this->get_parameter("max_step").as_double();
-        parameter_.jump_threshold          = this->get_parameter("jump_threshold").as_double();
+        RusMoveitManager::MoveitParameter param;
+        param.planning_group          = this->get_parameter("planning_group").as_string();
+        param.base_frame              = this->get_parameter("base_frame").as_string();
+        param.end_effector_link       = this->get_parameter("end_effector_link").as_string();
+        param.velocity_scaling_factor = this->get_parameter("velocity_scaling_factor").as_double();
+        param.max_step                = this->get_parameter("max_step").as_double();
+        param.jump_threshold          = this->get_parameter("jump_threshold").as_double();
+        param.servo_publish_period    = this->get_parameter("servo_publish_period").as_double();
+        param.linear_scale            = this->get_parameter("linear_scale").as_double();
+        param.rotational_scale        = this->get_parameter("rotational_scale").as_double();
+        param.kp_linear               = this->get_parameter("kp_linear").as_double();
+        param.kp_angular             = this->get_parameter("kp_angular").as_double();
+        param.position_tolerance      = this->get_parameter("position_tolerance").as_double();
+        param.orientation_tolerance   = this->get_parameter("orientation_tolerance").as_double();
 
         // 加载moveit规划组
-        moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), parameter_);
+        moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), param);
         // 加载服务客户端
-        service_clients_ = std::make_unique<RusServiceClients::ServiceClients>(shared_from_this(), cmd_services_list);
+        service_clients_ = std::make_unique<RusServiceClients::RelayNode>(shared_from_this(), cmd_services_list);
         RCLCPP_INFO(this->get_logger(), "运动控制初始化完成");
         return true;
     }
@@ -113,12 +139,12 @@ namespace RusMotionControllerNode
         // 开始执行预扫查
         if (request->command == RusUtils::Commands::kPreScanStart)
         {
-            auto [ok_start, msg_start] = service_clients_->RequestPreScan(std::string(RusUtils::Commands::kPreScanStart));
-            bool ok = moveit_manager_->PreScan(start_pose_, end_pose_);
-            auto [ok_end, msg_end] = service_clients_->RequestPreScan(std::string(RusUtils::Commands::kPreScanEnd));
-            response->success = ok_start && ok && ok_end;
-            response->message = ok ? "预扫查完成" : "预扫查失败";
-            return;
+            // auto [ok_start, msg_start] = service_clients_->RequestPreScan(std::string(RusUtils::Commands::kPreScanStart));
+            // bool ok = moveit_manager_->PreScan(start_pose_, end_pose_);
+            // auto [ok_end, msg_end] = service_clients_->RequestPreScan(std::string(RusUtils::Commands::kPreScanEnd));
+            // response->success = ok_start && ok && ok_end;
+            // response->message = ok ? "预扫查完成" : "预扫查失败";
+            // return;
         }
         // 进行规划
         if (request->command == RusUtils::Commands::kPlan)

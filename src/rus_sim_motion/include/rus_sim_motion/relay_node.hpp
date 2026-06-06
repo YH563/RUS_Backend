@@ -19,11 +19,11 @@ namespace RusServiceClients
     using ServiceCmd = rus_sim_interfaces::srv::Cmd;  // 服务指令
     using ServiceGenerateTrajectory = rus_sim_interfaces::srv::GenerateTrajectory;  // 生成轨迹的服务
 
-    // 客户端类，管理发布的客户端
-    class ServiceClients
+    // 中转节点，负责接收来自状态机的服务请求，并转发不同的服务请求到对应的节点
+    class RelayNode
     {
     public:
-        explicit ServiceClients(rclcpp::Node::SharedPtr node, std::vector<std::string>& services_list);
+        explicit RelayNode(rclcpp::Node::SharedPtr node, std::vector<std::string>& services_list);
 
         // 向点云节点，发送预扫查指令请求，返回请求结果
         std::pair<bool, std::string> RequestPreScan(
@@ -50,4 +50,7 @@ namespace RusServiceClients
         // rclcpp::Client<Cmd>::SharedPtr force_client_;  // 向力控处理节点发起指令请求的客户端
         // rclcpp::Client<Cmd>::SharedPtr ultra_image_client_;  // 向超声图像处理节点发起指令请求的客户端
     };
+
+    // 中转节点，负责接收来自状态机的服务请求，并转发不同的服务请求到对应的节点
+    
 }

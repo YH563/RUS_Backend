@@ -40,4 +40,7 @@ namespace RusUtils
     // Pose 和 Matrix4d 的相互转换
     Matrix4d PoseToMatrix4d(const Pose& pose);
     Pose Matrix4dToPose(const Matrix4d& matrix);
+
+    // 根据法兰位姿获取探头位姿
+    Pose FlangeToProbe(const Pose& p, const Matrix4d& probe_to_flange);
 }

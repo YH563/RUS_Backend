@@ -1,11 +1,8 @@
-#include "rus_sim_motion/service_clients.hpp"
-#include <rclcpp/logging.hpp>
-#include <rclcpp/node.hpp>
-#include <utility>
+#include "rus_sim_motion/relay_node.hpp"
 
 namespace RusServiceClients
 {
-    ServiceClients::ServiceClients(
+    RelayNode::RelayNode(
         rclcpp::Node::SharedPtr node, 
         std::vector<std::string>& services_list
     ): node_(node)
@@ -25,7 +22,7 @@ namespace RusServiceClients
     }
 
     // 向点云节点，发送预扫查指令请求
-    std::pair<bool, std::string> ServiceClients::RequestPreScan(
+    std::pair<bool, std::string> RelayNode::RequestPreScan(
         const std::string& cmd,
         std::chrono::seconds timeout
     ){
@@ -40,7 +37,7 @@ namespace RusServiceClients
     }
 
     // 向规划器发送生成轨迹的请求
-    std::pair<bool, std::string> ServiceClients::RequestTrajectory(
+    std::pair<bool, std::string> RelayNode::RequestTrajectory(
         const Pose& start, 
         const Pose& end, 
         std::vector<Pose>& out_poses,
@@ -62,7 +59,7 @@ namespace RusServiceClients
     }
 
     // 等待所有注册的服务都上线
-    bool ServiceClients::wait_for_services(std::chrono::seconds timeout)
+    bool RelayNode::wait_for_services(std::chrono::seconds timeout)
     {
         auto start = std::chrono::steady_clock::now();
         const auto check_duration = std::chrono::milliseconds(100); // 每次检查间隔

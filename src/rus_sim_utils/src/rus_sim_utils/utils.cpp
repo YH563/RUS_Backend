@@ -52,4 +52,12 @@ namespace RusUtils
         pose.orientation.w = q.w();
         return pose;
     }
+
+    // 根据法兰位姿获取探头位姿
+    Pose FlangeToProbe(const Pose& p, const Matrix4d& probe_to_flange)
+    {
+        auto mat = PoseToMatrix4d(p);
+        Pose probe_pose = Matrix4dToPose(mat * probe_to_flange);
+        return probe_pose;
+    }
 }

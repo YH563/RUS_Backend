@@ -27,6 +27,7 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 find_package(rus_sim_interfaces REQUIRED)
+find_package(rus_sim_utils REQUIRED)
 find_package(fairino_msgs REQUIRED)
 
 file(GLOB SRC_FILES src/rus_sim_task_executor/*.cpp)
@@ -49,6 +50,7 @@ ament_target_dependencies(task_executor_core PUBLIC
   std_msgs
   geometry_msgs
   rus_sim_interfaces
+  rus_sim_utils
   fairino_msgs
 )
 
@@ -80,6 +82,7 @@ ament_target_dependencies(rus_sim_task_executor PUBLIC
   moveit_visual_tools
   geometry_msgs
   rus_sim_interfaces
+  rus_sim_utils
   fairino_msgs
 )
 

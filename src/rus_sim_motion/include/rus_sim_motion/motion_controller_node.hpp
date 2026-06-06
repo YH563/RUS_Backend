@@ -11,7 +11,8 @@
 #include "fairino_msgs/msg/robot_nonrt_state.hpp"
 #include "rus_sim_utils/utils.hpp"
 #include "rus_sim_utils/command_definitions.hpp"
-#include "rus_sim_motion/service_clients.hpp"
+#include "rus_sim_interfaces/action/scan_task.hpp"
+#include "rus_sim_motion/relay_node.hpp"
 
 namespace RusMotionControllerNode
 {
@@ -20,6 +21,7 @@ namespace RusMotionControllerNode
     using ServiceGenerateTrajectory = rus_sim_interfaces::srv::GenerateTrajectory;  // 生成轨迹的服务
     using Pose = geometry_msgs::msg::Pose;  // 位姿
     using namespace std::placeholders;
+    using Eigen::Matrix4d;
 
     class MotionControllerNode : public rclcpp::Node
     {
@@ -49,15 +51,14 @@ namespace RusMotionControllerNode
         // 话题订阅，服务端，客户端
         rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
-        std::unique_ptr<RusServiceClients::ServiceClients> service_clients_;  // 指令客户端
+        std::unique_ptr<RusServiceClients::RelayNode> service_clients_;  // 指令客户端
         
         std::unique_ptr<MoveitManager> moveit_manager_;  // 规划器
         std::vector<Pose> trajectory_;  // 计算生成的轨迹
-        MoveitParameter parameter_;  // 存储机械臂参数
         Pose start_pose_;  // 起点
         Pose end_pose_;  // 终点
         int pose_flag_ = 0;  // 接收起点、终点位姿，0表示不接收，1表示为起点，2表示为终点
-        bool generate_success_;  // 轨迹是否生成成功
+        Matrix4d probe_to_flange_ = Matrix4d::Identity();  // 探头末端相对法兰的位姿
 
         std::vector<std::future<void>> pending_tasks_;  // 储存所有异步任务的结果
     };

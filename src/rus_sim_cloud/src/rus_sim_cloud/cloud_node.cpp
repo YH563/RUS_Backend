@@ -150,7 +150,7 @@ namespace RusCloudNode
             return;
         }
         response->success = false;
-        response->message = "请检查指令是否准确，以及是否重复";
+        response->message = "请检查指令是否准确，以及是否重复发布";
         return;
     }
 

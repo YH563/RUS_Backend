@@ -6,24 +6,25 @@ rus_sim_motion:
     cmd_service: "motiom_cmd"  # 状态机发布指令的服务
     cmd_services_list: ["pre_sacn_cmd", "generate_trajectory"]  # 由运动控制节点发送请求的服务
 
-    # ---------- 规划组配置 ----------
-    # 规划组名称（需与 MoveIt Setup Assistant 中定义的一致）
+    # 法兰到探头的变换矩阵
+    probe_to_flange: [0.452362, 0.0830591, 0.887958, 0.00492813,
+                      0.891303, -0.00774884, -0.453341, 0.00274416,
+                      -0.0307735, 0.996514, -0.0775361, 0.217645,
+                      0.0, 0.0, 0.0]  # 少了个1.0，现用于测试
+
+    # ----- MoveIt 规划参数 -----
     planning_group: "fairino3_v6_group"
-
-    # 基座坐标系（机械臂基座的 frame_id）
     base_frame: "base_link"
-
-    # 末端执行器 link 名称（Franka 为 panda_hand，UR 为 tool0 等）
     end_effector_link: "wrist3_link"
-
-    # ---------- 运动参数 ----------
-    # 最大速度缩放因子，范围 0.0 ~ 1.0，值越小运动越慢
     velocity_scaling_factor: 0.25
-
-    # 笛卡尔空间轨迹插值步长，单位：米
-    # 步长越小轨迹越密集，计算量越大
     max_step: 0.01
-
-    # 关节空间跳跃阈值，单位：弧度
-    # 设为 0.0 表示禁用跳跃检测（允许任意关节角度变化）
     jump_threshold: 0.0
+
+    # ----- 伺服控制参数 -----
+    servo_publish_period: 0.01
+    linear_scale: 0.5
+    rotational_scale: 0.5
+    kp_linear: 0.5
+    kp_angular: 0.5
+    position_tolerance: 0.005
+    orientation_tolerance: 0.05
