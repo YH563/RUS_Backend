@@ -9,6 +9,7 @@
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
 #include <moveit_servo/servo.h>
 #include <moveit_servo/servo_parameters.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <tf2/LinearMath/Quaternion.h>

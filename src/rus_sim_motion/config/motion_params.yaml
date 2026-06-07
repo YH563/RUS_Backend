@@ -1,16 +1,18 @@
-# 运动控制节点参数配置
-rus_sim_motion:
+# custom_control_params.yaml
+# 存放 MoveIt 规划参数、服务/话题配置、变换矩阵等
+
+/rus_sim_motion:                # 保留原节点命名空间，避免冲突
   ros__parameters:
     # 服务/话题配置
-    robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
-    cmd_service: "motiom_cmd"  # 状态机发布指令的服务
-    cmd_services_list: ["pre_sacn_cmd", "generate_trajectory"]  # 由运动控制节点发送请求的服务
+    robot_pose_topic: "/nonrt_state_data"
+    cmd_service: "motiom_cmd"
+    cmd_services_list: ["pre_sacn_cmd", "generate_trajectory"]
 
-    # 法兰到探头的变换矩阵
+    # 法兰到探头的变换矩阵 (注意：缺少最后一个 1.0，保持原样)
     probe_to_flange: [0.452362, 0.0830591, 0.887958, 0.00492813,
                       0.891303, -0.00774884, -0.453341, 0.00274416,
                       -0.0307735, 0.996514, -0.0775361, 0.217645,
-                      0.0, 0.0, 0.0]  # 少了个1.0，现用于测试
+                      0.0, 0.0, 0.0]   # 缺少1.0，现用于测试
 
     # ----- MoveIt 规划参数 -----
     planning_group: "fairino3_v6_group"
@@ -19,12 +21,3 @@ rus_sim_motion:
     velocity_scaling_factor: 0.25
     max_step: 0.01
     jump_threshold: 0.0
-
-    # ----- 伺服控制参数 -----
-    servo_publish_period: 0.01
-    linear_scale: 0.5
-    rotational_scale: 0.5
-    kp_linear: 0.5
-    kp_angular: 0.5
-    position_tolerance: 0.005
-    orientation_tolerance: 0.05

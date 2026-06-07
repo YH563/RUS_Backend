@@ -16,19 +16,13 @@ namespace RusMoveitManager
             parameter_.velocity_scaling_factor
         );
 
-        // 读取并创建 servo 参数对象（shared const ptr）
-        servo_params_ = moveit_servo::ServoParameters::makeServoParameters(node_);
-        if (!servo_params_) {
-            RCLCPP_ERROR(node_->get_logger(), "无法加载 servo 参数，请检查 YAML 配置或参数声明");
-            throw std::runtime_error("Servo parameters loading failed");
-        }
+        auto servo_param = moveit_servo::ServoParameters::makeServoParameters(node_);
+        auto planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(node, "robot_description");
+        planning_scene_monitor->startSceneMonitor();
+        planning_scene_monitor->startWorldGeometryMonitor();
+        planning_scene_monitor->startStateMonitor();
 
-        // 创建 PlanningSceneMonitor
-        auto planning_scene_monitor = 
-        std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(node_, "robot_description");
-
-        // 创建伺服实例
-        servo_ = std::make_unique<moveit_servo::Servo>(node_, servo_params_, planning_scene_monitor);
+        servo_ = std::make_unique<moveit_servo::Servo>(node, servo_param, planning_scene_monitor);
         
         // 创建速度指令发布器（伺服默认订阅 /servo_server/delta_twist_cmds）
         std::string twist_topic = "/servo_server/delta_twist_cmds";
