@@ -1,19 +1,14 @@
-# 文件名: servo_parameters.yaml
-# 机器人基础设置
 robot_link_command_frame: "base_link"
 move_group_name: "fairino3_v6_group"
 planning_frame: "base_link"
 ee_frame_name: "wrist3_link"
-
-# 输入/输出话题及频率
 command_in_type: "unitless"
-command_out_topic: "/frcobot_ros2/joint_trajectory"
+command_out_topic: "/fairino3_controller/joint_trajectory"
+command_out_type: "trajectory_msgs/JointTrajectory"
 status_topic: "/servo_node/status"
-publish_period: 0.034
-
-# 安全与限位
+publish_period: 0.01
 check_collisions: true
 joint_limit_margin: 0.1
 incoming_command_timeout: 0.1
 lower_singularity_threshold: 17.0
-# ... (其他参数可按需添加)
+# 其他参数按需添加...

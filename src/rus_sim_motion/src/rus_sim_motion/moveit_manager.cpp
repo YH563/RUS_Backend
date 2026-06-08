@@ -16,13 +16,13 @@ namespace RusMoveitManager
             parameter_.velocity_scaling_factor
         );
 
-        auto servo_param = moveit_servo::ServoParameters::makeServoParameters(node_);
-        auto planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(node, "robot_description");
-        planning_scene_monitor->startSceneMonitor();
-        planning_scene_monitor->startWorldGeometryMonitor();
-        planning_scene_monitor->startStateMonitor();
+        // auto servo_param = moveit_servo::ServoParameters::makeServoParameters(node_);
+        // auto planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(node, "robot_description");
+        // planning_scene_monitor->startSceneMonitor();
+        // planning_scene_monitor->startWorldGeometryMonitor();
+        // planning_scene_monitor->startStateMonitor();
 
-        servo_ = std::make_unique<moveit_servo::Servo>(node, servo_param, planning_scene_monitor);
+        // servo_ = std::make_unique<moveit_servo::Servo>(node, servo_param, planning_scene_monitor);
         
         // 创建速度指令发布器（伺服默认订阅 /servo_server/delta_twist_cmds）
         std::string twist_topic = "/servo_server/delta_twist_cmds";
