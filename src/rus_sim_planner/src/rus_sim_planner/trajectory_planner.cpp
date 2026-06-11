@@ -71,8 +71,16 @@ namespace RusTrajectoryPlanner {
         }
 
         // 将读取到的法兰位姿信息，转换为探头位姿
-        auto start_probe = RusUtils::FlangeToProbe(start, parameter_.probe_to_flange);
-        auto goal_probe = RusUtils::FlangeToProbe(goal,parameter_.probe_to_flange);
+        auto start_probe = RusUtils::EndToProbe(
+            start,
+            parameter_.flange_offset,
+            parameter_.probe_to_flange
+        );
+        auto goal_probe = RusUtils::EndToProbe(
+            goal,
+            parameter_.flange_offset,
+            parameter_.probe_to_flange
+        );
 
         int start_idx = find_nearest_point(Point(start_probe.position.x, start_probe.position.y, start_probe.position.z));
         int end_idx = find_nearest_point(Point(goal_probe.position.x, goal_probe.position.y, goal_probe.position.z));
@@ -120,7 +128,9 @@ namespace RusTrajectoryPlanner {
                 temp_pose.orientation.z = q.z();
                 temp_pose.orientation.w = q.w();
                 // 再做一次坐标变换
-                this->trajectory_.push_back(cal_end_pose(temp_pose));
+                this->trajectory_.push_back(RusUtils::EndToProbe(
+                    temp_pose, parameter_.flange_offset, parameter_.probe_to_flange)
+                );
             }
         };
         if (m < 3) 
@@ -470,16 +480,5 @@ namespace RusTrajectoryPlanner {
         std::vector<float> nearest_distance(1); // 存储距离
         tree_.nearestKSearch(p, 1, nearest_index, nearest_distance);
         return nearest_index[0];
-    }
-
-    // 计算Moveit规划末端的真实位姿
-    Pose TrajectoryPlanner::cal_end_pose(const Pose& pose)
-    {
-        Matrix4d mat1 = Matrix4d::Identity();
-        mat1(2, 3) = parameter_.flange_offset;
-        auto relative_transform = mat1 * parameter_.probe_to_flange;
-        auto origin_mat = RusUtils::PoseToMatrix4d(pose);
-        Pose end_pose = RusUtils::Matrix4dToPose(origin_mat * relative_transform.inverse());
-        return end_pose;
     }
 }

@@ -35,7 +35,7 @@ namespace RusCloudPreprocess
         }
         Eigen::Matrix4f T_base_ee;  // 末端在基坐标系下的位姿
         pose_to_matrix(end_pose, T_base_ee);
-        auto transform_matrix = T_base_ee * parameter_.camera_to_flange;  // 计算基坐标系下的变换矩阵
+        auto transform_matrix = T_base_ee * parameter_.camera_to_end;  // 计算基坐标系下的变换矩阵
         CloudRGBPtr transform_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
         // 执行点云变换
         pcl::transformPointCloud(

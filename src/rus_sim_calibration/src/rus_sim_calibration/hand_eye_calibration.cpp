@@ -55,11 +55,17 @@ namespace RusCalibration
         {
             for (size_t i = 0; i < robot_poses.size(); i++)
             {
-                cv::Mat R_g, t_g, R_t, t_t;
+                // 机器人末端到基座（方向正确）
+                cv::Mat R_g, t_g;
                 DecomposeTransform(robot_poses[i], R_g, t_g);
-                DecomposeTransform(target_poses[i], R_t, t_t);
                 R_gripper2base.push_back(R_g);
                 t_gripper2base.push_back(t_g);
+
+                // 标定板到相机 = 相机到标定板的逆矩阵
+                cv::Mat T_cam2target = target_poses[i];
+                cv::Mat T_target2cam = T_cam2target.inv();   // ★ 关键修正
+                cv::Mat R_t, t_t;
+                DecomposeTransform(T_target2cam, R_t, t_t);
                 R_target2cam.push_back(R_t);
                 t_target2cam.push_back(t_t);
             }
@@ -324,7 +330,7 @@ namespace RusCalibration
         // 将 rvec 旋转向量转换为 3×3 旋转矩阵，组合成 4×4 齐次变换矩阵
         cv::Mat rot_mat;
         cv::Rodrigues(rvec, rot_mat);
-        camera_to_target = ComposeTransform(rot_mat, tvec);
+        camera_to_target = ComposeTransform(rot_mat, tvec).inv();
 
         return true;
     }

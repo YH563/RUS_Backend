@@ -53,8 +53,13 @@ def generate_launch_description():
         output="screen",
         parameters=[
             custom_params,
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+            moveit_config.robot_description_kinematics,
+            moveit_config.joint_limits,
         ],
     )
+    
     return launch.LaunchDescription([
         custom_motion_node,
         servo_node,

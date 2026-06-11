@@ -5,6 +5,7 @@
   ros__parameters:
     # 服务/话题配置
     robot_pose_topic: "/nonrt_state_data"
+    end_pose_topic: "/end_pose"
     cmd_service: "motiom_cmd"
     cmd_services_list: ["pre_sacn_cmd", "generate_trajectory"]
 

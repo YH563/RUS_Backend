@@ -17,9 +17,9 @@ namespace RusUtils
         Eigen::Quaterniond q = yaw * pitch * roll;
         // 3. 构造 Pose
         geometry_msgs::msg::Pose pose;
-        pose.position.x = x;
-        pose.position.y = y;
-        pose.position.z = z;
+        pose.position.x = x / 1000;
+        pose.position.y = y / 1000;
+        pose.position.z = z / 1000;
         pose.orientation.x = q.x();
         pose.orientation.y = q.y();
         pose.orientation.z = q.z();
@@ -59,5 +59,16 @@ namespace RusUtils
         auto mat = PoseToMatrix4d(p);
         Pose probe_pose = Matrix4dToPose(mat * probe_to_flange);
         return probe_pose;
+    }
+
+    // 根据moveit末端位姿获取探头位姿
+    Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
+    {
+        Matrix4d mat1 = Matrix4d::Identity();
+        mat1(2, 3) = offset;
+        auto relative_transform = mat1 * probe_to_flange;
+        auto origin_mat = PoseToMatrix4d(p);
+        Pose end_pose = Matrix4dToPose(origin_mat * relative_transform.inverse());
+        return end_pose;
     }
 }

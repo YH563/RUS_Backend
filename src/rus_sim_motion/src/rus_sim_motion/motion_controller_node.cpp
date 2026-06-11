@@ -1,10 +1,12 @@
 #include "rus_sim_motion/motion_controller_node.hpp"
+#include <functional>
 
 namespace RusMotionControllerNode
 {
     MotionControllerNode::MotionControllerNode() : rclcpp::Node("motion_controller_node")
     {
         // ========== 声明并加载参数 ==========
+        this->declare_parameter<std::string>("end_pose_topic", "/end_pose");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
         this->declare_parameter<std::string>("cmd_service", "motion_cmd");
         this->declare_parameter("cmd_services_list", std::vector<std::string>());
@@ -27,6 +29,7 @@ namespace RusMotionControllerNode
         this->declare_parameter<double>("position_tolerance", 0.005);
         this->declare_parameter<double>("orientation_tolerance", 0.05);
         
+        auto end_pose_topic = this->get_parameter("end_pose_topic").as_string();
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
         auto cmd_service = this->get_parameter("cmd_service").as_string();
 
@@ -49,6 +52,10 @@ namespace RusMotionControllerNode
             10,
             std::bind(&MotionControllerNode::on_robot_pose, this, _1)
         );
+
+        // 创建计时器发布
+        robot_pose_pub_ = this->create_publisher<PoseStamped>(end_pose_topic, 10);
+        timer_ = this->create_wall_timer(20ms, std::bind(&MotionControllerNode::pub_end_pose, this));
 
         // 创建服务器
         cmd_server_ = this->create_service<rus_sim_interfaces::srv::Cmd>(
@@ -86,31 +93,25 @@ namespace RusMotionControllerNode
 
     void MotionControllerNode::on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg)
     {
-        if (pose_flag_ == 0) return;
-        if (pose_flag_ == 1) 
-        {
-            start_pose_ = RusUtils::Flange2Pose(
-                msg->flange_x_cur_pos,
-                msg->flange_y_cur_pos,
-                msg->flange_y_cur_pos,
-                msg->flange_a_cur_pos,
-                msg->flange_b_cur_pos,
-                msg->flange_c_cur_pos
-            );
-            pose_flag_ = 0;
-        }
-        if (pose_flag_ == 2)
-        {
-            end_pose_ = RusUtils::Flange2Pose(
-                msg->flange_x_cur_pos,
-                msg->flange_y_cur_pos,
-                msg->flange_y_cur_pos,
-                msg->flange_a_cur_pos,
-                msg->flange_b_cur_pos,
-                msg->flange_c_cur_pos
-            );
-            pose_flag_ = 0;
-        }
+        // if (pose_flag_ == 0) return;
+        // if (pose_flag_ == 1) 
+        // {
+        //     start_pose_ = moveit_manager_->GetCurrentPose();
+        //     pose_flag_ = 0;
+        // }
+        // if (pose_flag_ == 2)
+        // {
+        //     end_pose_ = moveit_manager_->GetCurrentPose();
+        //     pose_flag_ = 0;
+        // }
+    }
+
+    // 发布末端位姿
+    void MotionControllerNode::pub_end_pose()
+    {
+        PoseStamped msg;
+        msg = moveit_manager_->GetCurrentPose();
+        robot_pose_pub_->publish(msg);
     }
 
     void MotionControllerNode::handle_cmd(
@@ -121,19 +122,23 @@ namespace RusMotionControllerNode
         // 设置起点位姿
         if (request->command == RusUtils::Commands::kSetStartPose)
         {
-            pose_flag_ = 1;
             response->success = true;
             response->message = "";
-            RCLCPP_INFO(this->get_logger(), "成功设置起点");
+            start_pose_ = moveit_manager_->GetCurrentPose().pose;
+            RCLCPP_INFO(this->get_logger(), "成功设置起点: position(%.3f, %.3f, %.3f), orientation(%.3f, %.3f, %.3f, %.3f)",
+                        start_pose_.position.x, start_pose_.position.y, start_pose_.position.z,
+                        start_pose_.orientation.x, start_pose_.orientation.y, start_pose_.orientation.z, start_pose_.orientation.w);
             return ;
         }
         // 设置终点位姿
         if (request->command == RusUtils::Commands::kSetEndPose)
         {
-            pose_flag_ = 2;
             response->success = true;
             response->message = "";
-            RCLCPP_INFO(this->get_logger(), "成功设置终点");
+            end_pose_ = moveit_manager_->GetCurrentPose().pose;
+            RCLCPP_INFO(this->get_logger(), "成功设置终点: position(%.3f, %.3f, %.3f), orientation(%.3f, %.3f, %.3f, %.3f)",
+                        end_pose_.position.x, end_pose_.position.y, end_pose_.position.z,
+                        end_pose_.orientation.x, end_pose_.orientation.y, end_pose_.orientation.z, end_pose_.orientation.w);
             return ;
         }
         // 开始执行预扫查

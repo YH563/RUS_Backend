@@ -113,12 +113,12 @@ namespace RusCalibrationNode
         Eigen::AngleAxisd roll(a_rad, Eigen::Vector3d::UnitX());
         Eigen::AngleAxisd pitch(b_rad, Eigen::Vector3d::UnitY());
         Eigen::AngleAxisd yaw(c_rad, Eigen::Vector3d::UnitZ());
-        Eigen::Quaterniond q = yaw * pitch * roll;
+        Eigen::Quaterniond q = yaw * pitch * roll;  // 顺序颠倒了一下
         // 3. 构造 Pose
         geometry_msgs::msg::Pose pose;
-        pose.position.x = x;
-        pose.position.y = y;
-        pose.position.z = z;
+        pose.position.x = x / 1000;
+        pose.position.y = y / 1000;
+        pose.position.z = z / 1000;
         pose.orientation.x = q.x();
         pose.orientation.y = q.y();
         pose.orientation.z = q.z();
@@ -167,17 +167,17 @@ namespace RusCalibrationNode
     void CalibrationNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
     {
         auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
+        pose_stamped_ptr->header.stamp = this->get_clock()->now();
+        pose_stamped_ptr->header.frame_id = "base_link";
         auto pose = flange_to_pose(
             msg->flange_x_cur_pos,
             msg->flange_y_cur_pos,
-            msg->flange_y_cur_pos,
+            msg->flange_z_cur_pos,
             msg->flange_a_cur_pos,
             msg->flange_b_cur_pos,
             msg->flange_c_cur_pos
         );
         pose_stamped_ptr->pose = pose;
-        pose_stamped_ptr->header.stamp = this->get_clock()->now();
-        pose_stamped_ptr->header.frame_id = "base_link";
         pose_cache_.push_back(pose_stamped_ptr);
         // 超过最大缓存数量的时候出队
         while (pose_cache_.size() > max_cache_size_) 

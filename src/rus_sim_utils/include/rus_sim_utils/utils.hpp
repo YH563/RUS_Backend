@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <geometry_msgs/msg/detail/pose__struct.hpp>
 #include <utility>
 #include <type_traits>
 #include <variant>
@@ -43,4 +44,7 @@ namespace RusUtils
 
     // 根据法兰位姿获取探头位姿
     Pose FlangeToProbe(const Pose& p, const Matrix4d& probe_to_flange);
+
+    // 根据moveit末端位姿获取探头位姿，由于URDF文件的末端原点并非法兰，因此需要添加一个偏移量
+    Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange);
 }

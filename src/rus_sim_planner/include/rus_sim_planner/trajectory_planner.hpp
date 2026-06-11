@@ -112,8 +112,6 @@ namespace RusTrajectoryPlanner
         void taubin_smooth();
         // 根据点坐标查询点云中与之距离最近的点
         int find_nearest_point(const Point& p);
-        // 计算Moveit规划末端的真实位姿
-        Pose cal_end_pose(const Pose& pose);
 
         // ============== 私有成员变量 ==============
         bool is_initialized_ = false;  // 是否已初始化

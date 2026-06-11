@@ -1,7 +1,12 @@
 #pragma once
 
 #include <memory>
+#include <chrono>
+
+#include <geometry_msgs/msg/detail/pose_stamped__struct.hpp>
+#include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp/timer.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 
@@ -20,8 +25,10 @@ namespace RusMotionControllerNode
     using MoveitParameter = RusMoveitManager::MoveitParameter;  // 规划器参数
     using ServiceGenerateTrajectory = rus_sim_interfaces::srv::GenerateTrajectory;  // 生成轨迹的服务
     using Pose = geometry_msgs::msg::Pose;  // 位姿
+    using geometry_msgs::msg::PoseStamped;  // 带时间戳的位姿
     using namespace std::placeholders;
     using Eigen::Matrix4d;
+    using namespace std::chrono_literals;
 
     class MotionControllerNode : public rclcpp::Node
     {
@@ -36,6 +43,9 @@ namespace RusMotionControllerNode
     private:
         // 接收机械臂末端位姿
         void on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg);
+        
+        // 发布末端位姿
+        void pub_end_pose();
 
         // 处理指令服务
         void handle_cmd(
@@ -50,6 +60,8 @@ namespace RusMotionControllerNode
         // 私有成员变量
         // 话题订阅，服务端，客户端
         rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
+        rclcpp::TimerBase::SharedPtr timer_;  // 计时器发布机械臂末端位姿
+        rclcpp::Publisher<PoseStamped>::SharedPtr robot_pose_pub_;  // 发布机械臂末端位姿
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
         std::unique_ptr<RusServiceClients::RelayNode> service_clients_;  // 指令客户端
         

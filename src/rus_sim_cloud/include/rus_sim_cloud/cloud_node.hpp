@@ -1,5 +1,6 @@
 #pragma once
 
+#include <geometry_msgs/msg/detail/pose_stamped__struct.hpp>
 #include <memory>
 #include <deque>
 #include <chrono>
@@ -13,6 +14,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <shape_msgs/msg/mesh.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/point.hpp>
 #include <std_msgs/msg/detail/string__struct.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -39,6 +41,7 @@ namespace RusCloudNode
     using fairino_msgs::msg::RobotNonrtState;
     using CloudRGBPtr = pcl::PointCloud<pcl::PointXYZRGB>::Ptr;  // 彩色点云数据指针，为智能指针对象
     using CloudRGB = pcl::PointCloud<pcl::PointXYZRGB>;  // 彩色点云
+    using geometry_msgs::msg::PoseStamped;  // 带时间戳的位姿
 
     // 接收点云数据，进行处理并发布处理后的点云数据
     class CloudNode : public rclcpp::Node
@@ -60,6 +63,9 @@ namespace RusCloudNode
 
         // 接收位姿数据
         void on_robot_pose(const RobotNonrtState::SharedPtr msg);
+        // 接收末端位姿信息
+        void on_end_pose(const PoseStamped::SharedPtr msg);
+
         // 接收点云数据
         void on_cloud(const PointCloud2::SharedPtr msg);
         // 发布预处理后的点云数据
@@ -70,6 +76,7 @@ namespace RusCloudNode
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;  // 点云数据订阅
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_pub_;  // 处理后的点云数据发布
         rclcpp::Subscription<RobotNonrtState>::SharedPtr robot_pose_sub_;  // 机械臂末端位姿订阅
+        rclcpp::Subscription<PoseStamped>::SharedPtr end_pose_sub_;  // 机械臂末端位姿订阅（新）
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
 
         // 缓存数据

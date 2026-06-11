@@ -46,7 +46,7 @@ namespace RusCloudPreprocess
         float statistical_std_dev_mul = 1.0f;       // 标准差倍数
 
         // 眼在手上变换矩阵，深度相机相对于法兰的变换矩阵
-        Eigen::Matrix4f camera_to_flange = Eigen::Matrix4f::Identity();  
+        Eigen::Matrix4f camera_to_end = Eigen::Matrix4f::Identity();  
     };
 
     // 点云预处理类

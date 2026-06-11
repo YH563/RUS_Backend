@@ -20,8 +20,6 @@ fairino3_controller:
       - j5
       - j6
     command_interfaces:
-      - velocity
       - position
     state_interfaces:
       - position
-    use_feedforward_for_velocity: true

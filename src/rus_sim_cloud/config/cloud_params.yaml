@@ -5,6 +5,7 @@
     input_cloud_topic: "/origin_cloud"       # 输入点云话题，输入原始点云数据
     output_cloud_topic: "/preprocessed_cloud"     # 输出点云话题，输出预处理后的点云
     robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
+    end_pose_topic: "/end_pose"
     cmd_service: "pre_sacn_cmd"              # 预扫查指令服务名称
 
     # 时间同步参数
@@ -30,8 +31,8 @@
     statistical_mean_k: 50                  # 统计滤波邻域点数
     statistical_std_dev_mul: 1.0            # 统计滤波标准差倍数
 
-    # 标定后的相机相对法兰的变换矩阵
-    camera_to_flange: [1.0, 0.0, 0.0, 0.0,
+    # 标定后的相机相对机械臂末端的变换矩阵
+    camera_to_end: [1.0, 0.0, 0.0, 0.0,
                        0.0, 1.0, 0.0, 0.0,
                        0.0, 0.0, 1.0, 0.0,
                        0.0, 0.0, 0.0, 1.0]

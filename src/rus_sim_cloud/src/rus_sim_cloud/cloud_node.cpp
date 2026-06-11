@@ -1,10 +1,13 @@
 #include "rus_sim_cloud/cloud_node.hpp"
+#include <functional>
+#include <utility>
 
 namespace RusCloudNode 
 {
     CloudNode::CloudNode() : rclcpp::Node("cloud_node"), timer_(nullptr)
     {
         // 声明参数
+        this->declare_parameter<std::string>("end_pose_topic", "/end_pose");
         this->declare_parameter<std::string>("input_cloud_topic", "/input_cloud");
         this->declare_parameter<std::string>("output_cloud_topic", "/output_cloud");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
@@ -19,7 +22,7 @@ namespace RusCloudNode
         this->declare_parameter<bool>("passthrough_negative", false);
         this->declare_parameter<int>("statistical_mean_k", 50);
         this->declare_parameter<double>("statistical_std_dev_mul", 1.0);
-        this->declare_parameter<std::vector<double>>("camera_to_flange", {
+        this->declare_parameter<std::vector<double>>("camera_to_end", {
             1.0, 0.0, 0.0, 0.0,
             0.0, 1.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
@@ -27,6 +30,7 @@ namespace RusCloudNode
         });
 
         // 读取参数
+        auto end_pose_topic = this->get_parameter("end_pose_topic").as_string();
         auto input_cloud_topic  = this->get_parameter("input_cloud_topic").as_string();
         auto output_cloud_topic = this->get_parameter("output_cloud_topic").as_string();
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
@@ -34,7 +38,7 @@ namespace RusCloudNode
         max_allowed_diff_sec_   = this->get_parameter("max_allowed_diff_sec").as_double();
         max_cache_size_         = this->get_parameter("max_cache_size").as_int();
         cloud_sample_period_    = this->get_parameter("cloud_sample_period").as_double();
-        std::vector<double> mat_vec = this->get_parameter("camera_to_flange").as_double_array();
+        std::vector<double> mat_vec = this->get_parameter("camera_to_end").as_double_array();
         
 
         // 初始化点云预处理对象
@@ -52,13 +56,13 @@ namespace RusCloudNode
         param.statistical_mean_k = this->get_parameter("statistical_mean_k").as_int();
         param.statistical_std_dev_mul = static_cast<float>(this->get_parameter("statistical_std_dev_mul").as_double());
         if (mat_vec.size() == 16) {
-            param.camera_to_flange.row(0) << mat_vec[0], mat_vec[1], mat_vec[2], mat_vec[3];
-            param.camera_to_flange.row(1) << mat_vec[4], mat_vec[5], mat_vec[6], mat_vec[7];
-            param.camera_to_flange.row(2) << mat_vec[8], mat_vec[9], mat_vec[10], mat_vec[11];
-            param.camera_to_flange.row(3) << mat_vec[12], mat_vec[13], mat_vec[14], mat_vec[15];
+            param.camera_to_end.row(0) << mat_vec[0], mat_vec[1], mat_vec[2], mat_vec[3];
+            param.camera_to_end.row(1) << mat_vec[4], mat_vec[5], mat_vec[6], mat_vec[7];
+            param.camera_to_end.row(2) << mat_vec[8], mat_vec[9], mat_vec[10], mat_vec[11];
+            param.camera_to_end.row(3) << mat_vec[12], mat_vec[13], mat_vec[14], mat_vec[15];
         } else {
-            RCLCPP_WARN(this->get_logger(), "camera_to_flange 参数大小不为16，使用单位矩阵");
-            param.camera_to_flange = Eigen::Matrix4f::Identity();
+            RCLCPP_WARN(this->get_logger(), "camera_to_end 参数大小不为16，使用单位矩阵");
+            param.camera_to_end = Eigen::Matrix4f::Identity();
         }
         cloud_preprocess_->SetFilterParamter(param);
         // 创建发布器
@@ -70,9 +74,14 @@ namespace RusCloudNode
             std::bind(&CloudNode::on_cloud, this, std::placeholders::_1)
         );
 
-        robot_pose_sub_ = this->create_subscription<RobotNonrtState>(
-            robot_pose_topic, 10,
-            std::bind(&CloudNode::on_robot_pose, this, std::placeholders::_1)
+        // robot_pose_sub_ = this->create_subscription<RobotNonrtState>(
+        //     robot_pose_topic, 10,
+        //     std::bind(&CloudNode::on_robot_pose, this, std::placeholders::_1)
+        // );
+
+        end_pose_sub_ = this->create_subscription<PoseStamped>(
+            end_pose_topic, 10,
+            std::bind(&CloudNode::on_end_pose, this, std::placeholders::_1)
         );
 
         // 创建指令服务
@@ -130,11 +139,12 @@ namespace RusCloudNode
             RCLCPP_INFO(this->get_logger(), "正在启动点云预处理节点");
             cloud_preprocess_->Clear();
             enabled_ = true;
-            // 创建计时器
-            timer_ = this->create_wall_timer(
-                std::chrono::duration<double>(cloud_sample_period_), 
-                std::bind(&CloudNode::add_cloud_pose, this)
-            );
+            // // 创建计时器
+            // timer_ = this->create_wall_timer(
+            //     std::chrono::duration<double>(cloud_sample_period_), 
+            //     std::bind(&CloudNode::add_cloud_pose, this)
+            // );
+            add_cloud_pose();
             RCLCPP_INFO(this->get_logger(), "已启动点云预处理节点");
             response->success = true;
             response->message = "已启动点云预处理节点";
@@ -170,6 +180,16 @@ namespace RusCloudNode
         pose_stamped_ptr->header.stamp = this->get_clock()->now();
         pose_stamped_ptr->header.frame_id = "base_link";
         pose_cache_.push_back(pose_stamped_ptr);
+        // 超过最大缓存数量的时候出队
+        while (pose_cache_.size() > max_cache_size_) 
+            pose_cache_.pop_front();
+    }
+
+    // 接收末端位姿信息
+    void CloudNode::on_end_pose(const PoseStamped::SharedPtr msg)
+    {
+        if (!enabled_) return;
+        pose_cache_.push_back(std::move(msg));
         // 超过最大缓存数量的时候出队
         while (pose_cache_.size() > max_cache_size_) 
             pose_cache_.pop_front();

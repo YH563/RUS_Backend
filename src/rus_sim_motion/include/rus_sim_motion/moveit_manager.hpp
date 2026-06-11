@@ -11,12 +11,14 @@
 #include <moveit_servo/servo_parameters.h>
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace RusMoveitManager
 {
+    using geometry_msgs::msg::PoseStamped;  // 带时间戳的位姿
     using geometry_msgs::msg::Pose;  // 位姿
     using geometry_msgs::msg::TwistStamped;
 
@@ -64,11 +66,11 @@ namespace RusMoveitManager
         void StopMotion();
 
         // 获取当前末端位姿
-        Pose GetCurrentPose(){ 
-            if (move_group_ != nullptr) return move_group_->getCurrentPose().pose; 
+        PoseStamped GetCurrentPose(){ 
+            if (move_group_ != nullptr) return move_group_->getCurrentPose(); 
             else{
                 RCLCPP_ERROR(node_->get_logger(), "尚未初始化 Moveit 规划组");
-                return Pose();
+                return PoseStamped();
             }
         }
 
