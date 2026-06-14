@@ -62,13 +62,24 @@ namespace RusUtils
     }
 
     // 根据moveit末端位姿获取探头位姿
-    Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
+    Pose ProbeToEnd(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
     {
         Matrix4d mat1 = Matrix4d::Identity();
         mat1(2, 3) = offset;
         auto relative_transform = mat1 * probe_to_flange;
         auto origin_mat = PoseToMatrix4d(p);
         Pose end_pose = Matrix4dToPose(origin_mat * relative_transform.inverse());
+        return end_pose;
+    }
+
+    // 通过执行器坐标，求探头末端坐标
+    Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
+    {
+        Matrix4d mat1 = Matrix4d::Identity();
+        mat1(2, 3) = offset;
+        auto relative_transform = mat1 * probe_to_flange;
+        auto origin_mat = PoseToMatrix4d(p);
+        Pose end_pose = Matrix4dToPose(origin_mat * relative_transform);
         return end_pose;
     }
 }

@@ -2,7 +2,7 @@
 /rus_sim_cloud:
   ros__parameters:
     # 话题名称参数
-    input_cloud_topic: "/origin_cloud"       # 输入点云话题，输入原始点云数据
+    input_cloud_topic: "/camera/camera/depth/color/points"       # 输入点云话题，输入原始点云数据
     output_cloud_topic: "/preprocessed_cloud"     # 输出点云话题，输出预处理后的点云
     robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
     end_pose_topic: "/end_pose"
@@ -32,7 +32,8 @@
     statistical_std_dev_mul: 1.0            # 统计滤波标准差倍数
 
     # 标定后的相机相对机械臂末端的变换矩阵
-    camera_to_end: [1.0, 0.0, 0.0, 0.0,
-                       0.0, 1.0, 0.0, 0.0,
-                       0.0, 0.0, 1.0, 0.0,
-                       0.0, 0.0, 0.0, 1.0]
+    camera_to_end: [
+      -0.6890016, 0.72474778, -0.00417675, 0.09376472,
+      -0.72475632, -0.68896894, 0.00707673, -0.03569825,
+      0.0022512, 0.00790301, 0.99996624, -0.04231331,
+      0.0, 0.0, 0.0, 1.0]

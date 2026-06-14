@@ -1,5 +1,6 @@
 #include "rus_sim_cloud/cloud_node.hpp"
 #include <functional>
+#include <unistd.h>
 #include <utility>
 
 namespace RusCloudNode 
@@ -44,6 +45,7 @@ namespace RusCloudNode
         // 初始化点云预处理对象
         cloud_preprocess_ = std::make_unique<CloudPreprocess>();
         cloud_cache_ = std::make_shared<PointCloud2>();
+        cloud_cache_ = nullptr;
         latest_cloud_ = std::make_shared<CloudRGB>();
 
         // 配置预处理参数
@@ -139,12 +141,13 @@ namespace RusCloudNode
             RCLCPP_INFO(this->get_logger(), "正在启动点云预处理节点");
             cloud_preprocess_->Clear();
             enabled_ = true;
-            // // 创建计时器
-            // timer_ = this->create_wall_timer(
-            //     std::chrono::duration<double>(cloud_sample_period_), 
-            //     std::bind(&CloudNode::add_cloud_pose, this)
-            // );
-            add_cloud_pose();
+            // 创建一次性定时器，延迟 10秒后执行 add_cloud_pose
+            timer_ = this->create_wall_timer(
+            std::chrono::seconds(10),
+            [this]() {
+                this->add_cloud_pose();
+                this->timer_->cancel();  // 只执行一次
+            });
             RCLCPP_INFO(this->get_logger(), "已启动点云预处理节点");
             response->success = true;
             response->message = "已启动点云预处理节点";
@@ -166,23 +169,23 @@ namespace RusCloudNode
 
     void CloudNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
     {
-        if (!enabled_) return;
-        auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
-        auto pose = RusUtils::Flange2Pose(
-            msg->flange_x_cur_pos,
-            msg->flange_y_cur_pos,
-            msg->flange_y_cur_pos,
-            msg->flange_a_cur_pos,
-            msg->flange_b_cur_pos,
-            msg->flange_c_cur_pos
-        );
-        pose_stamped_ptr->pose = pose;
-        pose_stamped_ptr->header.stamp = this->get_clock()->now();
-        pose_stamped_ptr->header.frame_id = "base_link";
-        pose_cache_.push_back(pose_stamped_ptr);
-        // 超过最大缓存数量的时候出队
-        while (pose_cache_.size() > max_cache_size_) 
-            pose_cache_.pop_front();
+        // if (!enabled_) return;
+        // auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
+        // auto pose = RusUtils::Flange2Pose(
+        //     msg->flange_x_cur_pos,
+        //     msg->flange_y_cur_pos,
+        //     msg->flange_y_cur_pos,
+        //     msg->flange_a_cur_pos,
+        //     msg->flange_b_cur_pos,
+        //     msg->flange_c_cur_pos
+        // );
+        // pose_stamped_ptr->pose = pose;
+        // pose_stamped_ptr->header.stamp = this->get_clock()->now();
+        // pose_stamped_ptr->header.frame_id = "base_link";
+        // pose_cache_.push_back(pose_stamped_ptr);
+        // // 超过最大缓存数量的时候出队
+        // while (pose_cache_.size() > max_cache_size_) 
+        //     pose_cache_.pop_front();
     }
 
     // 接收末端位姿信息
@@ -212,6 +215,8 @@ namespace RusCloudNode
         PointCloud2::SharedPtr cloud_result = std::make_shared<PointCloud2>();
         cloud_result->header.frame_id = "base_link";
         cloud_result->header.stamp = this->now();
+        // 保存点云文件测试看看
+        cloud_preprocess_->SaveCloud("/home/hp/pytest/result.pcd");
         pcl::toROSMsg(*cloud_preprocess_->GetCloud(), *cloud_result);
         cloud_pub_->publish(*cloud_result);
     }

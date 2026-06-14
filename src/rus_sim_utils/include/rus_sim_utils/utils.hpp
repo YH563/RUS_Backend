@@ -45,6 +45,9 @@ namespace RusUtils
     // 根据法兰位姿获取探头位姿
     Pose FlangeToProbe(const Pose& p, const Matrix4d& probe_to_flange);
 
-    // 根据moveit末端位姿获取探头位姿，由于URDF文件的末端原点并非法兰，因此需要添加一个偏移量
+    // 通过探头末端坐标求解末端执行器坐标，由于URDF文件的末端原点并非法兰，因此需要添加一个偏移量
+    Pose ProbeToEnd(const Pose& p, const double& offset, const Matrix4d& probe_to_flange);
+
+    // 通过执行器坐标，求探头末端坐标
     Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange);
 }

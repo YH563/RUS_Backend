@@ -21,11 +21,11 @@ def generate_launch_description():
         .to_moveit_configs()
     )
 
-    servo_params = {
-        "moveit_servo": ParameterBuilder("rus_sim_motion")
-        .yaml("config/servo_params.yaml")
-        .to_dict()
-    }
+    # servo_params = {
+    #     "moveit_servo": ParameterBuilder("rus_sim_motion")
+    #     .yaml("config/servo_params.yaml")
+    #     .to_dict()
+    # }
 
     custom_params = os.path.join(
         get_package_share_directory("rus_sim_motion"),
@@ -33,18 +33,18 @@ def generate_launch_description():
         "motion_params.yaml",
     )
 
-    servo_node = launch_ros.actions.Node(
-        package="moveit_servo",
-        executable="servo_node_main",
-        parameters=[
-            servo_params,
-            moveit_config.robot_description,
-            moveit_config.robot_description_semantic,
-            moveit_config.robot_description_kinematics,
-            moveit_config.joint_limits,
-        ],
-        output="screen",
-    )
+    # servo_node = launch_ros.actions.Node(
+    #     package="moveit_servo",
+    #     executable="servo_node_main",
+    #     parameters=[
+    #         servo_params,
+    #         moveit_config.robot_description,
+    #         moveit_config.robot_description_semantic,
+    #         moveit_config.robot_description_kinematics,
+    #         moveit_config.joint_limits,
+    #     ],
+    #     output="screen",
+    # )
 
     custom_motion_node = Node(
         package="rus_sim_motion",
@@ -62,5 +62,5 @@ def generate_launch_description():
     
     return launch.LaunchDescription([
         custom_motion_node,
-        servo_node,
+        # servo_node,
     ])

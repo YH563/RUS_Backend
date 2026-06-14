@@ -9,6 +9,9 @@
 #include <rclcpp/timer.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_ros/buffer.h>
 
 #include "rus_sim_motion/moveit_manager.hpp"
 #include "rus_sim_interfaces/srv/generate_trajectory.hpp"
@@ -59,7 +62,9 @@ namespace RusMotionControllerNode
         
         // 私有成员变量
         // 话题订阅，服务端，客户端
-        rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
+        // rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
+        std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+        std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
         rclcpp::TimerBase::SharedPtr timer_;  // 计时器发布机械臂末端位姿
         rclcpp::Publisher<PoseStamped>::SharedPtr robot_pose_pub_;  // 发布机械臂末端位姿
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端

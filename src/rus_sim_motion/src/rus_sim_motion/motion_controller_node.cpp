@@ -47,14 +47,16 @@ namespace RusMotionControllerNode
         }
 
         // 创建订阅
-        robot_pose_sub_ = this->create_subscription<fairino_msgs::msg::RobotNonrtState>(
-            robot_pose_topic,
-            10,
-            std::bind(&MotionControllerNode::on_robot_pose, this, _1)
-        );
+        // robot_pose_sub_ = this->create_subscription<fairino_msgs::msg::RobotNonrtState>(
+        //     robot_pose_topic,
+        //     10,
+        //     std::bind(&MotionControllerNode::on_robot_pose, this, _1)
+        // );
 
         // 创建计时器发布
         robot_pose_pub_ = this->create_publisher<PoseStamped>(end_pose_topic, 10);
+        tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+        tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
         timer_ = this->create_wall_timer(20ms, std::bind(&MotionControllerNode::pub_end_pose, this));
 
         // 创建服务器
@@ -109,9 +111,23 @@ namespace RusMotionControllerNode
     // 发布末端位姿
     void MotionControllerNode::pub_end_pose()
     {
-        PoseStamped msg;
-        msg = moveit_manager_->GetCurrentPose();
-        robot_pose_pub_->publish(msg);
+        geometry_msgs::msg::TransformStamped transformStamped;
+        try {
+            transformStamped = tf_buffer_->lookupTransform("base_link", "wrist3_link", tf2::TimePointZero);
+            
+            geometry_msgs::msg::PoseStamped end_effector_pose;
+            end_effector_pose.header = transformStamped.header;
+            end_effector_pose.pose.position.x = transformStamped.transform.translation.x;
+            end_effector_pose.pose.position.y = transformStamped.transform.translation.y;
+            end_effector_pose.pose.position.z = transformStamped.transform.translation.z;
+            end_effector_pose.pose.orientation = transformStamped.transform.rotation;
+            
+            // 现在 end_effector_pose 就是末端相对于 base_link 的位姿
+            robot_pose_pub_->publish(end_effector_pose);
+
+        } catch (tf2::TransformException &ex) {
+            RCLCPP_WARN(this->get_logger(), "Could not transform: %s", ex.what());
+        }
     }
 
     void MotionControllerNode::handle_cmd(
@@ -124,7 +140,16 @@ namespace RusMotionControllerNode
         {
             response->success = true;
             response->message = "";
-            start_pose_ = moveit_manager_->GetCurrentPose().pose;
+            geometry_msgs::msg::TransformStamped transformStamped;
+            transformStamped = tf_buffer_->lookupTransform("base_link", "wrist3_link", tf2::TimePointZero);
+            
+            geometry_msgs::msg::PoseStamped end_effector_pose;
+            end_effector_pose.header = transformStamped.header;
+            end_effector_pose.pose.position.x = transformStamped.transform.translation.x;
+            end_effector_pose.pose.position.y = transformStamped.transform.translation.y;
+            end_effector_pose.pose.position.z = transformStamped.transform.translation.z;
+            end_effector_pose.pose.orientation = transformStamped.transform.rotation;
+            start_pose_ = end_effector_pose.pose;
             RCLCPP_INFO(this->get_logger(), "成功设置起点: position(%.3f, %.3f, %.3f), orientation(%.3f, %.3f, %.3f, %.3f)",
                         start_pose_.position.x, start_pose_.position.y, start_pose_.position.z,
                         start_pose_.orientation.x, start_pose_.orientation.y, start_pose_.orientation.z, start_pose_.orientation.w);
@@ -135,7 +160,16 @@ namespace RusMotionControllerNode
         {
             response->success = true;
             response->message = "";
-            end_pose_ = moveit_manager_->GetCurrentPose().pose;
+            geometry_msgs::msg::TransformStamped transformStamped;
+            transformStamped = tf_buffer_->lookupTransform("base_link", "wrist3_link", tf2::TimePointZero);
+            
+            geometry_msgs::msg::PoseStamped end_effector_pose;
+            end_effector_pose.header = transformStamped.header;
+            end_effector_pose.pose.position.x = transformStamped.transform.translation.x;
+            end_effector_pose.pose.position.y = transformStamped.transform.translation.y;
+            end_effector_pose.pose.position.z = transformStamped.transform.translation.z;
+            end_effector_pose.pose.orientation = transformStamped.transform.rotation;
+            end_pose_ = end_effector_pose.pose;
             RCLCPP_INFO(this->get_logger(), "成功设置终点: position(%.3f, %.3f, %.3f), orientation(%.3f, %.3f, %.3f, %.3f)",
                         end_pose_.position.x, end_pose_.position.y, end_pose_.position.z,
                         end_pose_.orientation.x, end_pose_.orientation.y, end_pose_.orientation.z, end_pose_.orientation.w);

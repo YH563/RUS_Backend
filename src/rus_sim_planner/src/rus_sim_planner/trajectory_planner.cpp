@@ -81,7 +81,8 @@ namespace RusTrajectoryPlanner {
             parameter_.flange_offset,
             parameter_.probe_to_flange
         );
-
+        RCLCPP_INFO(rclcpp::get_logger(class_name_), "start_probe: (%.3f, %.3f, %.3f)", start_probe.position.x, start_probe.position.y, start_probe.position.z);
+        RCLCPP_INFO(rclcpp::get_logger(class_name_), "goal_probe: (%.3f, %.3f, %.3f)", goal_probe.position.x, goal_probe.position.y, goal_probe.position.z);
         int start_idx = find_nearest_point(Point(start_probe.position.x, start_probe.position.y, start_probe.position.z));
         int end_idx = find_nearest_point(Point(goal_probe.position.x, goal_probe.position.y, goal_probe.position.z));
         // 1.初始化，生成初始轨迹
@@ -128,7 +129,7 @@ namespace RusTrajectoryPlanner {
                 temp_pose.orientation.z = q.z();
                 temp_pose.orientation.w = q.w();
                 // 再做一次坐标变换
-                this->trajectory_.push_back(RusUtils::EndToProbe(
+                this->trajectory_.push_back(RusUtils::ProbeToEnd(
                     temp_pose, parameter_.flange_offset, parameter_.probe_to_flange)
                 );
             }

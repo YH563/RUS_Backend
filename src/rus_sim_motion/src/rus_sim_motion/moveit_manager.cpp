@@ -25,14 +25,14 @@ namespace RusMoveitManager
         // servo_ = std::make_unique<moveit_servo::Servo>(node, servo_param, planning_scene_monitor);
         
         // 创建速度指令发布器（伺服默认订阅 /servo_server/delta_twist_cmds）
-        std::string twist_topic = "/servo_server/delta_twist_cmds";
-        twist_cmd_pub_ = node_->create_publisher<TwistStamped>(
-            twist_topic,
-            rclcpp::QoS(1)
-        );
-        RCLCPP_INFO(node_->get_logger(), "Twist命令发布器已创建，话题: %s", twist_topic.c_str());
+        // std::string twist_topic = "/servo_server/delta_twist_cmds";
+        // twist_cmd_pub_ = node_->create_publisher<TwistStamped>(
+        //     twist_topic,
+        //     rclcpp::QoS(1)
+        // );
+        // RCLCPP_INFO(node_->get_logger(), "Twist命令发布器已创建，话题: %s", twist_topic.c_str());
 
-        RCLCPP_INFO(node_->get_logger(), "伺服控制初始化完成，控制周期: %.3f s", parameter_.servo_publish_period);
+        // RCLCPP_INFO(node_->get_logger(), "伺服控制初始化完成，控制周期: %.3f s", parameter_.servo_publish_period);
     }
 
     bool MoveitManager::MoveToPose(const Pose& target_pose)
