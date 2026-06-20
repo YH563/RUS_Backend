@@ -19,6 +19,7 @@ find_package(rclcpp REQUIRED)
 find_package(yasmin REQUIRED)           # YASMIN 核心库，实现状态机逻辑
 find_package(yasmin_ros REQUIRED)       # YASMIN ROS2 集成（包含 YasminNode、Blackboard 等）
 find_package(yasmin_viewer REQUIRED)    # Web 可视化（可选，用于 YasminViewerPub）
+
 # MoveIt核心接口包
 find_package(moveit_ros_planning_interface REQUIRED)
 # 可选：可视化工具，推荐引入
@@ -38,6 +39,7 @@ add_library(task_executor_core STATIC ${SRC_FILES})
 
 target_include_directories(task_executor_core PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${Boost_LIBRARIES}
 )
 
 ament_target_dependencies(task_executor_core PUBLIC
