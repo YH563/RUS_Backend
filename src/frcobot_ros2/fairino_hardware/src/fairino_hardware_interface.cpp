@@ -11,9 +11,9 @@ hardware_interface::CallbackReturn FairinoHardwareInterface::on_init(const hardw
     for (const hardware_interface::ComponentInfo& joint : info_.joints) {
 
         //指令部分
-        if (joint.command_interfaces.size() != 1) {//开放servoJ
+        if (joint.command_interfaces.size() != 2) {//开放servoJ
             RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
-                        "Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
+                        "Joint '%s' has %zu command interfaces found. 2 expected.", joint.name.c_str(),
                         joint.command_interfaces.size());
             return hardware_interface::CallbackReturn::ERROR;
         }
@@ -25,15 +25,15 @@ hardware_interface::CallbackReturn FairinoHardwareInterface::on_init(const hardw
             return hardware_interface::CallbackReturn::ERROR;
         }
 
-        // if (joint.command_interfaces[1].name != hardware_interface::HW_IF_EFFORT){//预留，用于关节扭矩直接控制
-        //     RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
-        //            "Joint '%s' have %s command interfaces found as first command interface. '%s' expected.",
-        //            joint.name.c_str(), joint.command_interfaces[1].name.c_str(), hardware_interface::HW_IF_EFFORT);
-        //     return hardware_interface::CallbackReturn::ERROR;
-        // }
+        if (joint.command_interfaces[1].name != hardware_interface::HW_IF_EFFORT){//预留，用于关节扭矩直接控制
+            RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
+                   "Joint '%s' have %s command interfaces found as first command interface. '%s' expected.",
+                   joint.name.c_str(), joint.command_interfaces[1].name.c_str(), hardware_interface::HW_IF_EFFORT);
+            return hardware_interface::CallbackReturn::ERROR;
+        }
 
         //关节状态部分
-        if (joint.state_interfaces.size() != 1) {
+        if (joint.state_interfaces.size() != 3) {
             RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"), "Joint '%s' has %zu state interface. 3 expected.",
                         joint.name.c_str(), joint.state_interfaces.size());
             return hardware_interface::CallbackReturn::ERROR;
@@ -46,19 +46,19 @@ hardware_interface::CallbackReturn FairinoHardwareInterface::on_init(const hardw
             return hardware_interface::CallbackReturn::ERROR;
         }
 
-        // if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY) {
-        //     RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
-        //                 "Joint '%s' have %s state interface as second state interface. '%s' expected.", joint.name.c_str(),
-        //                 joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-        //     return hardware_interface::CallbackReturn::ERROR;
-        // }
+        if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY) {
+            RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
+                        "Joint '%s' have %s state interface as second state interface. '%s' expected.", joint.name.c_str(),
+                        joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+            return hardware_interface::CallbackReturn::ERROR;
+        }
 
-        // if (joint.state_interfaces[2].name != hardware_interface::HW_IF_EFFORT) {
-        //     RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
-        //                 "Joint '%s' have %s state interface as third state interface. '%s' expected.", joint.name.c_str(),
-        //                 joint.state_interfaces[2].name.c_str(), hardware_interface::HW_IF_EFFORT);
-        //     return hardware_interface::CallbackReturn::ERROR;
-        // }
+        if (joint.state_interfaces[2].name != hardware_interface::HW_IF_EFFORT) {
+            RCLCPP_FATAL(rclcpp::get_logger("FairinoHardwareInterface"),
+                        "Joint '%s' have %s state interface as third state interface. '%s' expected.", joint.name.c_str(),
+                        joint.state_interfaces[2].name.c_str(), hardware_interface::HW_IF_EFFORT);
+            return hardware_interface::CallbackReturn::ERROR;
+        }
 
     }
     return hardware_interface::CallbackReturn::SUCCESS;
@@ -75,11 +75,11 @@ std::vector<hardware_interface::StateInterface> FairinoHardwareInterface::export
     state_interfaces.emplace_back(hardware_interface::StateInterface(
         info_.joints[i].name, hardware_interface::HW_IF_POSITION, &_jnt_position_state[i]));
 
-    // state_interfaces.emplace_back(hardware_interface::StateInterface(
-    //     info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &_jnt_velocity_state.at(i)));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &_jnt_velocity_state[i]));
 
-    // state_interfaces.emplace_back(hardware_interface::StateInterface(
-    //     info_.joints[i].name, hardware_interface::HW_IF_EFFORT, &_jnt_torque_state.at(i)));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+        info_.joints[i].name, hardware_interface::HW_IF_EFFORT, &_jnt_torque_state[i]));
   }
 
   //导出
@@ -92,9 +92,10 @@ std::vector<hardware_interface::CommandInterface> FairinoHardwareInterface::expo
   for (size_t i = 0; i < info_.joints.size(); ++i) {
     command_interfaces.emplace_back(hardware_interface::CommandInterface(
         info_.joints[i].name, hardware_interface::HW_IF_POSITION, &_jnt_position_command[i]));
-
-//     command_interfaces.emplace_back(hardware_interface::CommandInterface(//预留的扭矩控制接口
-//         info_.joints[i].name, hardware_interface::HW_IF_EFFORT, &_jnt_torque_command.at(i)));
+    // command_interfaces.emplace_back(hardware_interface::CommandInterface(  // 速度控制接口
+    //     info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &_jnt_velocity_command[i]));
+    command_interfaces.emplace_back(hardware_interface::CommandInterface(//预留的扭矩控制接口
+        info_.joints[i].name, hardware_interface::HW_IF_EFFORT, &_jnt_torque_command[i]));
   }
 
   return command_interfaces;
@@ -163,14 +164,19 @@ hardware_interface::CallbackReturn FairinoHardwareInterface::on_deactivate(const
 hardware_interface::return_type FairinoHardwareInterface::read(const rclcpp::Time& time,const rclcpp::Duration& period)
 {//从RTDE反馈数据中获取所需的位置，速度和扭矩信息
     JointPos state_data;
+    float joint_speeds[6];
+    float joint_torques[6];
     error_t returncode = _ptr_robot->GetActualJointPosDegree(1,&state_data);
-    if(returncode == 0){
+    error_t returncode2 = _ptr_robot->GetActualJointSpeedsDegree(1,joint_speeds);
+    error_t returncode3 = _ptr_robot->GetJointTorques(1,joint_torques);
+    if(returncode == 0 && returncode2 == 0 && returncode3 == 0){
         for(int i=0;i<6;i++){
             _jnt_position_state[i] = state_data.jPos[i]/180.0*M_PI;//注意单位转换，moveit统一用弧度
-            //_jnt_torque_state[i] = state_data.jt_cur_tor[i];//注意单位转换
+            _jnt_velocity_state[i] = joint_speeds[i]/180.0*M_PI;  // 速度
+            _jnt_torque_state[i] = joint_torques[i];//注意单位转换
         }
     }else{
-        hardware_interface::return_type::ERROR;
+        return hardware_interface::return_type::ERROR;
     }
     //RCLCPP_INFO(rclcpp::get_logger("FairinoHardwareInterface"), "System successfully read: %f,%f,%f,%f,%f,%f",_jnt_position_state[0],\
     _jnt_position_state[1],_jnt_position_state[2],_jnt_position_state[3],_jnt_position_state[4],_jnt_position_state[5]);
@@ -202,7 +208,24 @@ hardware_interface::return_type FairinoHardwareInterface::write(const rclcpp::Ti
             [](double c) { return not std::isfinite(c); })) {
             return hardware_interface::return_type::ERROR;
         }
-        //_ptr_robot->write(_jnt_torque_command);//注意单位转换
+        // _ptr_robot->write(_jnt_torque_command);//注意单位转换
+    // }else if(_control_mode == 2){
+    //     if (std::any_of(&_jnt_velocity_command[0], &_jnt_velocity_command[5],
+    //         [](double c) { return !std::isfinite(c); })) {
+    //         return hardware_interface::return_type::ERROR;
+    //     }
+    //     double vel_deg[6];
+    //     for (int i = 0; i < 6; ++i) {
+    //         vel_deg[i] = _jnt_velocity_command[i]/M_PI*180;
+    //     }
+    //     ExaxisPos ext{0,0,0,0};
+    //     int ret = _ptr_robot->ServoJV(vel_deg, ext.exaxisPos, 0.0, 0.0, 
+    //                                 period.seconds(), 0.0, 0.0, 0, 0);
+    //     if (ret != 0) {
+    //         RCLCPP_ERROR(rclcpp::get_logger("FairinoHardwareInterface"),
+    //                     "ServoJV failed, error: %d", ret);
+    //         return hardware_interface::return_type::ERROR;
+    //     }
     }else{
         RCLCPP_INFO(rclcpp::get_logger("FairinoHardwareInterface"), "指令发送错误:未识别当前所处控制模式");
         return hardware_interface::return_type::ERROR;

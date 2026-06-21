@@ -21,5 +21,8 @@ fairino3_controller:
       - j6
     command_interfaces:
       - position
+      - effort
     state_interfaces:
       - position
+      - velocity
+      - effort

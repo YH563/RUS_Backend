@@ -29,10 +29,8 @@ namespace RusMotionControllerNode
     using ServiceGenerateTrajectory = rus_sim_interfaces::srv::GenerateTrajectory;  // 生成轨迹的服务
     using Pose = geometry_msgs::msg::Pose;  // 位姿
     using geometry_msgs::msg::PoseStamped;  // 带时间戳的位姿
-    using namespace std::placeholders;
     using Eigen::Matrix4d;
-    using namespace std::chrono_literals;
-
+    
     class MotionControllerNode : public rclcpp::Node
     {
     public:

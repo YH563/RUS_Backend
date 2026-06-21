@@ -57,43 +57,50 @@ ament_target_dependencies(task_executor_core PUBLIC
 )
 
 # ------------------- 主程序 -------------------
-set(MAIN_SOURCES src/main.cpp)
+set(TRANSFER_SOURCES src/transfer_main.cpp)
+set(SSM_SOURCES src/ssm_main.cpp)
 
 # 如果启用测试，将测试源文件加入主程序
 if(ENABLE_TEST)
   # 将测试源文件加入主程序
-  list(APPEND MAIN_SOURCES ${TEST_FILES})
+  list(APPEND TRANSFER_SOURCES ${TEST_FILES})
+  list(APPEND SSM_SOURCES ${TEST_FILES})
   # 定义宏，让代码知道测试模式已启用
   add_definitions(-DENABLE_TESTING)
 endif()
 
 # 创建可执行文件
-add_executable(rus_sim_task_executor ${MAIN_SOURCES})
+add_executable(rus_sim_transfer ${TRANSFER_SOURCES})
+add_executable(rus_sim_ssm ${SSM_SOURCES})
 
-target_link_libraries(rus_sim_task_executor PRIVATE
+target_link_libraries(rus_sim_transfer PRIVATE
   task_executor_core
 )
 
-ament_target_dependencies(rus_sim_task_executor PUBLIC
-  rclcpp
-  yasmin
-  yasmin_ros
-  yasmin_viewer
-  std_msgs
-  moveit_ros_planning_interface
-  moveit_visual_tools
-  geometry_msgs
-  rus_sim_interfaces
-  rus_sim_utils
-  fairino_msgs
+target_link_libraries(rus_sim_ssm PRIVATE
+  task_executor_core
 )
 
-target_include_directories(rus_sim_task_executor PRIVATE
+target_include_directories(rus_sim_transfer PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/test  # 链接测试用头文件
+)
+target_include_directories(rus_sim_ssm PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/test  # 链接测试用头文件
 )
 
-install(TARGETS rus_sim_task_executor
+install(TARGETS rus_sim_transfer
   DESTINATION lib/${PROJECT_NAME}
+)
+install(TARGETS rus_sim_ssm
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+install(DIRECTORY launch/
+  DESTINATION share/${PROJECT_NAME}/launch
 )
 
 if(BUILD_TESTING)

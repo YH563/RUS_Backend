@@ -6,7 +6,7 @@
     output_cloud_topic: "/preprocessed_cloud"     # 输出点云话题，输出预处理后的点云
     robot_pose_topic: "/nonrt_state_data"   # 机器人位姿话题
     end_pose_topic: "/end_pose"
-    cmd_service: "pre_sacn_cmd"              # 预扫查指令服务名称
+    cmd_service: "cloud_cmd"              # 点云指令服务名称
 
     # 时间同步参数
     max_allowed_diff_sec: 0.05              # 点云与位姿的最大允许时间差（秒）

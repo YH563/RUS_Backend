@@ -1,0 +1,7 @@
+# 参数文件：指令中转节点
+transfer_node:
+  ros__parameters:
+    # 本节点对外提供的服务名称
+    cmd_service: "transfer_cmd"
+    # 需要转发的下游服务列表，改为实际服务名
+    cmd_services_list: ["motiom_cmd", "cloud_cmd"]

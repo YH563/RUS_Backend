@@ -1,6 +1,9 @@
 #include "rus_sim_motion/motion_controller_node.hpp"
 #include <functional>
 
+using namespace std::placeholders;
+using namespace std::chrono_literals;
+
 namespace RusMotionControllerNode
 {
     MotionControllerNode::MotionControllerNode() : rclcpp::Node("motion_controller_node")
