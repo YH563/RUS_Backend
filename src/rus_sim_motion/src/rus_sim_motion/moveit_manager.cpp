@@ -15,24 +15,6 @@ namespace RusMoveitManager
             parameter_.planning_group.c_str(),
             parameter_.velocity_scaling_factor
         );
-
-        // auto servo_param = moveit_servo::ServoParameters::makeServoParameters(node_);
-        // auto planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(node, "robot_description");
-        // planning_scene_monitor->startSceneMonitor();
-        // planning_scene_monitor->startWorldGeometryMonitor();
-        // planning_scene_monitor->startStateMonitor();
-
-        // servo_ = std::make_unique<moveit_servo::Servo>(node, servo_param, planning_scene_monitor);
-        
-        // 创建速度指令发布器（伺服默认订阅 /servo_server/delta_twist_cmds）
-        // std::string twist_topic = "/servo_server/delta_twist_cmds";
-        // twist_cmd_pub_ = node_->create_publisher<TwistStamped>(
-        //     twist_topic,
-        //     rclcpp::QoS(1)
-        // );
-        // RCLCPP_INFO(node_->get_logger(), "Twist命令发布器已创建，话题: %s", twist_topic.c_str());
-
-        // RCLCPP_INFO(node_->get_logger(), "伺服控制初始化完成，控制周期: %.3f s", parameter_.servo_publish_period);
     }
 
     bool MoveitManager::MoveToPose(const Pose& target_pose)
@@ -90,84 +72,5 @@ namespace RusMoveitManager
             RCLCPP_ERROR(node_->get_logger(), "轨迹执行失败，错误码: %d", result.val);
             return false;
         }
-    }
-
-    void MoveitManager::SendVelocityCommand(const TwistStamped& twist)
-    {
-        if (!twist_cmd_pub_) {
-            RCLCPP_ERROR(node_->get_logger(), "Twist命令发布器未初始化，无法发送");
-            return;
-        }
-        twist_cmd_pub_->publish(twist);
-    }
-
-    void MoveitManager::StopMotion()
-    {
-        TwistStamped stop_twist;
-        stop_twist.header.stamp = node_->now();
-        stop_twist.header.frame_id = parameter_.base_frame;
-
-        // 所有速度置零
-        stop_twist.twist.linear.x = 0.0;
-        stop_twist.twist.linear.y = 0.0;
-        stop_twist.twist.linear.z = 0.0;
-        stop_twist.twist.angular.x = 0.0;
-        stop_twist.twist.angular.y = 0.0;
-        stop_twist.twist.angular.z = 0.0;
-
-        SendVelocityCommand(stop_twist);
-        RCLCPP_DEBUG(node_->get_logger(), "已发送零速度指令");
-    }
-
-    TwistStamped MoveitManager::CalTwistFromPose(const Pose& current, const Pose& target)
-    {
-        TwistStamped twist;
-        twist.header.stamp = node_->now();
-        twist.header.frame_id = parameter_.base_frame;
-
-        // ----- 位置误差 -> 线速度 (P控制) -----
-        Eigen::Vector3d pos_error(
-            target.position.x - current.position.x,
-            target.position.y - current.position.y,
-            target.position.z - current.position.z
-        );
-        double dist = pos_error.norm();
-
-        if (dist > parameter_.position_tolerance) {
-            // 比例控制，但建议限制最大速度，此处简单用 kp
-            twist.twist.linear.x = parameter_.kp_linear * pos_error.x();
-            twist.twist.linear.y = parameter_.kp_linear * pos_error.y();
-            twist.twist.linear.z = parameter_.kp_linear * pos_error.z();
-        } else {
-            twist.twist.linear.x = 0.0;
-            twist.twist.linear.y = 0.0;
-            twist.twist.linear.z = 0.0;
-        }
-
-        // ----- 姿态误差 -> 角速度 -----
-        tf2::Quaternion q_curr, q_targ;
-        tf2::fromMsg(current.orientation, q_curr);
-        tf2::fromMsg(target.orientation, q_targ);
-
-        // 相对旋转 q_rel = q_targ * q_curr.inverse()
-        tf2::Quaternion q_rel = q_targ * q_curr.inverse();
-        q_rel.normalize();
-
-        double angle = q_rel.getAngle();
-        if (angle > M_PI) angle = 2 * M_PI - angle;  // 取最短路径
-
-        if (angle > parameter_.orientation_tolerance) {
-            tf2::Vector3 axis = q_rel.getAxis();
-            // 比例控制
-            twist.twist.angular.x = parameter_.kp_angular * axis.x() * angle;
-            twist.twist.angular.y = parameter_.kp_angular * axis.y() * angle;
-            twist.twist.angular.z = parameter_.kp_angular * axis.z() * angle;
-        } else {
-            twist.twist.angular.x = 0.0;
-            twist.twist.angular.y = 0.0;
-            twist.twist.angular.z = 0.0;
-        }
-
-        return twist;
     }
 }

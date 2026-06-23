@@ -1,5 +1,4 @@
 #include "rus_sim_motion/motion_controller_node.hpp"
-#include <functional>
 
 using namespace std::placeholders;
 using namespace std::chrono_literals;
@@ -23,14 +22,6 @@ namespace RusMotionControllerNode
         this->declare_parameter<double>("velocity_scaling_factor", 0.25);
         this->declare_parameter<double>("max_step", 0.01);
         this->declare_parameter<double>("jump_threshold", 0.0);
-
-        this->declare_parameter<double>("servo_publish_period", 0.01);
-        this->declare_parameter<double>("linear_scale", 0.5);
-        this->declare_parameter<double>("rotational_scale", 0.5);
-        this->declare_parameter<double>("kp_linear", 0.5);
-        this->declare_parameter<double>("kp_angular", 0.5);
-        this->declare_parameter<double>("position_tolerance", 0.005);
-        this->declare_parameter<double>("orientation_tolerance", 0.05);
         
         auto end_pose_topic = this->get_parameter("end_pose_topic").as_string();
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
@@ -80,13 +71,6 @@ namespace RusMotionControllerNode
         param.velocity_scaling_factor = this->get_parameter("velocity_scaling_factor").as_double();
         param.max_step                = this->get_parameter("max_step").as_double();
         param.jump_threshold          = this->get_parameter("jump_threshold").as_double();
-        param.servo_publish_period    = this->get_parameter("servo_publish_period").as_double();
-        param.linear_scale            = this->get_parameter("linear_scale").as_double();
-        param.rotational_scale        = this->get_parameter("rotational_scale").as_double();
-        param.kp_linear               = this->get_parameter("kp_linear").as_double();
-        param.kp_angular             = this->get_parameter("kp_angular").as_double();
-        param.position_tolerance      = this->get_parameter("position_tolerance").as_double();
-        param.orientation_tolerance   = this->get_parameter("orientation_tolerance").as_double();
 
         // 加载moveit规划组
         moveit_manager_ = std::make_unique<MoveitManager>(shared_from_this(), param);

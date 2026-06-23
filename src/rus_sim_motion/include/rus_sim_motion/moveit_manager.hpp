@@ -33,15 +33,6 @@ namespace RusMoveitManager
         double velocity_scaling_factor = 0.25;  // 速度缩放因子
         double max_step = 0.01;  // 轨迹规划插值步长
         double jump_threshold = 0.0;  // 关节空间跳跃阈值，默认表示禁用跳跃检测
-
-        // 伺服控制参数
-        double servo_publish_period = 0.01;   // 控制周期（秒）
-        double linear_scale = 0.5;  // 线速度缩放
-        double rotational_scale = 0.5;  // 角速度缩放
-        double kp_linear = 0.5;              // 位置比例增益
-        double kp_angular = 0.5;             // 姿态比例增益
-        double position_tolerance = 0.005;    // 位置到达阈值 (m)
-        double orientation_tolerance = 0.05;  // 姿态到达阈值 (rad)
     };
 
     // Moveit 管理类，负责调用 moveit 控制机械臂末端运动
@@ -59,12 +50,6 @@ namespace RusMoveitManager
         // 执行一条笛卡尔轨迹
         bool ExecuteCartesianPath(const std::vector<Pose>& trajectory);
 
-        // 伺服单步指令：向 servo 发送一条 Twist 指令
-        void SendVelocityCommand(const TwistStamped& twist);
-
-        // 停止伺服运动 (发送零速度)
-        void StopMotion();
-
         // 获取当前末端位姿
         PoseStamped GetCurrentPose(){ 
             if (move_group_ != nullptr) return move_group_->getCurrentPose(); 
@@ -74,15 +59,9 @@ namespace RusMoveitManager
             }
         }
 
-        // 计算从当前位姿到目标位姿的速度指令
-        TwistStamped CalTwistFromPose(const Pose& current, const Pose& target);
-        
     private:
         rclcpp::Node::SharedPtr node_;  // 持有管理类的节点
         std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;  // 规划组
-        std::unique_ptr<moveit_servo::Servo> servo_;  // 伺服控制
-        moveit_servo::ServoParameters::SharedConstPtr servo_params_;  // 伺服参数
         MoveitParameter parameter_;  // Moveit所需参数
-        rclcpp::Publisher<TwistStamped>::SharedPtr twist_cmd_pub_;  // 速度指令发布
     };
 }
