@@ -1,4 +1,5 @@
 #include "rus_sim_cloud/cloud_preprocess.hpp"
+#include <Eigen/src/Core/Matrix.h>
 
 namespace RusCloudPreprocess
 {
@@ -33,8 +34,7 @@ namespace RusCloudPreprocess
             RCLCPP_ERROR(rclcpp::get_logger(class_name_), "传入的点云数据无效，请检查数据");
             return false;
         }
-        Eigen::Matrix4f T_base_ee;  // 末端在基坐标系下的位姿
-        pose_to_matrix(end_pose, T_base_ee);
+        auto T_base_ee = RusUtils::PoseToMatrix4d(end_pose).cast<float>();
         auto transform_matrix = T_base_ee * parameter_.camera_to_end;  // 计算基坐标系下的变换矩阵
         CloudRGBPtr transform_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
         // 执行点云变换
@@ -173,21 +173,5 @@ namespace RusCloudPreprocess
                     clouds_.size(), cloud_rgb_ptr_->size());
 
         return true;
-    }
-
-    void CloudPreprocess::pose_to_matrix(const Pose& pose, Eigen::Matrix4f& matrix)
-    {
-        // 从四元数构造旋转矩阵
-        Eigen::Quaternionf q(
-            pose.orientation.w,
-            pose.orientation.x,
-            pose.orientation.y,
-            pose.orientation.z
-        );
-        matrix.setIdentity();
-        matrix.block<3,3>(0,0) = q.toRotationMatrix();
-        matrix(0,3) = pose.position.x;
-        matrix(1,3) = pose.position.y;
-        matrix(2,3) = pose.position.z;
     }
 }

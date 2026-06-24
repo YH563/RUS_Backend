@@ -128,7 +128,7 @@ namespace RusTrajectoryPlanner {
                 temp_pose.orientation.y = q.y();
                 temp_pose.orientation.z = q.z();
                 temp_pose.orientation.w = q.w();
-                // 再做一次坐标变换
+                // 再做一次坐标变换，将轨迹上的探头位姿转换为末端位姿
                 this->trajectory_.push_back(RusUtils::ProbeToEnd(
                     temp_pose, parameter_.flange_offset, parameter_.probe_to_flange)
                 );

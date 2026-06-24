@@ -13,6 +13,7 @@ namespace RusCloudNode
         this->declare_parameter<std::string>("output_cloud_topic", "/output_cloud");
         this->declare_parameter<std::string>("robot_pose_topic", "/nonrt_state_data");
         this->declare_parameter<std::string>("cmd_service", "pre_sacn_cmd");
+        this->declare_parameter<double>("flange_offset", 0.0938);
         this->declare_parameter<double>("cloud_sample_period", 2.);
         this->declare_parameter<double>("max_allowed_diff_sec", 0.05);
         this->declare_parameter<int>("max_cache_size", 50);
@@ -31,11 +32,11 @@ namespace RusCloudNode
         });
 
         // 读取参数
-        auto end_pose_topic = this->get_parameter("end_pose_topic").as_string();
         auto input_cloud_topic  = this->get_parameter("input_cloud_topic").as_string();
         auto output_cloud_topic = this->get_parameter("output_cloud_topic").as_string();
         auto robot_pose_topic   = this->get_parameter("robot_pose_topic").as_string();
         auto cmd_service          = this->get_parameter("cmd_service").as_string();
+        flange_offset_ = this->get_parameter("flange_offset").as_double();
         max_allowed_diff_sec_   = this->get_parameter("max_allowed_diff_sec").as_double();
         max_cache_size_         = this->get_parameter("max_cache_size").as_int();
         cloud_sample_period_    = this->get_parameter("cloud_sample_period").as_double();
@@ -76,14 +77,9 @@ namespace RusCloudNode
             std::bind(&CloudNode::on_cloud, this, std::placeholders::_1)
         );
 
-        // robot_pose_sub_ = this->create_subscription<RobotNonrtState>(
-        //     robot_pose_topic, 10,
-        //     std::bind(&CloudNode::on_robot_pose, this, std::placeholders::_1)
-        // );
-
-        end_pose_sub_ = this->create_subscription<PoseStamped>(
-            end_pose_topic, 10,
-            std::bind(&CloudNode::on_end_pose, this, std::placeholders::_1)
+        robot_pose_sub_ = this->create_subscription<RobotNonrtState>(
+            robot_pose_topic, 10,
+            std::bind(&CloudNode::on_robot_pose, this, std::placeholders::_1)
         );
 
         // 创建指令服务
@@ -162,37 +158,26 @@ namespace RusCloudNode
             response->message = "点云数据处理完成";
             return;
         }
-        response->success = false;
-        response->message = "请检查指令是否准确，以及是否重复发布";
         return;
     }
 
     void CloudNode::on_robot_pose(const RobotNonrtState::SharedPtr msg)
     {
-        // if (!enabled_) return;
-        // auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
-        // auto pose = RusUtils::Flange2Pose(
-        //     msg->flange_x_cur_pos,
-        //     msg->flange_y_cur_pos,
-        //     msg->flange_y_cur_pos,
-        //     msg->flange_a_cur_pos,
-        //     msg->flange_b_cur_pos,
-        //     msg->flange_c_cur_pos
-        // );
-        // pose_stamped_ptr->pose = pose;
-        // pose_stamped_ptr->header.stamp = this->get_clock()->now();
-        // pose_stamped_ptr->header.frame_id = "base_link";
-        // pose_cache_.push_back(pose_stamped_ptr);
-        // // 超过最大缓存数量的时候出队
-        // while (pose_cache_.size() > max_cache_size_) 
-        //     pose_cache_.pop_front();
-    }
-
-    // 接收末端位姿信息
-    void CloudNode::on_end_pose(const PoseStamped::SharedPtr msg)
-    {
         if (!enabled_) return;
-        pose_cache_.push_back(std::move(msg));
+        auto now_time = this->get_clock()->now();
+        auto pose_stamped_ptr = std::make_shared<geometry_msgs::msg::PoseStamped>();
+        auto pose = RusUtils::FlangePose(
+            msg->flange_x_cur_pos,
+            msg->flange_y_cur_pos,
+            msg->flange_y_cur_pos,
+            msg->flange_a_cur_pos,
+            msg->flange_b_cur_pos,
+            msg->flange_c_cur_pos
+        );
+        pose_stamped_ptr->pose = RusUtils::FlangeToEnd(pose, flange_offset_);
+        pose_stamped_ptr->header.stamp = now_time;
+        pose_stamped_ptr->header.frame_id = "base_link";
+        pose_cache_.push_back(pose_stamped_ptr);
         // 超过最大缓存数量的时候出队
         while (pose_cache_.size() > max_cache_size_) 
             pose_cache_.pop_front();

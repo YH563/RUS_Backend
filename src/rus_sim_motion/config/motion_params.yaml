@@ -5,9 +5,8 @@
   ros__parameters:
     # 服务/话题配置
     robot_pose_topic: "/nonrt_state_data"
-    end_pose_topic: "/end_pose"
     cmd_service: "motiom_cmd"
-    cmd_services_list: ["pre_sacn_cmd", "generate_trajectory"]
+    planner_service: "generate_trajectory"
 
     # 法兰到探头的变换矩阵 (注意：缺少最后一个 1.0，保持原样)
     probe_to_flange: [0.452362, 0.0830591, 0.887958, 0.00492813,

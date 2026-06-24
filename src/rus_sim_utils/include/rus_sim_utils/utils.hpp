@@ -36,7 +36,7 @@ namespace RusUtils
     }
 
     // 法兰坐标转位姿
-    Pose Flange2Pose(double x, double y, double z, double a, double b, double c);
+    Pose FlangePose(double x, double y, double z, double a, double b, double c);
 
     // Pose 和 Matrix4d 的相互转换
     Matrix4d PoseToMatrix4d(const Pose& pose);
@@ -44,10 +44,16 @@ namespace RusUtils
 
     // 根据法兰位姿获取探头位姿
     Pose FlangeToProbe(const Pose& p, const Matrix4d& probe_to_flange);
+    // 根据探头位姿获取法兰位姿
+    Pose ProbeToFlange(const Pose& p, const Matrix4d& probe_to_flange);
+
+    // 根据末端位姿获取法兰位姿
+    Pose EndToFlange(const Pose& p, const double& offset);
+    // 根据法兰位姿获取末端位姿
+    Pose FlangeToEnd(const Pose& p, const double& offset);
 
     // 通过探头末端坐标求解末端执行器坐标，由于URDF文件的末端原点并非法兰，因此需要添加一个偏移量
-    Pose ProbeToEnd(const Pose& p, const double& offset, const Matrix4d& probe_to_flange);
-
-    // 通过执行器坐标，求探头末端坐标
     Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange);
+    // 通过执行器坐标，求探头末端坐标
+    Pose ProbeToEnd(const Pose& p, const double& offset, const Matrix4d& probe_to_flange);
 }

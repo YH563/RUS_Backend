@@ -1,9 +1,10 @@
 #include "rus_sim_utils/utils.hpp"
+#include <geometry_msgs/msg/detail/pose__struct.hpp>
 
 namespace RusUtils
 {
     // 法兰坐标转位姿
-    Pose Flange2Pose(double x, double y, double z, double a, double b, double c)
+    Pose FlangePose(double x, double y, double z, double a, double b, double c)
     {
         // 1. 角度转弧度 (a, b, c 单位为度)
         double a_rad = a * M_PI / 180.0;
@@ -61,8 +62,31 @@ namespace RusUtils
         return probe_pose;
     }
 
+    // 根据探头位姿获取法兰位姿
+    Pose ProbeToFlange(const Pose& p, const Matrix4d& probe_to_flange)
+    {
+        Pose p_flange = FlangeToProbe(p, probe_to_flange.inverse());
+        return p_flange;
+    }
+
+    // 根据末端位姿获取法兰位姿
+    Pose EndToFlange(const Pose& p, const double& offset)
+    {
+        Pose p_flange = p;
+        p_flange.position.z += offset;
+        return p_flange;
+    }
+
+    // 根据法兰位姿获取末端位姿
+    Pose FlangeToEnd(const Pose& p, const double& offset)
+    {
+        Pose p_end = p;
+        p_end.position.z -= offset;
+        return p_end;
+    }
+
     // 根据moveit末端位姿获取探头位姿
-    Pose ProbeToEnd(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
+    Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
     {
         Matrix4d mat1 = Matrix4d::Identity();
         mat1(2, 3) = offset;
@@ -73,7 +97,7 @@ namespace RusUtils
     }
 
     // 通过执行器坐标，求探头末端坐标
-    Pose EndToProbe(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
+    Pose ProbeToEnd(const Pose& p, const double& offset, const Matrix4d& probe_to_flange)
     {
         Matrix4d mat1 = Matrix4d::Identity();
         mat1(2, 3) = offset;

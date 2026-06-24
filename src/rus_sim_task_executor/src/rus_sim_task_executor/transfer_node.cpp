@@ -94,7 +94,7 @@ namespace RusTransfer {
                         if (ctx_.timeout_promise) {
                             ctx_.timeout_promise->set_value();
                         }
-                        std::string final_msg = "All done: " + ctx_.GetMessage();
+                        std::string final_msg = "所有服务均已完成: " + ctx_.GetMessage();
                         finalize_and_reply(!ctx_.has_error, final_msg);
                     }
                 }

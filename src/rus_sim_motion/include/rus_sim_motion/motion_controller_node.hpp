@@ -4,14 +4,12 @@
 #include <chrono>
 
 #include <geometry_msgs/msg/detail/pose_stamped__struct.hpp>
+#include <rclcpp/client.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/timer.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <geometry_msgs/msg/pose.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-#include <tf2_ros/transform_listener.h>
-#include <tf2_ros/buffer.h>
 
 #include "rus_sim_motion/moveit_manager.hpp"
 #include "rus_sim_interfaces/srv/generate_trajectory.hpp"
@@ -19,8 +17,6 @@
 #include "fairino_msgs/msg/robot_nonrt_state.hpp"
 #include "rus_sim_utils/utils.hpp"
 #include "rus_sim_utils/command_definitions.hpp"
-#include "rus_sim_interfaces/action/scan_task.hpp"
-#include "rus_sim_motion/relay_node.hpp"
 
 namespace RusMotionControllerNode
 {
@@ -44,9 +40,6 @@ namespace RusMotionControllerNode
     private:
         // 接收机械臂末端位姿
         void on_robot_pose(const std::shared_ptr<fairino_msgs::msg::RobotNonrtState> msg);
-        
-        // 发布末端位姿
-        void pub_end_pose();
 
         // 处理指令服务
         void handle_cmd(
@@ -60,13 +53,9 @@ namespace RusMotionControllerNode
         
         // 私有成员变量
         // 话题订阅，服务端，客户端
-        // rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
-        std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
-        std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
-        rclcpp::TimerBase::SharedPtr timer_;  // 计时器发布机械臂末端位姿
-        rclcpp::Publisher<PoseStamped>::SharedPtr robot_pose_pub_;  // 发布机械臂末端位姿
+        rclcpp::Subscription<fairino_msgs::msg::RobotNonrtState>::SharedPtr robot_pose_sub_;  // 订阅机械臂末端位姿
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
-        std::unique_ptr<RusServiceClients::RelayNode> service_clients_;  // 指令客户端
+        rclcpp::Client<ServiceGenerateTrajectory>::SharedPtr planner_client_;  // 轨迹规划客户端
         
         std::unique_ptr<MoveitManager> moveit_manager_;  // 规划器
         std::vector<Pose> trajectory_;  // 计算生成的轨迹
@@ -74,7 +63,5 @@ namespace RusMotionControllerNode
         Pose end_pose_;  // 终点
         int pose_flag_ = 0;  // 接收起点、终点位姿，0表示不接收，1表示为起点，2表示为终点
         Matrix4d probe_to_flange_ = Matrix4d::Identity();  // 探头末端相对法兰的位姿
-
-        std::vector<std::future<void>> pending_tasks_;  // 储存所有异步任务的结果
     };
 }

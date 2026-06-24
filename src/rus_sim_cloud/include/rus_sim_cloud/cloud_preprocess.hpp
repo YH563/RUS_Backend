@@ -21,6 +21,8 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
+#include "rus_sim_utils/utils.hpp"
+
 namespace RusCloudPreprocess 
 {
     using CloudRGBPtr = pcl::PointCloud<pcl::PointXYZRGB>::Ptr;  // 彩色点云数据指针，为智能指针对象

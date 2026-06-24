@@ -64,8 +64,6 @@ namespace RusCloudNode
 
         // 接收位姿数据
         void on_robot_pose(const RobotNonrtState::SharedPtr msg);
-        // 接收末端位姿信息
-        void on_end_pose(const PoseStamped::SharedPtr msg);
 
         // 接收点云数据
         void on_cloud(const PointCloud2::SharedPtr msg);
@@ -77,7 +75,8 @@ namespace RusCloudNode
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;  // 点云数据订阅
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_pub_;  // 处理后的点云数据发布
         rclcpp::Subscription<RobotNonrtState>::SharedPtr robot_pose_sub_;  // 机械臂末端位姿订阅
-        rclcpp::Subscription<PoseStamped>::SharedPtr end_pose_sub_;  // 机械臂末端位姿订阅（新）
+
+        // 服务
         rclcpp::Service<rus_sim_interfaces::srv::Cmd>::SharedPtr cmd_server_;  // 指令服务端
 
         // 缓存数据
@@ -91,5 +90,6 @@ namespace RusCloudNode
         std::unique_ptr<CloudPreprocess> cloud_preprocess_;  // 点云预处理对象
         rclcpp::TimerBase::SharedPtr timer_;  // 计时器
         double cloud_sample_period_;  // 点云的采样周期，单位秒
+        double flange_offset_;  // 法兰相对于末端的偏移量
     };
 }
