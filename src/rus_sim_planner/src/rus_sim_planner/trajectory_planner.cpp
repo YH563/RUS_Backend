@@ -71,14 +71,12 @@ namespace RusTrajectoryPlanner {
         }
 
         // 将读取到的法兰位姿信息，转换为探头位姿
-        auto start_probe = RusUtils::EndToProbe(
+        auto start_probe = RusUtils::FlangeToProbe(
             start,
-            parameter_.flange_offset,
             parameter_.probe_to_flange
         );
-        auto goal_probe = RusUtils::EndToProbe(
+        auto goal_probe = RusUtils::FlangeToProbe(
             goal,
-            parameter_.flange_offset,
             parameter_.probe_to_flange
         );
         RCLCPP_INFO(rclcpp::get_logger(class_name_), "start_probe: (%.3f, %.3f, %.3f)", start_probe.position.x, start_probe.position.y, start_probe.position.z);

@@ -2,13 +2,14 @@ robot_link_command_frame: "base_link"
 move_group_name: "fairino3_v6_group"
 planning_frame: "base_link"
 ee_frame_name: "wrist3_link"
-command_in_type: "unitless"
+command_in_type: "speed_units"
 command_out_topic: "/fairino3_controller/joint_trajectory"
 command_out_type: "trajectory_msgs/JointTrajectory"
 status_topic: "/servo_node/status"
 publish_period: 0.01
 check_collisions: true
 joint_limit_margin: 0.1
-incoming_command_timeout: 0.1
+incoming_command_timeout: 0.5
 lower_singularity_threshold: 17.0
+monitored_planning_scene_topic: "/monitored_planning_scene"
 # 其他参数按需添加...

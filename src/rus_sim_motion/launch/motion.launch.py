@@ -17,7 +17,7 @@ def generate_launch_description():
         )
         .robot_description(file_path="config/fairino3_v6_robot.urdf.xacro")
         .joint_limits(file_path="config/joint_limits.yaml")
-        .robot_description_kinematics()
+        .robot_description_kinematics(file_path="config/kinematics.yaml")
         .to_moveit_configs()
     )
 
